@@ -1,0 +1,14 @@
+<?php
+
+namespace Roombooking;
+
+class Config {
+    static $site = "Droitwich Spa High School & Sixth Form Centre Room Booking Service";
+    static $db = array(
+        'host' => "localhost:3306",
+        'user' => "root",
+        'password' => "",
+        'name' => "roombooking",
+    );
+    
+}
