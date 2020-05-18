@@ -2,8 +2,6 @@
 
 namespace Roombooking;
 
-require "classes.php";
-
 use \GraphQL\Client;
 use \GraphQL\Query;
 
@@ -16,12 +14,12 @@ class GraphQLClient {
             ['Authorization' => 'Basic ' . base64_encode(Config::$arbor['user'] . ':' . Config::$arbor['password'])]);
     }
     
-    function query(Query $query) {
-        return $this->client->runQuery($query, true, [['a' => 0]]);
+    function query(Query $query,  $vars = [['a' => 0]]) {
+        return $this->client->runQuery($query, true, $vars);
     }
     
-    function rawQuery(string $query) {
-        return $this->client->runRawQuery($query, true, [['a' => 0]]);
+    function rawQuery(string $query, $vars = [['a' => 0]]) {
+        return $this->client->runRawQuery($query, true, $vars);
     }
     
     function test() {

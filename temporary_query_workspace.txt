@@ -1,0 +1,47 @@
+{  
+  RoomRoomFeature (roomFeature__roomFeatureName: "ICT Room") {
+    room {
+      shortName
+      roomName
+      displayName
+      calendarEntryMappings {
+        displayName
+      }
+    }
+  }
+  
+  Calendar {
+    id
+    displayName
+    calendarType {
+      entityType
+      displayName
+    }
+    calendarName
+    calendarDescription
+  }
+  
+  RoomChangeRequirement {
+    id
+    roomChangedDatetime
+    newRoom {
+      displayName
+    }
+  }
+  
+  TimetableSlotLocation (location__id_in: [21, 22] timetableSlot__endDate_after: "2020-05-18") {
+    location {
+      id
+      displayName
+    }
+    timetableSlot {
+      id
+      effectiveDate
+      endDate
+      startTime
+      endTime
+      dayOfCycle
+      dayOfWeek
+    }
+  }
+}

@@ -7,7 +7,9 @@ if (!class_exists("Config")) {
     require "Config.php";
     require "Database.php";
     require "GraphQLClient.php";
-    
+    require "Room.php";
+    require "Site.php";
+    require Config::$site_docroot . "/contrib/php-graphql-client/vendor/autoload.php";
     /**
      * We start the session timer on creation, and destroy it after that time.
      * We don't allow keepalive or the data will become stale.
