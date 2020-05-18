@@ -10,5 +10,21 @@ class Config {
         'password' => "",
         'name' => "roombooking",
     );
+    static $arbor = array(
+    	'site' => "https://api-sandbox2.uk.arbor.sc/",
+    	'user' => "dshs-roombooking",
+    	'password' => "",
+    );
     
+    // static $maintenance = true;
+    
+    // static $debug = true;
+    
+    /* No user serviceable parts beyond this point */
+    
+    static function debug($msg) {
+        if (self::$debug) {
+            echo "<br />" . substr(round(microtime(true) * 1000), 6) . " $msg\n";
+        }
+    }
 }
