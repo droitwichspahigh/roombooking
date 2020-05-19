@@ -40,17 +40,25 @@ class Site
      * 
      */
     public function getTimetables() {
+        $calendarIds = [];
+        echo '<pre>';
         /* Let's find out which Calendars we need to query */
+        foreach (array_keys($this->rooms) as $rId) {
+            $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
+            $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/rooms/" . $rId);
+            $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
+                \Arbor\Query\Query::OPERATOR_EQUALS,
+                'ACADEMIC');
+            array_push($calendarIds, (\Arbor\Model\Calendar::query($query))[0]->getResourceId());
+        }
         
-        
-        
+        /* OK, we'll for now just query this week */     
         $monday = date('Y-m-d', strtotime('last Monday', strtotime('tomorrow')));
-        $friday = date('Y-m-d', strtotime('next Friday', strtotime('yesterday')));
-        echo "Monday $monday Friday $friday <hr />";
-        $page = 0;
-        while ($data = ($this->client->rawQuery('
+        $saturday = date('Y-m-d', strtotime('next Saturday', strtotime('yesterday')));
+        /* You don't want to know how long this query took to construct :( */
+        $data = $this->client->rawQuery('
 query {
-    CalendarEntryMapping (page_num: ' . $page . ' endDatetime_after: "' . $monday . '" startDatetime_before: "' . $friday . '") {
+    CalendarEntryMapping (calendar__id_in: [' . implode(",", $calendarIds) . '] endDatetime_after: "' . $monday . '" startDatetime_before: "' . $saturday . '") {
         id
         event {
             __typename
@@ -71,21 +79,13 @@ query {
             }
         }
     }
-}')->getData())) {
-            if (!isset($data['CalendarEntryMapping'][0])) {
-                /* No more pages! */                
-                break;
-            }
-            foreach ($data['CalendarEntryMapping'] as $d) {
-                if (isset($d['event']['location'])) {
-                    if (isset($this->rooms[$d['event']['location']['id']])) {
-                        $this->rooms[$d['event']['location']['id']]->addTTFrag($d['event']);
-                    }
+}')->getData();
+        foreach ($data['CalendarEntryMapping'] as $d) {
+            if (isset($d['event']['location'])) {
+                if (isset($this->rooms[$d['event']['location']['id']])) {
+                    $this->rooms[$d['event']['location']['id']]->addTTFrag($d['event']);
                 }
             }
-            $page++;
-            if ($page > 5)
-                break;
         }
         print_r($this->rooms);
         
