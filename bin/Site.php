@@ -25,7 +25,25 @@ class Site
         $this->getTimetables();
     }
     
+    /**
+     * So this is marvellous.
+     * 
+     * If I only use the REST API I'm going to have to make tens of connections-
+     * one per calendar entry ('lesson').
+     * 
+     * If I only use the GraphQL API, I can't find a way to get the calendar 'belonging'
+     * to a Room, and therefore get thousands of returns on the query, meaning I have
+     * a large download and many pages to go through.
+     * 
+     * So... until GraphQL allows Room (id_in: [ ]) { calendarEntryMapping }, I'm going to
+     * mix&match.  Yay.
+     * 
+     */
     public function getTimetables() {
+        /* Let's find out which Calendars we need to query */
+        
+        
+        
         $monday = date('Y-m-d', strtotime('last Monday', strtotime('tomorrow')));
         $friday = date('Y-m-d', strtotime('next Friday', strtotime('yesterday')));
         echo "Monday $monday Friday $friday <hr />";
