@@ -8,6 +8,8 @@ class Site
      */
     protected $rooms = [];
     protected $timetableQuery = [];
+    protected $timetablePeriod = [];
+    protected $isTermDay = [];
     protected $client;
     
     public function __construct()
@@ -53,12 +55,12 @@ class Site
         }
         
         /* OK, we'll for now just query this week */     
-        $monday = date('Y-m-d', strtotime('last Monday', strtotime('tomorrow')));
+        $sunday = date('Y-m-d', strtotime('last Sunday', strtotime('tomorrow')));
         $saturday = date('Y-m-d', strtotime('next Saturday', strtotime('yesterday')));
         /* You don't want to know how long this query took to construct :( */
         $data = $this->client->rawQuery('
 query {
-    CalendarEntryMapping (calendar__id_in: [' . implode(",", $calendarIds) . '] endDatetime_after: "' . $monday . '" startDatetime_before: "' . $saturday . '") {
+    CalendarEntryMapping (calendar__id_in: [' . implode(",", $calendarIds) . '] startDatetime_after: "' . $sunday . '" startDatetime_before: "' . $saturday . '") {
         id
         event {
             __typename
@@ -72,24 +74,71 @@ query {
                 startDatetime
                 endDatetime
                 displayName
-                calendarEntryTitle
                 staff {
                     displayName
                 }
             }
         }
     }
+    TimetablePeriodGrouping {
+        shortName
+        timetablePeriods {
+            dayOfWeek
+            dayOfCycle
+            startTime
+            endTime
+        }
+    }
+    AcademicCalendarDate (startDate_after: "' . $sunday . '" startDate_before: "' . $saturday . '") {
+        startDate
+        dayOfTerm
+        isGoodSchoolDay
+    }
 }')->getData();
+        
+        foreach ($data['TimetablePeriodGrouping'] as $p) {
+            /* 
+             * XXX This assumes that Periods are the same regardless of day,
+             *     so places with special Wednesdays or Fridays for example
+             *     aren't going to manage with this! 
+             */ 
+            $this->timetablePeriod[$p['timetablePeriods'][0]['startTime']] = $p['shortName'];
+        }
+        
+        foreach ($data['AcademicCalendarDate'] as $d) {
+            $this->isTermDay[date("Y-m-d", strtotime($d['startDate']))] = $d['isGoodSchoolDay'];
+        }
+        
         foreach ($data['CalendarEntryMapping'] as $d) {
             if (isset($d['event']['location'])) {
-                if (isset($this->rooms[$d['event']['location']['id']])) {
-                    $this->rooms[$d['event']['location']['id']]->addTTFrag($d['event']);
+                $staff = [];
+                foreach ($d['event']['staff'] as $s) {
+                    $staff[$s['id']] = $s['displayName'];
                 }
+                
+                $startTime = date("H:i:s",   strtotime($d['event']['startDatetime']));
+                if (!isset ($this->timetablePeriod[$startTime])) {
+                    die ("Hm, no timetable map for $startTime. <pre>ttMap = " . print_r($this->timetablePeriod, true));
+                }
+                
+                $this->rooms[$d['event']['location']['id']]->addLesson(
+                    $this->timetablePeriod[$startTime],
+                    date("Y-m-d", strtotime($d['event']['startDatetime'])),
+                    $d['event']['displayName'],
+                    $staff
+                );
             }
         }
+        
         print_r($this->rooms);
-        
-        
+    }
+    
+    /**
+     * Returns an array of 'start time' => 'period name'
+     * @return array
+     */
+    function getPeriods() {
+        return $this->timetablePeriod;
     }
 
     function __destruct()

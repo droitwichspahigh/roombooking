@@ -5,6 +5,7 @@ namespace Roombooking;
 /* Have we been called before? */
 if (!class_exists("Config")) {
     require "Config.php";
+    require "Day.php";
     require "Database.php";
     require "GraphQLClient.php";
     require "Room.php";
