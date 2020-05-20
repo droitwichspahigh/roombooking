@@ -44,7 +44,6 @@ class School
      */
     public function getTimetables() {
         $calendarIds = [];
-        echo '<pre>';
         /* Let's find out which Calendars we need to query */
         foreach (array_keys($this->rooms) as $rId) {
             $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
