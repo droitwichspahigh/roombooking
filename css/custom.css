@@ -1,0 +1,70 @@
+body {
+	font-family: "Neutraface";
+	padding-bottom: 40px;
+}
+
+@font-face {
+	font-family: "Neutraface";
+	src: url("NeutraText-Book.otf") format("opentype");
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+	margin-bottom: 0.5rem;
+	font-family: inherit;
+	font-weight: 300;
+	line-height: 1.2;
+	color: inherit;
+}
+
+.breadcrumb {
+	padding: 12px 0px;
+}
+
+.container-page {
+	margin-top: -16px;
+	padding: 30px 15px;
+	background: #ffffff;
+}
+
+.text-footer {
+	margin-bottom: 0px;
+}
+
+table {
+    width: 100%;
+    white-space: nowrap;
+}
+
+td:last-child {
+    width: 100%;
+}
+
+.table-sm td, .table-sm th {
+    padding: .3rem .75rem;
+}
+
+.clickable-row {
+	cursor: pointer;
+}
+
+.btn-options {
+	white-space: normal;
+	margin-bottom: 15px;
+}
+
+.table-flush th, .table-flush td {
+	padding: .75rem 1.25rem;
+}
+
+table a:hover {
+	text-decoration: none;
+}
+
+.btn-header {
+	margin: -3px 0px !important;
+}
+
+.table-flush-sm th, .table-flush-sm td {
+	padding: .3rem 1.25rem;
+}
