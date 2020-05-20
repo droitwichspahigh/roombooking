@@ -25,6 +25,9 @@ class School
             $this->rooms[$r['room']['id']] = new Room($r['room']['roomName']);
         }
         
+        /* It is most natural to sort Rooms by name and not ID */
+        asort($this->rooms);
+        
         $this->getTimetables();
     }
     
@@ -105,6 +108,9 @@ query {
             $this->timetablePeriod[$p['timetablePeriods'][0]['startTime']] = $p['shortName'];
         }
         
+        /* Sort timetablePeriods by starting time, not when they were entered! */
+        ksort($this->timetablePeriod);
+        
         foreach ($data['AcademicCalendarDate'] as $d) {
             $this->isTermDay[date("Y-m-d", strtotime($d['startDate']))] = $d['isGoodSchoolDay'];
         }
@@ -137,6 +143,15 @@ query {
      */
     function getPeriods() {
         return $this->timetablePeriod;
+    }
+    
+    /**
+     * The order of the Rooms is stable
+     * 
+     * @return array(Room)
+     */
+    function getRooms() {
+        return $this->rooms;
     }
 
     function __destruct()
