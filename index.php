@@ -45,36 +45,37 @@ $date = date("Y-m-d", $date);
 		}
 		
 		?>
-		
-		<table class="table table-striped table-bordered text-center">
-			<thead>
-				<tr>
-					<th>&nbsp;</th>
-					<?php
-					 /** @var \RoomBooking\Room $r */
-					 foreach ($school->getRooms() as $r) {
-				        echo "<th>" . $r->getName() . "</th>";
-				     }
-				    ?>
-				</tr>
-			</thead>
-			<?php 
-			 foreach ($school->getPeriods() as $p) {
-			     echo "<tr><th>" . $p . "</th>";
-			     foreach ($school->getRooms() as $r) {
-			         echo "<td>";
-			         $e = $r->getEntry($p, $date);
-			         if (is_null($e)) {
-			             echo "Bookable!";
-			         } else {
-			             echo $e[Room::LESSON]->getName() . "<br />" . $e[Room::LESSON]->strStaff();
-			         }
-			         
-			     }
-			     echo "</tr>";
-			 }
-			?>
-		</table>
+		<div class="table-responsive">
+    		<table class="table table-striped table-bordered text-center">
+    			<thead>
+    				<tr>
+    					<th>&nbsp;</th>
+    					<?php
+    					 /** @var \RoomBooking\Room $r */
+    					 foreach ($school->getRooms() as $r) {
+    				        echo "<th>" . $r->getName() . "</th>";
+    				     }
+    				    ?>
+    				</tr>
+    			</thead>
+    			<?php 
+    			 foreach ($school->getPeriods() as $p) {
+    			     echo "<tr><th>" . $p . "</th>";
+    			     foreach ($school->getRooms() as $r) {
+    			         echo "<td>";
+    			         $e = $r->getEntry($p, $date);
+    			         if (is_null($e)) {
+    			             echo "Bookable!";
+    			         } else {
+    			             echo $e[Room::LESSON]->getName() . "<br />" . $e[Room::LESSON]->strStaff();
+    			         }
+    			         
+    			     }
+    			     echo "</tr>";
+    			 }
+    			?>
+    		</table>
+		</div>
 	</div>
 </body>
 </html>
