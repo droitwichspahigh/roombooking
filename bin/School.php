@@ -10,6 +10,7 @@ class School
     protected $days = [];
     protected $timetableQuery = [];
     protected $timetablePeriod = [];
+    protected $calendarIds;
     protected $client;
     
     public function __construct()
@@ -45,24 +46,25 @@ class School
      * 
      */
     public function getTimetables() {
-        $calendarIds = [];
-        /* Let's find out which Calendars we need to query */
-        foreach (array_keys($this->rooms) as $rId) {
-            $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
-            $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/rooms/" . $rId);
-            $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
-                \Arbor\Query\Query::OPERATOR_EQUALS,
-                'ACADEMIC');
-            array_push($calendarIds, (\Arbor\Model\Calendar::query($query))[0]->getResourceId());
-        }
-        
-        /* OK, we'll for now just query this week */     
-        $sunday = date('Y-m-d', strtotime('last Sunday', strtotime('tomorrow')));
-        $saturday = date('Y-m-d', strtotime('next Saturday', strtotime('yesterday')));
+        /* 
+         * XXX We're going to look ahead by five weeks.
+         * 
+         * The longest holidays (apart from the summer,
+         * where you can't normally book in advance) are
+         * two weeks, so that makes four weeks in advance
+         * max we'll need.  We'll go for five, because
+         * bank holidays can mess things up.
+         * 
+         * Inefficient?  Meh.
+         * 
+         */
+        $end = date('Y-m-d', strtotime('5 weeks'));
+        $lastMidnight = date('Y-m-d');
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
         /* You don't want to know how long this query took to construct :( */
         $data = $this->client->rawQuery('
 query {
-    CalendarEntryMapping (calendar__id_in: [' . implode(",", $calendarIds) . '] startDatetime_after: "' . $sunday . '" startDatetime_before: "' . $saturday . '") {
+    CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
         id
         event {
             __typename
@@ -91,7 +93,7 @@ query {
             endTime
         }
     }
-    AcademicCalendarDate (startDate_after: "' . $sunday . '" startDate_before: "' . $saturday . '") {
+    AcademicCalendarDate (startDate_after: "' . $yesterday . '" startDate_before: "' . $end . '") {
         startDate
         dayOfTerm
         isGoodSchoolDay
@@ -126,6 +128,12 @@ query {
                     die ("Hm, no timetable map for $startTime. <pre>ttMap = " . print_r($this->timetablePeriod, true));
                 }
                 
+                $day = $this->getDay($d['event']['startDatetime']);
+                
+                if ($day === null) {
+                    die ("Hm, no Day for " . $d['event']['startDatetime']);
+                }
+                
                 $this->rooms[$d['event']['location']['id']]->addLesson(
                     $this->timetablePeriod[$startTime],
                     $this->getDay($d['event']['startDatetime']),
@@ -134,6 +142,32 @@ query {
                 );
             }
         }
+    }
+    
+    function getCalendarIds() {
+        if (!empty($this->calendarIds)) {
+            return $this->calendarIds;
+        }
+        
+        if (isset($_SESSION['calendarIds'])) {
+            Config::debug("School::getCalendarIds: found session record, returning");
+            $this->calendarIds = $_SESSION['calendarIds'];
+            return $this->calendarIds;
+        }
+        
+        $this->calendarIds = [];
+        /* Let's find out which Calendars we need to query */
+        foreach (array_keys($this->rooms) as $rId) {
+            $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
+            $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/rooms/" . $rId);
+            $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
+                \Arbor\Query\Query::OPERATOR_EQUALS,
+                'ACADEMIC');
+                array_push($this->calendarIds, (\Arbor\Model\Calendar::query($query))[0]->getResourceId());
+        }
+        
+        $_SESSION['calendarIds'] = $this->calendarIds;
+        return $this->calendarIds;        
     }
     
     /**

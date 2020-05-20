@@ -32,10 +32,6 @@ class Room
      * @param array $staff
      */
     public function addLesson(string $period, Day $day, string $lesson_name, array $staff) {
-        if (!$day) {
-            die ("Somehow, there is no Day for $lesson_name, during $period on unknown date");
-        }
-        
         array_push(
             $this->timetableEntries, 
             [
