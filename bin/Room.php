@@ -3,6 +3,10 @@ namespace Roombooking;
 
 class Room
 {
+    const PERIOD = 'period',
+          DATE =   'date',
+          LESSON = 'lesson';
+    
     protected $name;
     protected $timetableEntries = [];
 
@@ -15,14 +19,8 @@ class Room
         return ($this->timetableEntries);
     }
     
-    /**
-     * Returns timetable entry lesson staff separated by " & "
-     * 
-     * @param int $entry Which lesson (arbitrary ID, corresponding to place in array)
-     * @return string
-     */
-    public function getStaff(int $entry) {
-        return implode(" & ", $this->timetableEntries[$entry]['staff']);
+    public function getName() {
+        return ($this->name);
     }
     
     /**
@@ -37,23 +35,22 @@ class Room
         array_push(
             $this->timetableEntries, 
             [
-                'period'    =>   $period,
-                'date' =>        $date,
-                'lesson_name' => $lesson_name,
-                'staff' =>       $staff,
+                PERIOD => $period,
+                DATE =>   $date,
+                LESSON => new Lesson($lesson_name, $staff),
             ]
         );
     }
     
     
-    public function getLesson(string $period, string $date) {
+    public function getEntry(string $period, string $date) {
         /* Let's look through the lessons */
         foreach ($this->timetableEntries as $e) {
-            if ($this->timetableEntries['date'] === $date && $this->timetableEntries['period'] === $period) {
+            if ($this->timetableEntries[DATE] === $date && $this->timetableEntries[PERIOD] === $period) {
                 return $e;
             }
         }
-        return false;
+        return null;
     }
 
     function __destruct()

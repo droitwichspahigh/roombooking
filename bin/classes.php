@@ -8,6 +8,7 @@ if (!class_exists("Config")) {
     require "Day.php";
     require "Database.php";
     require "GraphQLClient.php";
+    require "Lesson.php";
     require "Room.php";
     require "School.php";
     require Config::site_docroot . "/contrib/php-graphql-client/vendor/autoload.php";
