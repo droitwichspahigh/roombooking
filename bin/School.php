@@ -1,7 +1,7 @@
 <?php
 namespace Roombooking;
 
-class Site
+class School
 {
     /**
      * @var array $rooms Contains all of the ICT rooms in the school

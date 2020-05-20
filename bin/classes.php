@@ -9,7 +9,7 @@ if (!class_exists("Config")) {
     require "Database.php";
     require "GraphQLClient.php";
     require "Room.php";
-    require "Site.php";
+    require "School.php";
     require Config::$site_docroot . "/contrib/php-graphql-client/vendor/autoload.php";
     require Config::$site_docroot . "/contrib/sis-sdk-php/vendor/autoload.php";
     

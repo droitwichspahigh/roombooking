@@ -1,8 +1,8 @@
 <?php
 require "bin/classes.php";
 
-use \Roombooking\Site;
+use \Roombooking\School;
 
-$site = new Site();
+$school = new School();
 
 ?>
