@@ -22,6 +22,10 @@ class Lesson
         return implode(" & ", $this->staff);
     }
     
+    public function getName() {
+        return $this->name;
+    }
+    
     function __destruct()
     {}
 }
