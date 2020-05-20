@@ -35,9 +35,9 @@ class Room
         array_push(
             $this->timetableEntries, 
             [
-                PERIOD => $period,
-                DATE =>   $date,
-                LESSON => new Lesson($lesson_name, $staff),
+                self::PERIOD => $period,
+                self::DATE =>   $date,
+                self::LESSON => new Lesson($lesson_name, $staff),
             ]
         );
     }
@@ -46,7 +46,7 @@ class Room
     public function getEntry(string $period, string $date) {
         /* Let's look through the lessons */
         foreach ($this->timetableEntries as $e) {
-            if ($this->timetableEntries[DATE] === $date && $this->timetableEntries[PERIOD] === $period) {
+            if ($e[self::DATE] === $date && $e[self::PERIOD] === $period) {
                 return $e;
             }
         }
