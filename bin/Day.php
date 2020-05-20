@@ -8,6 +8,14 @@ class Day {
     
     function __construct($date, $isTermDay) {
         $this->date = $date;
-        $this->isTermday = $isTermDay;
+        $this->isTermday = $isTermDay ? true : false;
+    }
+    
+    function getDate() {
+        return $this->date;
+    }
+    
+    function isTermDay() {
+        return $this->isTermDay;
     }
 }

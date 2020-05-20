@@ -11,22 +11,40 @@ require "bin/head.php";
 
 $school = new School();
 
+if (isset($_GET['date'])) {
+    $date = strtotime($_GET['date']);
+    if ($date < strtotime('yesterday') || $date > strtotime('next fortnight')) {
+        unset ($date);
+    }
+}
+if (!isset($date)) {
+    $date = time();
+}
 
-
-/* TODO make a date setting thingy */
-$date = "2020-05-20"; 
+$date = date("Y-m-d", $date);
 
 ?>
 </head>
 <body>
 	<div class="container">
 		<h3 class="mb-3">Welcome to the <?= Config::site ?></h3>
-		<div class="form-group row">
-			<label for="date-input" class="col-2 col-form-label">Date</label>
-  			<div class="col-10">
-    			<input class="form-control" type="date" id="date-input" value="2020-05-20">
-  			</div>
-		</div>
+		<form method="GET">
+    		<div class="form-group row">
+    			<label for="date-input" class="col-2 col-form-label">Date</label>
+      			<div class="col-10">
+        			<input class="form-control" type="date" id="date-input" name="date" value="<?= $date; ?>" onchange="this.form.submit()">
+      			</div>
+    		</div>
+		</form>
+		<?php
+		/** @var Day $day */
+		$day = $school->getDay($date);
+		if ($day === null || $day->isTermDay() === false) {
+		    die ('<div class="alert alert-warning">' . $date . ' is not actually in term time.  Please choose a different date</div>');
+		}
+		
+		?>
+		
 		<table class="table table-striped table-bordered">
 			<thead>
 				<tr>

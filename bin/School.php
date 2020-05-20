@@ -10,7 +10,6 @@ class School
     protected $days = [];
     protected $timetableQuery = [];
     protected $timetablePeriod = [];
-    protected $isTermDay = [];
     protected $client;
     
     public function __construct()
@@ -112,7 +111,7 @@ query {
         ksort($this->timetablePeriod);
         
         foreach ($data['AcademicCalendarDate'] as $d) {
-            $this->isTermDay[date("Y-m-d", strtotime($d['startDate']))] = $d['isGoodSchoolDay'];
+            $this->days[$d['id']] = new Day(date("Y-m-d", strtotime($d['startDate'])), $d['isGoodSchoolDay']);
         }
         
         foreach ($data['CalendarEntryMapping'] as $d) {
@@ -129,7 +128,7 @@ query {
                 
                 $this->rooms[$d['event']['location']['id']]->addLesson(
                     $this->timetablePeriod[$startTime],
-                    date("Y-m-d", strtotime($d['event']['startDatetime'])),
+                    $this->getDay($d['event']['startDatetime']),
                     $d['event']['displayName'],
                     $staff
                 );
@@ -152,6 +151,22 @@ query {
      */
     function getRooms() {
         return $this->rooms;
+    }
+    
+    /**
+     * Returns a Day based on the date provided
+     * 
+     * @param string $datetime
+     * @return Day
+     */
+    function getDay(string $datetime) {
+        $date = date("Y-m-d", strtotime($datetime));
+        foreach ($this->days as $d) {
+            if ($date === $d->getDate()) {
+                return $d;
+            }
+        }
+        return null;
     }
 
     function __destruct()

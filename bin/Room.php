@@ -4,7 +4,7 @@ namespace Roombooking;
 class Room
 {
     const PERIOD = 'period',
-          DATE =   'date',
+          DAY =   'day',
           LESSON = 'lesson';
     
     protected $name;
@@ -31,12 +31,16 @@ class Room
      * @param string $lesson_name
      * @param array $staff
      */
-    public function addLesson(string $period, string $date, string $lesson_name, array $staff) {
+    public function addLesson(string $period, Day $day, string $lesson_name, array $staff) {
+        if (!$day) {
+            die ("Somehow, there is no Day for $lesson_name, during $period on unknown date");
+        }
+        
         array_push(
             $this->timetableEntries, 
             [
                 self::PERIOD => $period,
-                self::DATE =>   $date,
+                self::DAY =>   $day,
                 self::LESSON => new Lesson($lesson_name, $staff),
             ]
         );
@@ -46,7 +50,7 @@ class Room
     public function getEntry(string $period, string $date) {
         /* Let's look through the lessons */
         foreach ($this->timetableEntries as $e) {
-            if ($e[self::DATE] === $date && $e[self::PERIOD] === $period) {
+            if ($e[self::DAY]->getDate() === $date && $e[self::PERIOD] === $period) {
                 return $e;
             }
         }
