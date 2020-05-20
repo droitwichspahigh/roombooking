@@ -10,8 +10,8 @@ class GraphQLClient {
     
     function __construct() {
         $this->client = new Client(
-            Config::$arbor['site'] . 'graphql/query',
-            ['Authorization' => 'Basic ' . base64_encode(Config::$arbor['user'] . ':' . Config::$arbor['password'])]);
+            Config::arbor['site'] . 'graphql/query',
+            ['Authorization' => 'Basic ' . base64_encode(Config::arbor['user'] . ':' . Config::arbor['password'])]);
     }
     
     function query(Query $query,  $vars = [['a' => 0]]) {

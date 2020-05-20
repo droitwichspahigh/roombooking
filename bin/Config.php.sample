@@ -3,27 +3,32 @@
 namespace Roombooking;
 
 class Config {
-    static $site = "Droitwich Spa High School & Sixth Form Centre Room Booking Service";
-    static $db = array(
+    const site = "Droitwich Spa High School & Sixth Form Centre Room Booking Service";
+    const site_docroot = "/home/crees/public_html/roombooking/roombooking";
+    
+    const db = array(
         'host' => "localhost:3306",
         'user' => "root",
         'password' => "",
         'name' => "roombooking",
     );
-    static $arbor = array(
-    	'site' => "https://api-sandbox2.uk.arbor.sc/",
-    	'user' => "dshs-roombooking",
-    	'password' => "",
+    
+    const arbor = array(
+        'site' => "https://api-sandbox2.uk.arbor.sc/",
+        'user' => "dshs-roombooking",
+        'password' => "",
     );
     
-    // static $maintenance = true;
+    const roomFeatureName = "ICT Room";
     
-    // static $debug = true;
+    const maintenance = true;
+    
+    const debug = true;
     
     /* No user serviceable parts beyond this point */
     
     static function debug($msg) {
-        if (self::$debug) {
+        if (self::debug) {
             echo "<br />" . substr(round(microtime(true) * 1000), 6) . " $msg\n";
         }
     }

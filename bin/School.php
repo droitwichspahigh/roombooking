@@ -7,6 +7,7 @@ class School
      * @var array $rooms Contains all of the ICT rooms in the school
      */
     protected $rooms = [];
+    protected $days = [];
     protected $timetableQuery = [];
     protected $timetablePeriod = [];
     protected $isTermDay = [];
@@ -18,7 +19,7 @@ class School
         $this->client = new GraphQLClient();
         
         $result = $this->client->rawQuery(
-            '{ RoomRoomFeature (roomFeature__roomFeatureName: "'. Config::$roomFeatureName . '") { room { shortName roomName displayName } } }');
+            '{ RoomRoomFeature (roomFeature__roomFeatureName: "'. Config::roomFeatureName . '") { room { shortName roomName displayName } } }');
         
         foreach ($result->getData()['RoomRoomFeature'] as $r) {
             $this->rooms[$r['room']['id']] = new Room($r['room']['roomName']);
@@ -129,8 +130,6 @@ query {
                 );
             }
         }
-        
-        print_r($this->rooms);
     }
     
     /**
