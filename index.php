@@ -7,10 +7,12 @@
 require "bin/classes.php";
 require "bin/head.php";
 
-
-
 $school = new School();
 
+/**
+ * TODO this validation for dates is inadequate, as calendar fortnight isn't what we
+ * want- we want today and next nine working days 
+ */
 if (isset($_GET['date'])) {
     $date = strtotime($_GET['date']);
     if ($date < strtotime('yesterday') || $date > strtotime('next fortnight')) {
@@ -20,7 +22,6 @@ if (isset($_GET['date'])) {
 if (!isset($date)) {
     $date = time();
 }
-
 $date = date("Y-m-d", $date);
 
 ?>
@@ -45,7 +46,7 @@ $date = date("Y-m-d", $date);
 		
 		?>
 		
-		<table class="table table-striped table-bordered">
+		<table class="table table-striped table-bordered text-center">
 			<thead>
 				<tr>
 					<th>&nbsp;</th>
