@@ -66,7 +66,7 @@ class School
 query {
     CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
         id
-        event {
+        lesson: event {
             __typename
             ... on Session {
                 location {
@@ -81,6 +81,16 @@ query {
                 staff {
                     displayName
                 }
+            }
+        }
+        unavailability: event {
+            ... on RoomUnavailability {
+                room {
+                    id
+                }
+                startDatetime
+                endDatetime
+                displayName
             }
         }
     }
@@ -104,7 +114,10 @@ query {
             /* 
              * XXX This assumes that Periods are the same regardless of day,
              *     so places with special Wednesdays or Fridays for example
-             *     aren't going to manage with this! 
+             *     aren't going to manage with this!
+             *     
+             *     Hint: you'll know if this is the case when you connect it
+             *     to Arbor and the room booking suite crashes...
              */ 
             $this->timetablePeriod[$p['timetablePeriods'][0]['startTime']] = $p['shortName'];
         }
@@ -117,27 +130,27 @@ query {
         }
         
         foreach ($data['CalendarEntryMapping'] as $d) {
-            if (isset($d['event']['location'])) {
+            if (isset($d['lesson']['location'])) {
                 $staff = [];
-                foreach ($d['event']['staff'] as $s) {
+                foreach ($d['lesson']['staff'] as $s) {
                     $staff[$s['id']] = $s['displayName'];
                 }
                 
-                $startTime = date("H:i:s",   strtotime($d['event']['startDatetime']));
+                $startTime = date("H:i:s",   strtotime($d['lesson']['startDatetime']));
                 if (!isset ($this->timetablePeriod[$startTime])) {
                     die ("Hm, no timetable map for $startTime. <pre>ttMap = " . print_r($this->timetablePeriod, true));
                 }
                 
-                $day = $this->getDay($d['event']['startDatetime']);
+                $day = $this->getDay($d['lesson']['startDatetime']);
                 
                 if ($day === null) {
-                    die ("Hm, no Day for " . $d['event']['startDatetime']);
+                    die ("Hm, no Day for " . $d['lesson']['startDatetime']);
                 }
                 
-                $this->rooms[$d['event']['location']['id']]->addLesson(
+                $this->rooms[$d['lesson']['location']['id']]->addLesson(
                     $this->timetablePeriod[$startTime],
-                    $this->getDay($d['event']['startDatetime']),
-                    $d['event']['displayName'],
+                    $this->getDay($d['lesson']['startDatetime']),
+                    $d['lesson']['displayName'],
                     $staff
                 );
             }
@@ -150,23 +163,31 @@ query {
         }
         
         if (isset($_SESSION['calendarIds'])) {
-            Config::debug("School::getCalendarIds: found session record, returning");
             $this->calendarIds = $_SESSION['calendarIds'];
             return $this->calendarIds;
         }
         
+        Config::debug("School::getCalendarIds: no session record or expired, looking up from Arbor");
+        
         $this->calendarIds = [];
         /* Let's find out which Calendars we need to query */
         foreach (array_keys($this->rooms) as $rId) {
-            $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
-            $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/rooms/" . $rId);
-            $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
-                \Arbor\Query\Query::OPERATOR_EQUALS,
-                'ACADEMIC');
+            /* 
+             * We need the Academic calendar for Sessions (lessons), and the School calendar
+             * for unavailability.
+             */ 
+            foreach (['SCHOOL', 'ACADEMIC'] as $type) {
+                $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
+                $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/rooms/" . $rId);
+                $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
+                    \Arbor\Query\Query::OPERATOR_EQUALS,
+                    $type);
                 array_push($this->calendarIds, (\Arbor\Model\Calendar::query($query))[0]->getResourceId());
+            }
         }
         
         $_SESSION['calendarIds'] = $this->calendarIds;
+
         return $this->calendarIds;        
     }
     
