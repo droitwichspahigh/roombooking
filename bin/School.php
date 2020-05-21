@@ -118,8 +118,9 @@ query {
              *     
              *     Hint: you'll know if this is the case when you connect it
              *     to Arbor and the room booking suite crashes...
-             */ 
-            $this->timetablePeriod[$p['timetablePeriods'][0]['startTime']] = $p['shortName'];
+             */
+            $this->timetablePeriod[$p['timetablePeriods'][0]['startTime']] =
+                new Period($p['shortName'], $p['timetablePeriods'][0]['startTime'], $p['timetablePeriods'][0]['endTime']);
         }
         
         /* Sort timetablePeriods by starting time, not when they were entered! */
@@ -130,6 +131,7 @@ query {
         }
         
         foreach ($data['CalendarEntryMapping'] as $d) {
+            // First deal with lessons
             if (isset($d['lesson']['location'])) {
                 $staff = [];
                 foreach ($d['lesson']['staff'] as $s) {
@@ -148,11 +150,12 @@ query {
                 }
                 
                 $this->rooms[$d['lesson']['location']['id']]->addLesson(
-                    $this->timetablePeriod[$startTime],
-                    $this->getDay($d['lesson']['startDatetime']),
-                    $d['lesson']['displayName'],
-                    $staff
+                    new Lesson($d['lesson']['displayName'], $day, $this->timetablePeriod[$startTime], $staff)
                 );
+            }
+            // Then deal with availability
+            if (isset($d['unavailability']['room'])) {
+                true;
             }
         }
     }
@@ -192,8 +195,8 @@ query {
     }
     
     /**
-     * Returns an array of 'start time' => 'period name'
-     * @return array
+     * Returns an array of Periods
+     * @return array(\Roombooking\Period)
      */
     function getPeriods() {
         return $this->timetablePeriod;

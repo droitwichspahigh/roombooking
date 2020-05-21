@@ -6,11 +6,14 @@ namespace Roombooking;
 if (!class_exists("Config")) {
     require "Config.php";
     require "Day.php";
+    require "Event.php";
     require "Database.php";
     require "GraphQLClient.php";
     require "Lesson.php";
+    require "Period.php";
     require "Room.php";
     require "School.php";
+    require "Unavailability.php";
     require Config::site_docroot . "/contrib/php-graphql-client/vendor/autoload.php";
     require Config::site_docroot . "/contrib/sis-sdk-php/vendor/autoload.php";
     

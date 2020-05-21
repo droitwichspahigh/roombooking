@@ -1,17 +1,22 @@
 <?php
 namespace Roombooking;
 
-class Lesson
+class Lesson extends Event
 {
-
-    protected $name;
     protected $staff;
+    protected $day;
+    protected $period;
     
-    public function __construct(string $name, array $staff)
+    public function __construct(string $name, Day $day, Period $period, array $staff)
     {
         $this->name = $name;
-        $this->staff = $staff;        
+        $this->staff = $staff;  
+        $this->day = $day;
+        $this->period = $period;
     }
+    
+    public function getDay() { return $this->day; }
+    public function getPeriod() { return $this->period; }
 
     /**
      * Returns staff separated by " & "
@@ -22,8 +27,8 @@ class Lesson
         return implode(" & ", $this->staff);
     }
     
-    public function getName() {
-        return $this->name;
+    public function getInfo() {
+        return $this->name . "<br />" . $this->strStaff();
     }
     
     function __destruct()

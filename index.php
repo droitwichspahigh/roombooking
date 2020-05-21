@@ -60,16 +60,15 @@ $date = date("Y-m-d", $date);
     			</thead>
     			<?php 
     			 foreach ($school->getPeriods() as $p) {
-    			     echo "<tr><th>" . $p . "</th>";
+    			     echo "<tr><th>" . $p->getName() . "</th>";
     			     foreach ($school->getRooms() as $r) {
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
     			             echo "Bookable!";
     			         } else {
-    			             echo $e[Room::LESSON]->getName() . "<br />" . $e[Room::LESSON]->strStaff();
+    			             echo $e->getName() . "<br />" . $e->strStaff();
     			         }
-    			         
     			     }
     			     echo "</tr>";
     			 }

@@ -3,10 +3,6 @@ namespace Roombooking;
 
 class Room
 {
-    const PERIOD = 'period',
-          DAY =   'day',
-          LESSON = 'lesson';
-    
     protected $name;
     protected $timetableEntries = [];
 
@@ -15,6 +11,11 @@ class Room
         $this->name = $name;
     }
     
+    /**
+     * Watch out, this returns Lessons and Unavailabilities!
+     * 
+     * @return array
+     */
     public function getEntries() {
         return ($this->timetableEntries);
     }
@@ -26,30 +27,28 @@ class Room
     /**
      * Adds a new Lesson to the Room
      * 
-     * @param string $period
-     * @param string $date
-     * @param string $lesson_name
-     * @param array $staff
+     * @param Lesson $lesson
      */
-    public function addLesson(string $period, Day $day, string $lesson_name, array $staff) {
-        array_push(
-            $this->timetableEntries, 
-            [
-                self::PERIOD => $period,
-                self::DAY =>   $day,
-                self::LESSON => new Lesson($lesson_name, $staff),
-            ]
-        );
+    public function addLesson(Lesson $lesson) {
+        array_push($this->timetableEntries, $lesson);
     }
     
+    public function addUnavailability(Unavailability $unavailability) {
+        array_push($this->timetableEntries, $unavailability);
+    }
     
-    public function getEntry(string $period, string $date) {
+    public function getEntry(Period $period, string $date) {
         /* Let's look through the lessons */
         foreach ($this->timetableEntries as $e) {
-            if ($e[self::DAY]->getDate() === $date && $e[self::PERIOD] === $period) {
-                return $e;
+            if ($e instanceOf Lesson) {
+                if ($e->getDay()->getDate() === $date && $e->getPeriod() === $period) {
+                    return $e;
+                }
+            } elseif ($e instanceOf Unavailability) {
+                
             }
         }
+        /* Now, we need to find out if it's Available */
         return null;
     }
 
