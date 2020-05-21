@@ -15,9 +15,9 @@ if (Config::$maintenance) {
     $db->dosql("
     CREATE TABLE booking (
         id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-        staff_id INT NOT NULL,
-        class_id INT NOT NULL,
-        description TEXT,
+        lesson_id INT NOT NULL,
+        oldroom_id INT NOT NULL,
+        newroom_id INT NOT NULL,
         CONSTRAINT pk PRIMARY KEY (id)
     );");
 }
