@@ -35,8 +35,9 @@ if (!class_exists("Config")) {
     
     $time = $_SERVER['REQUEST_TIME'];
     
-    if (isset($_SESSION['SESSION_CREATIONTIME']) &&
-        ($time - $_SESSION['SESSION_CREATIONTIME']) > $timeout_duration) {
+    if (!isset($_SESSION['SESSION_CREATIONTIME']) ||
+        ($time - $_SESSION['SESSION_CREATIONTIME']) > $timeout_duration ||
+        (isset($_GET['session_destroy']) && $_GET['session_destroy'] == $_SESSION['SESSION_CREATIONTIME'])) {
             session_unset();
             session_destroy();
             session_start();

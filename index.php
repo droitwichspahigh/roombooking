@@ -28,6 +28,24 @@ $date = date("Y-m-d", $date);
 </head>
 <body>
 	<div class="container">
+		 <nav class="navbar navbar-expand">
+          <!-- Brand -->
+          <a class="navbar-brand">Actions</a>
+        
+          <!-- Toggler/collapsibe Button -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon">collapse</span>
+          </button>
+        
+          <!-- Navbar links -->
+          <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="?date=<?= $date; ?>&session_destroy=<?= $_SESSION['SESSION_CREATIONTIME']; ?>">Rescan Arbor for changes</a>
+              </li>
+            </ul>
+          </div>
+        </nav> 
 		<h3 class="mb-3">Welcome to the <?= Config::site ?></h3>
 		<form method="GET">
     		<div class="form-group row">
@@ -67,7 +85,7 @@ $date = date("Y-m-d", $date);
     			         if (is_null($e)) {
     			             echo "Bookable!";
     			         } else {
-    			             echo $e->getName() . "<br />" . $e->strStaff();
+    			             echo $e->getInfo();
     			         }
     			     }
     			     echo "</tr>";
