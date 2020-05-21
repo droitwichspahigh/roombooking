@@ -4,7 +4,7 @@ namespace Roombooking;
 class School
 {
     /**
-     * @var array $rooms Contains all of the ICT rooms in the school
+     * @var array(\Roombooking\Room) $rooms Contains all of the ICT rooms in the school
      */
     protected $rooms = [];
     protected $days = [];
@@ -15,9 +15,29 @@ class School
     
     public function __construct()
     {
-        /* First, we find out which rooms we need */
         $this->client = new GraphQLClient();
         
+        $this->getTimetables();
+    }
+    
+    /**
+     * The order of the Rooms is stable
+     *
+     * @return array(Room)
+     */
+    public function getRooms() {
+        if (!empty($this->rooms)) {
+            return $this->rooms;
+        }
+        
+        if (isset($_SESSION['rooms'])) {
+            $this->rooms = $_SESSION['rooms'];
+            return $this->rooms;
+        }
+        
+        Config::debug("School::getRooms: no session data, fetching");
+        
+        /* First, we find out which rooms we need */
         $result = $this->client->rawQuery(
             '{ RoomRoomFeature (roomFeature__roomFeatureName: "'. Config::roomFeatureName . '") { room { shortName roomName displayName } } }');
         
@@ -28,7 +48,9 @@ class School
         /* It is most natural to sort Rooms by name and not ID */
         asort($this->rooms);
         
-        $this->getTimetables();
+        $_SESSION['rooms'] = $this->rooms;
+        
+        return $this->rooms;
     }
     
     /**
@@ -83,16 +105,14 @@ query {
                 }
             }
         }
-        unavailability: event {
-            ... on RoomUnavailability {
-                room {
-                    id
-                }
-                startDatetime
-                endDatetime
-                displayName
-            }
+    }
+    RoomUnavailability (room__id_in: [' . implode (",", array_keys($this->getRooms())). '] ){
+        room {
+            id
         }
+        startDatetime
+        endDatetime
+        displayName
     }
     TimetablePeriodGrouping {
         shortName
@@ -150,13 +170,20 @@ query {
                 }
                 
                 $this->rooms[$d['lesson']['location']['id']]->addLesson(
-                    new Lesson($d['lesson']['displayName'], $day, $this->timetablePeriod[$startTime], $staff)
+                    new Lesson($d['lesson']['id'], $d['lesson']['displayName'], $day, $this->timetablePeriod[$startTime], $staff)
                 );
-            }
+            }            
+        }
+        foreach ($data['RoomUnavailability'] as $u) {
             // Then deal with availability
-            if (isset($d['unavailability']['room'])) {
-                true;
-            }
+            $this->rooms[$u['room']['id']]->addUnavailability(
+                new Unavailability(
+                    $u['id'],
+                    $u['displayName'],
+                    strtotime($u['startDatetime']['date']),
+                    strtotime($u['endDatetime']['date'])
+                    )
+            );
         }
     }
     
@@ -174,12 +201,9 @@ query {
         
         $this->calendarIds = [];
         /* Let's find out which Calendars we need to query */
-        foreach (array_keys($this->rooms) as $rId) {
-            /* 
-             * We need the Academic calendar for Sessions (lessons), and the School calendar
-             * for unavailability.
-             */ 
-            foreach (['SCHOOL', 'ACADEMIC'] as $type) {
+        foreach (array_keys($this->getRooms()) as $rId) {
+            /* We need the Academic calendar for Sessions (lessons) */ 
+            foreach (['ACADEMIC'] as $type) {
                 $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
                 $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/rooms/" . $rId);
                 $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
@@ -200,15 +224,6 @@ query {
      */
     function getPeriods() {
         return $this->timetablePeriod;
-    }
-    
-    /**
-     * The order of the Rooms is stable
-     * 
-     * @return array(Room)
-     */
-    function getRooms() {
-        return $this->rooms;
     }
     
     /**

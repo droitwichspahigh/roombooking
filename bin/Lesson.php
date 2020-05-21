@@ -7,8 +7,9 @@ class Lesson extends Event
     protected $day;
     protected $period;
     
-    public function __construct(string $name, Day $day, Period $period, array $staff)
+    public function __construct(int $id, string $name, Day $day, Period $period, array $staff)
     {
+        $this->id = $id;
         $this->name = $name;
         $this->staff = $staff;  
         $this->day = $day;

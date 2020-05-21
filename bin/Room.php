@@ -38,17 +38,19 @@ class Room
     }
     
     public function getEntry(Period $period, string $date) {
-        /* Let's look through the lessons */
         foreach ($this->timetableEntries as $e) {
-            if ($e instanceOf Lesson) {
+            if ($e instanceOf Unavailability) {
+                /* First, check Availability */
+                if ($e->includes($date, $period)) {
+                    return $e;
+                }
+            } else if ($e instanceOf Lesson) {
+                /* Let's look through the lessons */
                 if ($e->getDay()->getDate() === $date && $e->getPeriod() === $period) {
                     return $e;
                 }
-            } elseif ($e instanceOf Unavailability) {
-                
             }
         }
-        /* Now, we need to find out if it's Available */
         return null;
     }
 
