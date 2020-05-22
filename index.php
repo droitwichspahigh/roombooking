@@ -9,13 +9,9 @@ require "bin/head.php";
 
 $school = new School();
 
-/**
- * TODO this validation for dates is inadequate, as calendar fortnight isn't what we
- * want- we want today and next nine working days 
- */
 if (isset($_GET['date'])) {
     $date = strtotime($_GET['date']);
-    if ($date < strtotime('yesterday') || $date > strtotime('next fortnight')) {
+    if ($date < strtotime('today') || $date > strtotime($school->getTenWorkingDaysFromNow()->getDate())) {
         unset ($date);
     }
 }
@@ -45,7 +41,7 @@ $date = date("Y-m-d", $date);
               </li>
             </ul>
           </div>
-        </nav> 
+        </nav>
 		<h3 class="mb-3">Welcome to the <?= Config::site ?></h3>
 		<form method="GET">
     		<div class="form-group row">
@@ -59,9 +55,8 @@ $date = date("Y-m-d", $date);
 		/** @var Day $day */
 		$day = $school->getDay($date);
 		if ($day === null || $day->isTermDay() === false) {
-		    die ('<div class="alert alert-warning">' . $date . ' is not actually in term time.  Please choose a different date</div>');
+		    die ('<div class="alert alert-warning">' . $date . ' is not actually a working day.  Please choose a different date</div>');
 		}
-		
 		?>
 		<div class="table-responsive">
     		<table class="table table-striped table-bordered text-center">

@@ -8,10 +8,12 @@ class School
      */
     protected $rooms = [];
     protected $days = [];
+    protected $tenWorkingDaysFromNow = 0;
     protected $timetableQuery = [];
     protected $timetablePeriod = [];
     protected $calendarIds;
     protected $client;
+    protected $queryData = null;
     
     public function __construct()
     {
@@ -54,37 +56,41 @@ class School
     }
     
     /**
-     * So this is marvellous.
+     * This is the Big Kahuna of queries, that should get everything we need in one fetch.
      * 
-     * If I only use the REST API I'm going to have to make tens of connections-
-     * one per calendar entry ('lesson').
-     * 
-     * If I only use the GraphQL API, I can't find a way to get the calendar 'belonging'
-     * to a Room, and therefore get thousands of returns on the query, meaning I have
-     * a large download and many pages to go through.
-     * 
-     * So... until GraphQL allows Room (id_in: [ ]) { calendarEntryMapping }, I'm going to
-     * mix&match.  Yay.
-     * 
+     * Bonus is, we can serialise the Data from it, so it's easy to cache in session.
+     *
+     * @return array
      */
-    public function getTimetables() {
-        /* 
+    public function getQueryData() {
+        if (!is_null($this->queryData)) {
+            return $this->queryData;
+        }
+        
+        if (isset($_SESSION['School_queryData'])) {
+            $this->queryData = $_SESSION['School_queryData'];
+            return $this->queryData;
+        }
+        
+        Config::debug("School::getQueryData: no session cache data, requerying");
+        
+        /*
          * XXX We're going to look ahead by five weeks.
-         * 
+         *
          * The longest holidays (apart from the summer,
          * where you can't normally book in advance) are
          * two weeks, so that makes four weeks in advance
          * max we'll need.  We'll go for five, because
          * bank holidays can mess things up.
-         * 
+         *
          * Inefficient?  Meh.
-         * 
+         *
          */
         $end = date('Y-m-d', strtotime('5 weeks'));
         $lastMidnight = date('Y-m-d');
         $yesterday = date('Y-m-d', strtotime('yesterday'));
         /* You don't want to know how long this query took to construct :( */
-        $data = $this->client->rawQuery('
+        $this->queryData = $this->client->rawQuery('
 query {
     CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
         id
@@ -129,6 +135,26 @@ query {
         isGoodSchoolDay
     }
 }')->getData();
+        $_SESSION['School_queryData'] = $this->queryData;
+        return $this->queryData;
+    }
+    
+    /**
+     * So this is marvellous.
+     * 
+     * If I only use the REST API I'm going to have to make tens of connections-
+     * one per calendar entry ('lesson').
+     * 
+     * If I only use the GraphQL API, I can't find a way to get the calendar 'belonging'
+     * to a Room, and therefore get thousands of returns on the query, meaning I have
+     * a large download and many pages to go through.
+     * 
+     * So... until GraphQL allows Room (id_in: [ ]) { calendarEntryMapping }, I'm going to
+     * mix&match.  Yay.
+     * 
+     */
+    public function getTimetables() {
+        $data = $this->getQueryData();
         
         foreach ($data['TimetablePeriodGrouping'] as $p) {
             /* 
@@ -146,8 +172,17 @@ query {
         /* Sort timetablePeriods by starting time, not when they were entered! */
         ksort($this->timetablePeriod);
         
+        $tenDays = 10;
+        
         foreach ($data['AcademicCalendarDate'] as $d) {
-            $this->days[$d['id']] = new Day(date("Y-m-d", strtotime($d['startDate'])), $d['isGoodSchoolDay']);
+            $day = new Day(date("Y-m-d", strtotime($d['startDate'])), $d['isGoodSchoolDay']);
+            $this->days[$d['id']] = $day;
+            if ($d['isGoodSchoolDay']) {
+                $tenDays--;
+                if ($tenDays == 0) {
+                    $this->tenWorkingDaysFromNow = $day;
+                }
+            }
         }
         
         foreach ($data['CalendarEntryMapping'] as $d) {
@@ -155,7 +190,10 @@ query {
             if (isset($d['lesson']['location'])) {
                 $staff = [];
                 foreach ($d['lesson']['staff'] as $s) {
-                    $staff[$s['id']] = $s['displayName'];
+                    if (!isset($this->staff[$s['id']])) {
+                        $this->staff[$s['id']] = new Staff($s['id'], $s['displayName']);                    
+                    }
+                    $staff[$s['id']] = $this->staff[$s['id']];
                 }
                 
                 $startTime = date("H:i:s",   strtotime($d['lesson']['startDatetime']));
@@ -169,7 +207,7 @@ query {
                     die ("Hm, no Day for " . $d['lesson']['startDatetime']);
                 }
                 
-                $this->rooms[$d['lesson']['location']['id']]->addLesson(
+                $this->getRooms()[$d['lesson']['location']['id']]->addLesson(
                     new Lesson($d['lesson']['id'], $d['lesson']['displayName'], $day, $this->timetablePeriod[$startTime], $staff)
                 );
             }            
@@ -200,7 +238,7 @@ query {
         Config::debug("School::getCalendarIds: no session record or expired, looking up from Arbor");
         
         $this->calendarIds = [];
-        /* Let's find out which Calendars we need to query */
+        /* Let's find out which Calendars we need to query- these are the Rooms we should query */
         foreach (array_keys($this->getRooms()) as $rId) {
             /* We need the Academic calendar for Sessions (lessons) */ 
             foreach (['ACADEMIC'] as $type) {
@@ -213,6 +251,9 @@ query {
             }
         }
         
+        /* We also want the Calendar for the logged in user, so we'll get that too */
+        
+        
         $_SESSION['calendarIds'] = $this->calendarIds;
 
         return $this->calendarIds;        
@@ -224,6 +265,15 @@ query {
      */
     function getPeriods() {
         return $this->timetablePeriod;
+    }
+    
+    /**
+     * Give ten working days away- the cutoff for bookings
+     * 
+     * @return \Roombooking\Day
+     */
+    function getTenWorkingDaysFromNow() {
+        return $this->tenWorkingDaysFromNow;
     }
     
     /**

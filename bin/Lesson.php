@@ -25,7 +25,7 @@ class Lesson extends Event
      * @return string
      */
     public function strStaff() {
-        return implode(" & ", $this->staff);
+        return implode(" & ", array_map(function (Staff $s) {return $s->getName(); }, $this->staff));
     }
     
     public function getInfo() {
