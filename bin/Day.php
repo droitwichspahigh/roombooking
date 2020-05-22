@@ -6,16 +6,26 @@ class Day {
     protected $isTermDay;
     protected $date;
     
-    function __construct($date, $isTermDay) {
+    /**
+     * Store a date along with term date status
+     * 
+     * @param string $date in the format yyyy-mm-dd
+     * @param int $isTermDay 1 if term day, otherwise holiday/weekend
+     */
+    function __construct(string $date, int $isTermDay) {
         $this->date = $date;
-        $this->isTermday = $isTermDay ? true : false;
+        if ($isTermDay === 1) {
+            $this->isTermday = true;
+        } else {
+            $this->isTermDay = false;
+        }
     }
     
     function getDate() {
         return $this->date;
     }
     
-    function isTermDay() {
+    public function isTermDay() {
         return $this->isTermDay;
     }
 }
