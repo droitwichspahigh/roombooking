@@ -12,7 +12,9 @@ class Staff
         $this->calendarId = $calendarId;
     }
     
+    public function getId() { return $this->id; }
     public function getName() { return $this->name; }
+    public function getCalendar() { return $this->calendarId; }
 
     function __destruct()
     {}
