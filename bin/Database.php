@@ -15,7 +15,7 @@ class Database
      * @param boolean $firstconnection
      */
     function __construct($firstconnection = FALSE) {
-        $details = Config::$db;
+        $details = Config::db;
         if ($firstconnection) {
             $this->conn = new mysqli($details['host'], $details['user'], $details['password']);
         } else {
