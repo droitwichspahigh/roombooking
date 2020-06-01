@@ -14,6 +14,7 @@ class School
     protected $calendarIds;
     protected $client;
     protected $queryData = null;
+    protected $staff = null;
     
     public function __construct()
     {
@@ -187,7 +188,12 @@ query {
         
         foreach ($data['CalendarEntryMapping'] as $d) {
             // First deal with lessons
-            if (isset($d['lesson']['location'])) {
+            if (isset($d['lesson']['location'])) {                
+                if (!array_key_exists($d['lesson']['location']['id'], $this->getRooms())) {
+                    // This must be a non-ICT room, so a calendared lesson
+                    continue;
+                }
+                
                 $staff = [];
                 foreach ($d['lesson']['staff'] as $s) {
                     if (!isset($this->staff[$s['id']])) {
@@ -210,7 +216,7 @@ query {
                 $this->getRooms()[$d['lesson']['location']['id']]->addLesson(
                     new Lesson($d['lesson']['id'], $d['lesson']['displayName'], $day, $this->timetablePeriod[$startTime], $staff)
                 );
-            }            
+            }
         }
         foreach ($data['RoomUnavailability'] as $u) {
             // Then deal with availability
@@ -252,7 +258,43 @@ query {
         }
         
         /* We also want the Calendar for the logged in user, so we'll get that too */
+        /* TODO Remove this, it should be in auth.php or similar */
+        //$auth_user = preg_replace('/@' . Config::site_emaildomain . '/', "", $_SERVER['PHP_AUTH_USER']);
+        $auth_user = 'abbie.young';
         
+        Config::debug("School::getCalendarIds: looking for email");
+        $emailAddress = $auth_user . "@" . Config::site_emaildomain;
+        $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::EMAIL_ADDRESS);
+        $query->addPropertyFilter(\Arbor\Model\EmailAddress::EMAIL_ADDRESS, \Arbor\Query\Query::OPERATOR_EQUALS, $emailAddress);
+        $emailAddress = \Arbor\Model\EmailAddress::query($query);
+        if (!isset($emailAddress[0])) {
+            die("Your email address " . $emailAddress . '@' . Config::$site_emaildomain ." appears unrecognised.");
+        }
+        if (isset($emailAddress[1])) {
+            die("Your email address appears to have more than one owner.  This cannot possibly be right");
+        }
+        
+        $emailAddress = \Arbor\Model\EmailAddress::retrieve($emailAddress[0]->getResourceId());
+
+        Config::debug("School::getCalendarIds: query complete");
+        if ($emailAddress->getEmailAddressOwner()->getResourceType() != \Arbor\Resource\ResourceType::STAFF) {
+            die("Your email address " . $emailAddress->getEmailAddress() . " appears not to belong to a member of staff.");
+        }
+        
+        Config::debug("School::getCalendarIds: email found");
+        $s = $emailAddress->getEmailAddressOwner()->getProperties();
+                
+        /* OK, now we need to get the Calendar for this staff member */
+        
+        $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
+        $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/staff/" . $s['id']);
+        $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
+            \Arbor\Query\Query::OPERATOR_EQUALS,
+            'ACADEMIC');
+        $c = (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
+        array_push($this->calendarIds, $c);
+        
+        $this->staff[$s['id']] = new Staff($s['id'], $s['person']->getPreferredFirstName() . $s['person']->getPreferredLastName(), $c);
         
         $_SESSION['calendarIds'] = $this->calendarIds;
 

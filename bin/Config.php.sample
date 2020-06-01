@@ -6,6 +6,7 @@ class Config {
     const site = "Droitwich Spa High School & Sixth Form Centre Room Booking Service";
     const site_docroot = "/home/crees/public_html/roombooking/roombooking";
     const site_url = "https://www.bayofrum.net/roombooking/roombooking";
+    const site_emaildomain = "arbor-mail.com"; 
         
     const db = array(
         'host' => "localhost:3306",
