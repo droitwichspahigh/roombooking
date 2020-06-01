@@ -1,11 +1,6 @@
-<?php namespace Roombooking; ?>
-<!doctype html>
-<html>
-<head>
-<?php
+<?php namespace Roombooking;
 
 require "bin/classes.php";
-require "bin/head.php";
 
 $school = new School();
 
@@ -21,6 +16,10 @@ if (!isset($date)) {
 $date = date("Y-m-d", $date);
 
 ?>
+<!doctype html>
+<html>
+<head>
+<?php require "bin/head.php"; ?>
 </head>
 <body>
 	<div class="container">
@@ -80,7 +79,7 @@ $date = date("Y-m-d", $date);
     			         if (is_null($e)) {
     			             /* TODO Get the teacher's lesson then and there */
     			             
-    			             echo "Bookable!";
+    			             echo "FREE";
     			         } else {
     			             echo $e->getInfo();
     			         }
