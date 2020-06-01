@@ -14,7 +14,11 @@ class Staff
     
     public function getId() { return $this->id; }
     public function getName() { return $this->name; }
-    public function getCalendar() { return $this->calendarId; }
+    public function getCalendarId() { return $this->calendarId; }
+    
+    public function getLesson($date, Period $period) {
+        
+    }
 
     function __destruct()
     {}

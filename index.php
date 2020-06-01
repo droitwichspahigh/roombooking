@@ -65,7 +65,7 @@ $date = date("Y-m-d", $date);
     					<th>&nbsp;</th>
     					<?php
     					 /** @var \RoomBooking\Room $r */
-    					 foreach ($school->getRooms() as $r) {
+    					 foreach ($school->getIctRooms() as $r) {
     				        echo "<th>" . $r->getName() . "</th>";
     				     }
     				    ?>
@@ -74,10 +74,12 @@ $date = date("Y-m-d", $date);
     			<?php 
     			 foreach ($school->getPeriods() as $p) {
     			     echo "<tr><th>" . $p->getName() . "</th>";
-    			     foreach ($school->getRooms() as $r) {
+    			     foreach ($school->getIctRooms() as $r) {
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
+    			             /* TODO Get the teacher's lesson then and there */
+    			             
     			             echo "Bookable!";
     			         } else {
     			             echo $e->getInfo();

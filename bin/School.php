@@ -40,12 +40,29 @@ class School
         
         Config::debug("School::getRooms: no session data, fetching");
         
-        /* First, we find out which rooms we need */
+        /* First, we find out the rooms */
         $result = $this->client->rawQuery(
-            '{ RoomRoomFeature (roomFeature__roomFeatureName: "'. Config::roomFeatureName . '") { room { shortName roomName displayName } } }');
+            '{
+                IctRoom: RoomRoomFeature (roomFeature__roomFeatureName: "'. Config::roomFeatureName . '") {
+                    room {
+                        id
+                        roomName
+                    }
+                }
+                AllRoom: Room {
+                    id
+                    roomName
+                }
+            }');
         
-        foreach ($result->getData()['RoomRoomFeature'] as $r) {
-            $this->rooms[$r['room']['id']] = new Room($r['room']['roomName']);
+        foreach ($result->getData()['IctRoom'] as $r) {
+            $this->rooms[$r['room']['id']] = new Room($r['room']['roomName'], true);
+        }
+        
+        foreach ($result->getData()['AllRoom'] as $r) {
+            if (!array_key_exists($r['id'], $this->rooms)) {
+                $this->rooms[$r['id']] = new Room($r['roomName'], false);
+            }
         }
         
         /* It is most natural to sort Rooms by name and not ID */
@@ -54,6 +71,16 @@ class School
         $_SESSION['rooms'] = $this->rooms;
         
         return $this->rooms;
+    }
+    
+    public function getIctRooms() {
+        $ictRooms = [];
+        foreach ($this->getRooms() as $id => $r) {
+            if ($r->isIctRoom()) {
+                $ictRooms[$id] = $r;
+            } 
+        }
+        return $ictRooms;
     }
     
     /**
@@ -185,11 +212,11 @@ query {
                 }
             }
         }
-        
+
         foreach ($data['CalendarEntryMapping'] as $d) {
             // First deal with lessons
             if (isset($d['lesson']['location'])) {                
-                if (!array_key_exists($d['lesson']['location']['id'], $this->getRooms())) {
+                if (!$this->getRooms()[$d['lesson']['location']['id']]->isIctRoom()) {
                     // This must be a non-ICT room, so a calendared lesson
                     continue;
                 }

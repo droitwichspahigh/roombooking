@@ -4,11 +4,13 @@ namespace Roombooking;
 class Room
 {
     protected $name;
+    protected $isIctRoom;
     protected $timetableEntries = [];
 
-    public function __construct(string $name)
+    public function __construct(string $name, bool $isIctRoom = false)
     {
         $this->name = $name;
+        $this->isIctRoom = $isIctRoom;
     }
     
     /**
@@ -22,6 +24,10 @@ class Room
     
     public function getName() {
         return ($this->name);
+    }
+    
+    public function isIctRoom() {
+        return ($this->isIctRoom);
     }
     
     /**
