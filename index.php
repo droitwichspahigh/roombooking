@@ -3,6 +3,7 @@
 require "bin/classes.php";
 
 $school = new School();
+$db = new Database();
 
 if (isset($_GET['date'])) {
     $date = strtotime($_GET['date']);
@@ -19,7 +20,13 @@ $date = date("Y-m-d", $date);
 <!doctype html>
 <html>
 <head>
-<?php require "bin/head.php"; ?>
+<?php
+require "bin/head.php"; 
+
+if (isset($_GET['period']) && isset($_GET['roomId'])) {
+    require "bin/makebooking.php";
+}
+?>
 </head>
 <body>
 	<div class="container">
@@ -70,18 +77,26 @@ $date = date("Y-m-d", $date);
     				    ?>
     				</tr>
     			</thead>
-    			<?php 
+    			<?php
+    			 /* Fetch the lessons from the Database */
+                 $bookedLessons = [];
+    	       	 foreach ($db->dosql("SELECT lesson_id FROM roomchanges;")->fetch_all(MYSQLI_NUM) as $r) {
+    			     array_push($bookedLessons, $r[0]);
+    			 }
     			 foreach ($school->getPeriods() as $p) {
     			     echo "<tr><th>" . $p->getName() . "</th>";
-    			     foreach ($school->getIctRooms() as $r) {
+    			     foreach ($school->getIctRooms() as $rId => $r) {
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
-    			             /* TODO Get the teacher's lesson then and there */
-    			             
-    			             echo "FREE";
+    			             echo "<a href=\"?period=" . urlencode($p->getStartTime()) . "&roomId=" . $rId . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
     			         } else {
-    			             echo $e->getInfo();
+    			             $info = $e->getInfo();
+    			             /* Is this my booking? */
+    			             if (in_array($e->getId(), $bookedLessons)) {
+    			                 $info = "<a href=\"?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
+    			             }
+    			             echo $info;
     			         }
     			     }
     			     echo "</tr>";

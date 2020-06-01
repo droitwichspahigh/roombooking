@@ -285,6 +285,14 @@ query {
         }
         
         /* We also want the Calendar for the logged in user, so we'll get that too */
+        array_push($this->calendarIds, $this->getStaffCalendarId($this->getLoggedInStaffId()));
+        
+        $_SESSION['calendarIds'] = $this->calendarIds;
+        
+        return $this->calendarIds;        
+    }
+
+    function getLoggedInStaffId() {
         /* TODO Remove this, it should be in auth.php or similar */
         //$auth_user = preg_replace('/@' . Config::site_emaildomain . '/', "", $_SERVER['PHP_AUTH_USER']);
         $auth_user = 'abbie.young';
@@ -302,30 +310,28 @@ query {
         }
         
         $emailAddress = \Arbor\Model\EmailAddress::retrieve($emailAddress[0]->getResourceId());
-
+        
         Config::debug("School::getCalendarIds: query complete");
+
         if ($emailAddress->getEmailAddressOwner()->getResourceType() != \Arbor\Resource\ResourceType::STAFF) {
             die("Your email address " . $emailAddress->getEmailAddress() . " appears not to belong to a member of staff.");
         }
         
         Config::debug("School::getCalendarIds: email found");
         $s = $emailAddress->getEmailAddressOwner()->getProperties();
-                
-        /* OK, now we need to get the Calendar for this staff member */
         
+        $this->staff[$s['id']] = new Staff($s['id'], $s['person']->getPreferredFirstName() . $s['person']->getPreferredLastName());
+        
+        return ($s['id']);
+    }
+    
+    function getStaffCalendarId(int $staffId) {
         $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
-        $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/staff/" . $s['id']);
+        $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/staff/" . $staffId);
         $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
             \Arbor\Query\Query::OPERATOR_EQUALS,
             'ACADEMIC');
-        $c = (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
-        array_push($this->calendarIds, $c);
-        
-        $this->staff[$s['id']] = new Staff($s['id'], $s['person']->getPreferredFirstName() . $s['person']->getPreferredLastName(), $c);
-        
-        $_SESSION['calendarIds'] = $this->calendarIds;
-
-        return $this->calendarIds;        
+        return (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
     }
     
     /**
