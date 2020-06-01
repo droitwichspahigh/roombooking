@@ -272,7 +272,7 @@ query {
         
         $this->calendarIds = [];
         /* Let's find out which Calendars we need to query- these are the Rooms we should query */
-        foreach (array_keys($this->getRooms()) as $rId) {
+        foreach (array_keys($this->getIctRooms()) as $rId) {
             /* We need the Academic calendar for Sessions (lessons) */ 
             foreach (['ACADEMIC'] as $type) {
                 $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
