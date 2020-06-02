@@ -140,7 +140,7 @@ query {
             }
         }
     }
-    RoomUnavailability (room__id_in: [' . implode (",", array_keys($this->getRooms())). '] ){
+    RoomUnavailability (room__id_in: [' . implode (",", array_keys($this->getIctRooms())). '] ){
         room {
             id
         }
