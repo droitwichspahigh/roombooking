@@ -22,10 +22,6 @@ $date = date("Y-m-d", $date);
 <head>
 <?php
 require "bin/head.php"; 
-
-if (isset($_GET['period']) && isset($_GET['roomId'])) {
-    require "bin/makebooking.php";
-}
 ?>
 </head>
 <body>
@@ -89,12 +85,12 @@ if (isset($_GET['period']) && isset($_GET['roomId'])) {
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
-    			             echo "<a href=\"?period=" . urlencode($p->getStartTime()) . "&roomId=" . $rId . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
+    			             echo "<a href=\"makebooking.php?period=" . urlencode($p->getStartTime()) . "&roomId=" . $rId . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
     			         } else {
     			             $info = $e->getInfo();
     			             /* Is this my booking? */
     			             if (in_array($e->getId(), $bookedLessons)) {
-    			                 $info = "<a href=\"?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
+    			                 $info = "<a href=\"makebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
     			             }
     			             echo $info;
     			         }

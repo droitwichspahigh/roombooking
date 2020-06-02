@@ -1,10 +1,12 @@
 <?php
 namespace Roombooking;
 
-/* Included from index.php */
+$school = new School();
+$db = new Database();
 
 $startTime = $_GET['period'];
 $roomId = $_GET['roomId'];
+$date = $_GET['date'];
 $client = new GraphQLClient();
 
 /** @var string $date Defined in index.php */
@@ -58,6 +60,4 @@ $session->save();
 /* Need to invalidate the Query data now, as timetable is new */
 unset($_SESSION['School_queryData']);
 
-die($school->getStaffCalendarId($school->getLoggedInStaffId()));
-
-die("<pre>" . print_r($queryData, true));
+header("location: index.php?date=$date");
