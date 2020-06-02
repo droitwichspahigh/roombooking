@@ -17,6 +17,7 @@ if (Config::maintenance) {
         id INT UNSIGNED NOT NULL AUTO_INCREMENT,
         lesson_id INT NOT NULL,
         oldroom_id INT NOT NULL,
+        booking_calendar INT NOT NULL,
         CONSTRAINT pk PRIMARY KEY (id)
     );");
 }

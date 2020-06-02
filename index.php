@@ -21,6 +21,10 @@ if (isset ($_SESSION['thereIsNoLessonAtThisTime'])) {
     unset ($_SESSION['thereIsNoLessonAtThisTime']);
     /* Do a popup here about there being no lesson for the teacher! */
 }
+if (isset ($_SESSION['thatIsNotYourLesson'])) {
+    unset ($_SESSION['thatIsNotYourLesson']);
+    /* Do a popup here about there not being allowed to unbook someone else's booking! */
+}
 
 ?>
 <!doctype html>
@@ -81,8 +85,8 @@ require "bin/head.php";
     			<?php
     			 /* Fetch the lessons from the Database */
                  $bookedLessons = [];
-    	       	 foreach ($db->dosql("SELECT lesson_id FROM roomchanges;")->fetch_all(MYSQLI_NUM) as $r) {
-    			     array_push($bookedLessons, $r[0]);
+    	       	 foreach ($db->dosql("SELECT * FROM roomchanges;")->fetch_all(MYSQLI_ASSOC) as $r) {
+    			     $bookedLessons[$r['lesson_id']] = $r['booking_calendar'];
     			 }
     			 foreach ($school->getPeriods() as $p) {
     			     echo "<tr><th>" . $p->getName() . "</th>";
@@ -94,7 +98,7 @@ require "bin/head.php";
     			         } else {
     			             $info = $e->getInfo();
     			             /* Is this my booking? */
-    			             if (in_array($e->getId(), $bookedLessons)) {
+    			             if (isset ($bookedLessons[$e->getId()]) && $bookedLessons[$e->getId()] == $school->getCalendarIds()[0]) {
     			                 $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
     			             }
     			             echo $info;

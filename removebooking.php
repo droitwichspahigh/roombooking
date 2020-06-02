@@ -9,13 +9,24 @@ $db = new Database();
 $lessonId = $_GET['cancelBooking'];
 $date = $_GET['date'];
 
-$roomId = $db->dosql("SELECT oldroom_id FROM roomchanges WHERE lesson_id = '$lessonId';")->fetch_array(MYSQLI_NUM)[0];
+/* Is this actually my booking? */
+$checkQuery = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR_ENTRY_MAPPING);
+$checkQuery->addPropertyFilter(\Arbor\Model\CalendarEntryMapping::CALENDAR, \Arbor\Query\Query::OPERATOR_EQUALS, '/rest-v2/calendars/' . $school->getCalendarIds()[0]);
+$checkQuery->addPropertyFilter(\Arbor\Model\CalendarEntryMapping::EVENT, \Arbor\Query\Query::OPERATOR_EQUALS, '/rest-v2/sessions/' . $lessonId);
+if (!isset ((\Arbor\Model\CalendarEntryMapping::query($checkQuery))[0])) {
+    $_SESSION['thatIsNotYourLesson'] = true;
+    header("location: index.php?date=$date");
+    die();
+}
+
+$roomDbRow = $db->dosql("SELECT * FROM roomchanges WHERE lesson_id = '$lessonId';")->fetch_array(MYSQLI_ASSOC);
 
 $session = \Arbor\Model\Session::retrieve($lessonId);
-$session->setLocation(\Arbor\Model\Room::retrieve($roomId));
+$session->setLocation(\Arbor\Model\Room::retrieve($roomDbRow['oldroom_id']));
 $session->save();
+
+$db->dosql("DELETE FROM roomchanges WHERE id = '" . $roomDbRow['id'] . "';");
 
 /* Need to invalidate the Query data now, as timetable is new */
 unset($_SESSION['School_queryData']);
-
 header("location: index.php?date=$date");

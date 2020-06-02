@@ -30,7 +30,7 @@ if (!class_exists("Config")) {
      * We start the session timer on creation, and destroy it after that time.
      * We don't allow keepalive or the data will become stale.
      */
-    $timeout_duration = 300;
+    $timeout_duration = 600;
     
     session_start(['gc_maxlifetime' => $timeout_duration, 'cookie_lifetime' => $timeout_duration]);
     

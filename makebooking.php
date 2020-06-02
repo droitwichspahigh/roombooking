@@ -61,7 +61,8 @@ $oldLessonRoomId= $staffCal[0]['lesson']['location']['id'];
 /* Store the old room in the database */
 
 $db = new Database();
-$db->dosql("INSERT INTO roomchanges (lesson_id, oldroom_id) VALUES ($LessonId, $oldLessonRoomId);");
+$myCalendarId = $school->getCalendarIds()[0];
+$db->dosql("INSERT INTO roomchanges (lesson_id, oldroom_id, booking_calendar) VALUES ($LessonId, $oldLessonRoomId, $myCalendarId);");
 
 $session = \Arbor\Model\Session::retrieve($LessonId);
 $session->setLocation(\Arbor\Model\Room::retrieve($roomId));
