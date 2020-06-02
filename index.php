@@ -50,7 +50,7 @@ require "bin/head.php";
             </ul>
           </div>
         </nav>
-		<h3 class="mb-3">Welcome to the <?= Config::site ?></h3>
+		<h3 class="mb-4"><?= Config::site ?></h3>
 		<form method="GET">
     		<div class="form-group row">
     			<label for="date-input" class="col-2 col-form-label">Date</label>
@@ -60,7 +60,6 @@ require "bin/head.php";
     		</div>
 		</form>
 		<?php
-		/** @var Day $day */
 		$day = $school->getDay($date);
 		if ($day === null || $day->isTermDay() === false) {
 		    die ('<div class="alert alert-warning">' . $date . ' is not actually a working day.  Please choose a different date</div>');
@@ -96,7 +95,7 @@ require "bin/head.php";
     			             $info = $e->getInfo();
     			             /* Is this my booking? */
     			             if (in_array($e->getId(), $bookedLessons)) {
-    			                 $info = "<a href=\"makebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
+    			                 $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
     			             }
     			             echo $info;
     			         }
