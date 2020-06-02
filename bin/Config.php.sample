@@ -30,7 +30,7 @@ class Config {
     /* No user serviceable parts beyond this point */
     
     static function debug($msg) {
-        if (self::debug) {
+        if (defined ("self::debug") && self::debug) {
             echo "<br />" . substr(round(microtime(true) * 1000), 6) . " $msg\n";
         }
     }
