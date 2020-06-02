@@ -45,7 +45,6 @@ if (isset($queryData['roomCal'][0])) {
 }
 
 if (!isset($staffCal[0])) {
-    /* TODO don't die! */
     $_SESSION['thereIsNoLessonAtThisTime'] = true;
     header("location: index.php?date=$date");
     die();

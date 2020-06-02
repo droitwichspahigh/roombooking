@@ -16,6 +16,12 @@ if (!isset($date)) {
 }
 $date = date("Y-m-d", $date);
 
+/* OK, now let's deal with some popups */
+if (isset ($_SESSION['thereIsNoLessonAtThisTime'])) {
+    unset ($_SESSION['thereIsNoLessonAtThisTime']);
+    /* Do a popup here about there being no lesson for the teacher! */
+}
+
 ?>
 <!doctype html>
 <html>
