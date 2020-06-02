@@ -1,6 +1,8 @@
 <?php
 namespace Roombooking;
 
+require "bin/classes.php";
+
 $school = new School();
 $db = new Database();
 
@@ -16,7 +18,7 @@ $client = new GraphQLClient();
 
 $queryData = $client->rawQuery('
 query {
-    CalendarEntryMapping (calendar__id: ' . $school->getStaffCalendarId($school->getLoggedInStaffId()) . ' startDatetime: "' . $date . " " . $startTime . '") {
+    staffCal: CalendarEntryMapping (calendar__id: ' . $school->getStaffCalendarId($school->getLoggedInStaffId()) . ' startDatetime: "' . $date . " " . $startTime . '") {
         id
         lesson: event {
             __typename
@@ -31,20 +33,31 @@ query {
             }
         }
     }
-}')->getData()['CalendarEntryMapping'];
+    roomCal: CalendarEntryMapping (calendar__id: ' . $school->getCalendarIds()[$roomId] . ' startDatetime: "' . $date . " " . $startTime . '") {
+        id
+    }
+}')->getData();
 
-if (!isset($queryData[0])) {
-    /* TODO don't die! */
-    die ("No lesson");
+$staffCal = $queryData['staffCal'];
+
+if (isset($queryData['roomCal'][0])) {
+    die ("Sorry, appears someone has pipped you to the post...");
 }
 
-if (isset($queryData[1])) {
+if (!isset($staffCal[0])) {
+    /* TODO don't die! */
+    $_SESSION['thereIsNoLessonAtThisTime'] = true;
+    header("location: index.php?date=$date");
+    die();
+}
+
+if (isset($staffCal[1])) {
     /* There is a conflict, that's weird */
     die ("Conflicting lessons?");
 }
 
-$LessonId = $queryData[0]['lesson']['id'];
-$oldLessonRoomId= $queryData[0]['lesson']['location']['id'];
+$LessonId = $staffCal[0]['lesson']['id'];
+$oldLessonRoomId= $staffCal[0]['lesson']['location']['id'];
 
 /* Store the old room in the database */
 
@@ -55,7 +68,7 @@ $db->dosql("INSERT INTO roomchanges (lesson_id, oldroom_id) VALUES ($LessonId, $
 
 $session = \Arbor\Model\Session::retrieve($LessonId);
 $session->setLocation(\Arbor\Model\Room::retrieve($roomId));
-$session->save();
+//$session->save();
 
 /* Need to invalidate the Query data now, as timetable is new */
 unset($_SESSION['School_queryData']);

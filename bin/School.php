@@ -257,7 +257,10 @@ query {
             );
         }
     }
-    
+    /**
+     *
+     * @return int[] Array of calendar IDs.  The zeroth element is the logged in user's Calendar, and the room calendars are stored under Room ID
+     */
     function getCalendarIds() {
         if (!empty($this->calendarIds)) {
             return $this->calendarIds;
@@ -280,12 +283,12 @@ query {
                 $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
                     \Arbor\Query\Query::OPERATOR_EQUALS,
                     $type);
-                array_push($this->calendarIds, (\Arbor\Model\Calendar::query($query))[0]->getResourceId());
+                $this->calendarIds[$rId] = (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
             }
         }
         
         /* We also want the Calendar for the logged in user, so we'll get that too */
-        array_push($this->calendarIds, $this->getStaffCalendarId($this->getLoggedInStaffId()));
+        $this->calendarIds[0] = $this->getStaffCalendarId($this->getLoggedInStaffId());
         
         $_SESSION['calendarIds'] = $this->calendarIds;
         
@@ -295,7 +298,8 @@ query {
     function getLoggedInStaffId() {
         /* TODO Remove this, it should be in auth.php or similar */
         //$auth_user = preg_replace('/@' . Config::site_emaildomain . '/', "", $_SERVER['PHP_AUTH_USER']);
-        $auth_user = 'abbie.young';
+        //$auth_user = 'abbie.young';
+        $auth_user = 'henry.allen';
         
         Config::debug("School::getCalendarIds: looking for email");
         $emailAddress = $auth_user . "@" . Config::site_emaildomain;
