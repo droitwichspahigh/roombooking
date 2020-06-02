@@ -64,11 +64,9 @@ $oldLessonRoomId= $staffCal[0]['lesson']['location']['id'];
 $db = new Database();
 $db->dosql("INSERT INTO roomchanges (lesson_id, oldroom_id) VALUES ($LessonId, $oldLessonRoomId);");
 
-/* TODO Write the room change to Arbor */
-
 $session = \Arbor\Model\Session::retrieve($LessonId);
 $session->setLocation(\Arbor\Model\Room::retrieve($roomId));
-//$session->save();
+$session->save();
 
 /* Need to invalidate the Query data now, as timetable is new */
 unset($_SESSION['School_queryData']);
