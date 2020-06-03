@@ -20,10 +20,12 @@ $date = date("Y-m-d", $date);
 if (isset ($_SESSION['thereIsNoLessonAtThisTime'])) {
     unset ($_SESSION['thereIsNoLessonAtThisTime']);
     /* Do a popup here about there being no lesson for the teacher! */
+    $modalmsg = "You don't appear to have a lesson scheduled during this period.";
 }
 if (isset ($_SESSION['thatIsNotYourLesson'])) {
     unset ($_SESSION['thatIsNotYourLesson']);
     /* Do a popup here about there not being allowed to unbook someone else's booking! */
+    $modalmsg = "You can't unbook someone else's lesson!";
 }
 
 ?>
@@ -35,24 +37,49 @@ require "bin/head.php";
 ?>
 </head>
 <body>
-	<div class="container">
-		 <nav class="navbar navbar-expand">
-          <!-- Brand -->
-          <a class="navbar-brand">Actions</a>
-        
-          <!-- Toggler/collapsibe Button -->
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon">collapse</span>
-          </button>
-        
-          <!-- Navbar links -->
-          <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="?date=<?= $date; ?>&session_destroy=<?= $_SESSION['SESSION_CREATIONTIME']; ?>">Rescan Arbor for changes</a>
-              </li>
-            </ul>
+<?php
+if (isset($modalmsg)) {
+    echo <<< EOF
+    <div class="modal fade" id="msgBox" tabindex="-1" role="dialog" aria-labelledby="msgBoxLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="msgBoxLabel">There is a problem</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
+          <div class="modal-body">
+            $modalmsg
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>$('#msgBox').modal('show')</script>
+EOF;
+}
+?>	
+	<div class="container">
+		<nav class="navbar navbar-expand">
+            <!-- Brand -->
+            <a class="navbar-brand">Actions</a>
+            
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            	<span class="navbar-toggler-icon">collapse</span>
+            </button>
+            
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            	<ul class="navbar-nav">
+            		<li class="nav-item">
+                		<a class="nav-link" href="?date=<?= $date; ?>&session_destroy=<?= $_SESSION['SESSION_CREATIONTIME']; ?>">Rescan Arbor for changes</a>
+                	</li>
+            	</ul>
+        	</div>
         </nav>
 		<h3 class="mb-4"><?= Config::site ?></h3>
 		<form method="GET">
