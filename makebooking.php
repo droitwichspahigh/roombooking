@@ -36,7 +36,6 @@ query {
                 }
                 displayName
                 startDatetime
-                endDatetime
                 staff {
                     displayName
                 }

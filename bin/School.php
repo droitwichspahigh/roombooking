@@ -7,12 +7,9 @@ class School
      * @var array(\Roombooking\Room) $rooms Contains all of the ICT rooms in the school
      */
     protected $rooms = [];
-    protected $days = [];
-    protected $tenWorkingDaysFromNow = 0;
     protected $timetableQuery = [];
     protected $timetablePeriod = [];
     protected $client;
-    protected $queryData = null;
     protected $staff = null;
     
     public function __construct()
@@ -25,6 +22,8 @@ class School
      * @return \Roombooking\Staff
      */
     public function getCurrentlyLoggedInStaff() {
+        /* Depends on $auth_user */
+        
         if (isset ($_SESSION['currentlyLoggedInStaffId'])) {
             return $this->staff[$_SESSION['currentlyLoggedInStaffId']];
         }
@@ -34,30 +33,26 @@ class School
         //$auth_user = 'abbie.young';
         $auth_user = 'henry.allen';
         
-        Config::debug("School::getRoomCalendarIds: looking for email");
+        Config::debug("School::getCurrentlyLoggedInStaff: looking for email");
         $emailAddress = $auth_user . "@" . Config::site_emaildomain;
-        $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::EMAIL_ADDRESS);
-        $query->addPropertyFilter(\Arbor\Model\EmailAddress::EMAIL_ADDRESS, \Arbor\Query\Query::OPERATOR_EQUALS, $emailAddress);
-        $emailAddress = \Arbor\Model\EmailAddress::query($query);
+        
+        $emailQuery = "{ EmailAddress (emailAddress: \"$emailAddress\") { emailAddressOwner { ... on Staff { id entityType displayName } }}}";
+        $emailAddress = $this->client->rawQuery($emailQuery)->getData()['EmailAddress'];
+        Config::debug("School::getCurrentlyLoggedInStaff: query complete");
         if (!isset($emailAddress[0])) {
-            die("Your email address " . $emailAddress . '@' . Config::$site_emaildomain ." appears unrecognised.");
+            die("Your email address " . $auth_user . '@' . Config::$site_emaildomain ." appears unrecognised.");
         }
         if (isset($emailAddress[1])) {
             die("Your email address appears to have more than one owner.  This cannot possibly be right");
         }
-        
-        $emailAddress = \Arbor\Model\EmailAddress::retrieve($emailAddress[0]->getResourceId());
-        
-        Config::debug("School::getCalendarIds: query complete");
-        
-        if ($emailAddress->getEmailAddressOwner()->getResourceType() != \Arbor\Resource\ResourceType::STAFF) {
-            die("Your email address " . $emailAddress->getEmailAddress() . " appears not to belong to a member of staff.");
+        if ($emailAddress[0]['emailAddressOwner']['entityType'] != 'Staff') {
+            die("Your email address " . $auth_user . '@' . Config::$site_emaildomain ." appears not to belong to a member of staff.");
         }
+        Config::debug("School::getCurrentlyLoggedInStaff: email found");
+        $s = $emailAddress[0]['emailAddressOwner'];
         
-        Config::debug("School::getCalendarIds: email found");
-        $s = $emailAddress->getEmailAddressOwner()->getProperties();
-        
-        $this->staff[$s['id']] = new Staff($s['id'], $s['person']->getPreferredFirstName() . " " . $s['person']->getPreferredLastName());
+        /* May as well, save a few microseconds if we need it later */
+        $this->staff[$s['id']] = new Staff($s['id'], $s['displayName']);
         
         $_SESSION['currentlyLoggedInStaffId'] = $s['id'];
         
@@ -136,13 +131,8 @@ class School
      * @return array
      */
     public function getQueryData() {
-        if (!is_null($this->queryData)) {
-            return $this->queryData;
-        }
-        
         if (isset($_SESSION['School_queryData'])) {
-            $this->queryData = $_SESSION['School_queryData'];
-            return $this->queryData;
+            return $_SESSION['School_queryData'];
         }
         
         Config::debug("School::getQueryData: no session cache data, requerying");
@@ -163,7 +153,7 @@ class School
         $lastMidnight = date('Y-m-d');
         $yesterday = date('Y-m-d', strtotime('yesterday'));
         /* You don't want to know how long this query took to construct :( */
-        $this->queryData = $this->client->rawQuery('
+        $_SESSION['School_queryData'] = $this->client->rawQuery('
 query {
     CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
         id
@@ -177,7 +167,6 @@ query {
                     }
                 }
                 startDatetime
-                endDatetime
                 displayName
                 staff {
                     displayName
@@ -208,8 +197,7 @@ query {
         isGoodSchoolDay
     }
 }')->getData();
-        $_SESSION['School_queryData'] = $this->queryData;
-        return $this->queryData;
+        return $_SESSION['School_queryData'];
     }
     
     public function resetQuery() {
@@ -231,9 +219,7 @@ query {
      * 
      */
     public function getTimetables() {
-        $data = $this->getQueryData();
-        
-        foreach ($data['TimetablePeriodGrouping'] as $p) {
+        foreach ($this->getQueryData()['TimetablePeriodGrouping'] as $p) {
             /* 
              * XXX This assumes that Periods are the same regardless of day,
              *     so places with special Wednesdays or Fridays for example
@@ -245,24 +231,11 @@ query {
             $this->timetablePeriod[$p['timetablePeriods'][0]['startTime']] =
                 new Period($p['shortName'], $p['timetablePeriods'][0]['startTime'], $p['timetablePeriods'][0]['endTime']);
         }
-        
+    
         /* Sort timetablePeriods by starting time, not when they were entered! */
         ksort($this->timetablePeriod);
         
-        $tenDays = 10;
-        
-        foreach ($data['AcademicCalendarDate'] as $d) {
-            $day = new Day(date("Y-m-d", strtotime($d['startDate'])), $d['isGoodSchoolDay']);
-            $this->days[$d['id']] = $day;
-            if ($d['isGoodSchoolDay']) {
-                $tenDays--;
-                if ($tenDays == 0) {
-                    $this->tenWorkingDaysFromNow = $day;
-                }
-            }
-        }
-
-        foreach ($data['CalendarEntryMapping'] as $d) {
+        foreach ($this->getQueryData()['CalendarEntryMapping'] as $d) {
             // First deal with lessons
             if (isset($d['lesson']['location'])) {                
                 if (!$this->getRooms()[$d['lesson']['location']['id']]->isIctRoom()) {
@@ -294,7 +267,7 @@ query {
                 );
             }
         }
-        foreach ($data['RoomUnavailability'] as $u) {
+        foreach ($this->getQueryData()['RoomUnavailability'] as $u) {
             // Then deal with availability
             $this->rooms[$u['room']['id']]->addUnavailability(
                 new Unavailability(
@@ -306,6 +279,7 @@ query {
             );
         }
     }
+    
     /**
      *
      * @return int[] Array of calendar IDs.  The room calendars are stored under Room ID.
@@ -336,7 +310,7 @@ query {
      * @return \Roombooking\Day
      */
     function getTenWorkingDaysFromNow() {
-        return $this->tenWorkingDaysFromNow;
+        return $_SESSION['tenWorkingDaysFromNow'];
     }
     
     /**
@@ -346,8 +320,23 @@ query {
      * @return Day
      */
     function getDay(string $datetime) {
+        if (!isset($_SESSION['days'])) {        
+            $tenDays = 10;
+            
+            foreach ($this->getQueryData()['AcademicCalendarDate'] as $d) {
+                $day = new Day(date("Y-m-d", strtotime($d['startDate'])), $d['isGoodSchoolDay']);
+                $_SESSION['days'][$d['id']] = $day;
+                if ($d['isGoodSchoolDay']) {
+                    $tenDays--;
+                    if ($tenDays == 0) {
+                        $_SESSION['tenWorkingDaysFromNow'] = $day;
+                    }
+                }
+            }
+        }
+        
         $date = date("Y-m-d", strtotime($datetime));
-        foreach ($this->days as $d) {
+        foreach ($_SESSION['days'] as $d) {
             if ($date === $d->getDate()) {
                 return $d;
             }
