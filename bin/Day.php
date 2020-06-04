@@ -15,7 +15,7 @@ class Day {
     function __construct(string $date, int $isTermDay) {
         $this->date = $date;
         if ($isTermDay === 1) {
-            $this->isTermday = true;
+            $this->isTermDay = true;
         } else {
             $this->isTermDay = false;
         }
