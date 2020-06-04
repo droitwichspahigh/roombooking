@@ -102,7 +102,6 @@ EOF;
     				<tr>
     					<th>&nbsp;</th>
     					<?php
-    					 /** @var \RoomBooking\Room $r */
     					 foreach ($school->getIctRooms() as $r) {
     				        echo "<th>" . $r->getName() . "</th>";
     				     }
@@ -121,11 +120,11 @@ EOF;
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
-    			             echo "<a href=\"makebooking.php?period=" . urlencode($p->getStartTime()) . "&roomId=" . $rId . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
+    			             echo "<a href=\"makebooking.php?startTime=" . urlencode($p->getStartTime()) . "&roomId=" . $rId . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
     			         } else {
     			             $info = $e->getInfo();
     			             /* Is this my booking? */
-    			             if (isset ($bookedLessons[$e->getId()]) && $bookedLessons[$e->getId()] == $school->getCalendarIds()[0]) {
+    			             if (isset ($bookedLessons[$e->getId()]) && $bookedLessons[$e->getId()] == $school->getCurrentlyLoggedInStaff()->getCalendarId()) {
     			                 $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
     			             }
     			             echo $info;

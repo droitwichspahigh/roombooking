@@ -6,7 +6,13 @@ require "bin/classes.php";
 $school = new School();
 $db = new Database();
 
-$startTime = $_GET['period'];
+foreach (['startTime', 'roomId', 'date'] as $g) {
+    if (!isset($_GET[$g])) {
+        header("location: index.php");
+    }
+}
+
+$startTime = $_GET['startTime'];
 $roomId = $_GET['roomId'];
 $date = $_GET['date'];
 $client = new GraphQLClient();
@@ -18,7 +24,7 @@ $client = new GraphQLClient();
 
 $queryData = $client->rawQuery('
 query {
-    staffCal: CalendarEntryMapping (calendar__id: ' . $school->getStaffCalendarId($school->getLoggedInStaffId()) . ' startDatetime: "' . $date . " " . $startTime . '") {
+    staffCal: CalendarEntryMapping (calendar__id: ' . $school->getCurrentlyLoggedInStaff()->getCalendarId() . ' startDatetime: "' . $date . " " . $startTime . '") {
         id
         lesson: event {
             __typename
@@ -29,11 +35,16 @@ query {
                         id
                     }
                 }
+                displayName
                 startDatetime
+                endDatetime
+                staff {
+                    displayName
+                }
             }
         }
     }
-    roomCal: CalendarEntryMapping (calendar__id: ' . $school->getCalendarIds()[$roomId] . ' startDatetime: "' . $date . " " . $startTime . '") {
+    roomCal: CalendarEntryMapping (calendar__id: ' . $school->getRoomCalendarIds()[$roomId] . ' startDatetime: "' . $date . " " . $startTime . '") {
         id
     }
 }')->getData();
@@ -61,14 +72,16 @@ $oldLessonRoomId= $staffCal[0]['lesson']['location']['id'];
 /* Store the old room in the database */
 
 $db = new Database();
-$myCalendarId = $school->getCalendarIds()[0];
+$myCalendarId = $school->getCurrentlyLoggedInStaff()->getCalendarId();
 $db->dosql("INSERT INTO roomchanges (lesson_id, oldroom_id, booking_calendar) VALUES ($LessonId, $oldLessonRoomId, $myCalendarId);");
 
 $session = \Arbor\Model\Session::retrieve($LessonId);
 $session->setLocation(\Arbor\Model\Room::retrieve($roomId));
 $session->save();
 
-/* Need to invalidate the Query data now, as timetable is new */
-unset($_SESSION['School_queryData']);
+/* Need to hack this into the Query data now, as timetable has changed */
+/* XXX This is so evil, but it works I guess */
+$staffCal[0]['lesson']['location']['id'] = $roomId;
+array_push($_SESSION['School_queryData']['CalendarEntryMapping'], $staffCal[0]);
 
 header("location: index.php?date=$date");

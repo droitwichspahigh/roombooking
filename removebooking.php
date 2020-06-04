@@ -11,7 +11,7 @@ $date = $_GET['date'];
 
 /* Is this actually my booking? */
 $checkQuery = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR_ENTRY_MAPPING);
-$checkQuery->addPropertyFilter(\Arbor\Model\CalendarEntryMapping::CALENDAR, \Arbor\Query\Query::OPERATOR_EQUALS, '/rest-v2/calendars/' . $school->getCalendarIds()[0]);
+$checkQuery->addPropertyFilter(\Arbor\Model\CalendarEntryMapping::CALENDAR, \Arbor\Query\Query::OPERATOR_EQUALS, '/rest-v2/calendars/' . $school->getCurrentlyLoggedInStaff()->getCalendarId());
 $checkQuery->addPropertyFilter(\Arbor\Model\CalendarEntryMapping::EVENT, \Arbor\Query\Query::OPERATOR_EQUALS, '/rest-v2/sessions/' . $lessonId);
 if (!isset ((\Arbor\Model\CalendarEntryMapping::query($checkQuery))[0])) {
     $_SESSION['thatIsNotYourLesson'] = true;
@@ -28,5 +28,5 @@ $session->save();
 $db->dosql("DELETE FROM roomchanges WHERE id = '" . $roomDbRow['id'] . "';");
 
 /* Need to invalidate the Query data now, as timetable is new */
-unset($_SESSION['School_queryData']);
+session_destroy();
 header("location: index.php?date=$date");

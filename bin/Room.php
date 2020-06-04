@@ -3,12 +3,15 @@ namespace Roombooking;
 
 class Room
 {
+    protected $id;
     protected $name;
     protected $isIctRoom;
+    protected $calendarId = null;
     protected $timetableEntries = [];
 
-    public function __construct(string $name, bool $isIctRoom = false)
+    public function __construct(int $id, string $name, bool $isIctRoom = false)
     {
+        $this->id = $id;
         $this->name = $name;
         $this->isIctRoom = $isIctRoom;
     }
@@ -22,12 +25,27 @@ class Room
         return ($this->timetableEntries);
     }
     
+    public function getId() { return $this->id; }
+    
     public function getName() {
         return ($this->name);
     }
     
     public function isIctRoom() {
         return ($this->isIctRoom);
+    }
+    
+    public function getCalendarId() {
+        if (!is_null($this->calendarId)) {
+            return $this->calendarId;
+        }
+        $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
+        $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/rooms/" . $this->id);
+        $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
+            \Arbor\Query\Query::OPERATOR_EQUALS,
+            'ACADEMIC');
+        $this->calendarId = (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
+        return $this->calendarId;
     }
     
     /**

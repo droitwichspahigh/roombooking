@@ -11,22 +11,63 @@ class School
     protected $tenWorkingDaysFromNow = 0;
     protected $timetableQuery = [];
     protected $timetablePeriod = [];
-    protected $calendarIds;
     protected $client;
     protected $queryData = null;
     protected $staff = null;
     
     public function __construct()
     {
-        $this->client = new GraphQLClient();
-        
+        $this->client = new GraphQLClient();        
         $this->getTimetables();
+    }
+    /**
+     * 
+     * @return \Roombooking\Staff
+     */
+    public function getCurrentlyLoggedInStaff() {
+        if (isset ($_SESSION['currentlyLoggedInStaffId'])) {
+            return $this->staff[$_SESSION['currentlyLoggedInStaffId']];
+        }
+        
+        /* TODO Remove this, it should be in auth.php or similar */
+        //$auth_user = preg_replace('/@' . Config::site_emaildomain . '/', "", $_SERVER['PHP_AUTH_USER']);
+        //$auth_user = 'abbie.young';
+        $auth_user = 'henry.allen';
+        
+        Config::debug("School::getRoomCalendarIds: looking for email");
+        $emailAddress = $auth_user . "@" . Config::site_emaildomain;
+        $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::EMAIL_ADDRESS);
+        $query->addPropertyFilter(\Arbor\Model\EmailAddress::EMAIL_ADDRESS, \Arbor\Query\Query::OPERATOR_EQUALS, $emailAddress);
+        $emailAddress = \Arbor\Model\EmailAddress::query($query);
+        if (!isset($emailAddress[0])) {
+            die("Your email address " . $emailAddress . '@' . Config::$site_emaildomain ." appears unrecognised.");
+        }
+        if (isset($emailAddress[1])) {
+            die("Your email address appears to have more than one owner.  This cannot possibly be right");
+        }
+        
+        $emailAddress = \Arbor\Model\EmailAddress::retrieve($emailAddress[0]->getResourceId());
+        
+        Config::debug("School::getCalendarIds: query complete");
+        
+        if ($emailAddress->getEmailAddressOwner()->getResourceType() != \Arbor\Resource\ResourceType::STAFF) {
+            die("Your email address " . $emailAddress->getEmailAddress() . " appears not to belong to a member of staff.");
+        }
+        
+        Config::debug("School::getCalendarIds: email found");
+        $s = $emailAddress->getEmailAddressOwner()->getProperties();
+        
+        $this->staff[$s['id']] = new Staff($s['id'], $s['person']->getPreferredFirstName() . " " . $s['person']->getPreferredLastName());
+        
+        $_SESSION['currentlyLoggedInStaffId'] = $s['id'];
+        
+        return $this->staff[$s['id']];
     }
     
     /**
      * The order of the Rooms is stable
      *
-     * @return array(Room)
+     * @return \Roombooking\Room[]
      */
     public function getRooms() {
         if (!empty($this->rooms)) {
@@ -56,12 +97,12 @@ class School
             }');
         
         foreach ($result->getData()['IctRoom'] as $r) {
-            $this->rooms[$r['room']['id']] = new Room($r['room']['roomName'], true);
+            $this->rooms[$r['room']['id']] = new Room($r['room']['id'], $r['room']['roomName'], true);
         }
         
         foreach ($result->getData()['AllRoom'] as $r) {
             if (!array_key_exists($r['id'], $this->rooms)) {
-                $this->rooms[$r['id']] = new Room($r['roomName'], false);
+                $this->rooms[$r['id']] = new Room($r['id'], $r['roomName'], false);
             }
         }
         
@@ -73,6 +114,10 @@ class School
         return $this->rooms;
     }
     
+    /**
+     * 
+     * @return \Roombooking\Room[]
+     */
     public function getIctRooms() {
         $ictRooms = [];
         foreach ($this->getRooms() as $id => $r) {
@@ -120,7 +165,7 @@ class School
         /* You don't want to know how long this query took to construct :( */
         $this->queryData = $this->client->rawQuery('
 query {
-    CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
+    CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
         id
         lesson: event {
             __typename
@@ -259,85 +304,20 @@ query {
     }
     /**
      *
-     * @return int[] Array of calendar IDs.  The zeroth element is the logged in user's Calendar, and the room calendars are stored under Room ID
+     * @return int[] Array of calendar IDs.  The room calendars are stored under Room ID.
      */
-    function getCalendarIds() {
-        if (!empty($this->calendarIds)) {
-            return $this->calendarIds;
-        }
-        
-        if (isset($_SESSION['calendarIds'])) {
-            $this->calendarIds = $_SESSION['calendarIds'];
-            return $this->calendarIds;
-        }
-        
+    function getRoomCalendarIds() {
         Config::debug("School::getCalendarIds: no session record or expired, looking up from Arbor");
         
-        $this->calendarIds = [];
+        $cals = [];
         /* Let's find out which Calendars we need to query- these are the Rooms we should query */
-        foreach (array_keys($this->getIctRooms()) as $rId) {
-            /* We need the Academic calendar for Sessions (lessons) */ 
-            foreach (['ACADEMIC'] as $type) {
-                $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
-                $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/rooms/" . $rId);
-                $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
-                    \Arbor\Query\Query::OPERATOR_EQUALS,
-                    $type);
-                $this->calendarIds[$rId] = (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
-            }
+        foreach ($this->getIctRooms() as $r) {
+            $cals[$r->getId()] = $r->getCalendarId();
         }
         
-        /* We also want the Calendar for the logged in user, so we'll get that too */
-        $this->calendarIds[0] = $this->getStaffCalendarId($this->getLoggedInStaffId());
-        
-        $_SESSION['calendarIds'] = $this->calendarIds;
-        
-        return $this->calendarIds;        
+        return $cals;
     }
 
-    function getLoggedInStaffId() {
-        /* TODO Remove this, it should be in auth.php or similar */
-        //$auth_user = preg_replace('/@' . Config::site_emaildomain . '/', "", $_SERVER['PHP_AUTH_USER']);
-        //$auth_user = 'abbie.young';
-        $auth_user = 'henry.allen';
-        
-        Config::debug("School::getCalendarIds: looking for email");
-        $emailAddress = $auth_user . "@" . Config::site_emaildomain;
-        $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::EMAIL_ADDRESS);
-        $query->addPropertyFilter(\Arbor\Model\EmailAddress::EMAIL_ADDRESS, \Arbor\Query\Query::OPERATOR_EQUALS, $emailAddress);
-        $emailAddress = \Arbor\Model\EmailAddress::query($query);
-        if (!isset($emailAddress[0])) {
-            die("Your email address " . $emailAddress . '@' . Config::$site_emaildomain ." appears unrecognised.");
-        }
-        if (isset($emailAddress[1])) {
-            die("Your email address appears to have more than one owner.  This cannot possibly be right");
-        }
-        
-        $emailAddress = \Arbor\Model\EmailAddress::retrieve($emailAddress[0]->getResourceId());
-        
-        Config::debug("School::getCalendarIds: query complete");
-
-        if ($emailAddress->getEmailAddressOwner()->getResourceType() != \Arbor\Resource\ResourceType::STAFF) {
-            die("Your email address " . $emailAddress->getEmailAddress() . " appears not to belong to a member of staff.");
-        }
-        
-        Config::debug("School::getCalendarIds: email found");
-        $s = $emailAddress->getEmailAddressOwner()->getProperties();
-        
-        $this->staff[$s['id']] = new Staff($s['id'], $s['person']->getPreferredFirstName() . $s['person']->getPreferredLastName());
-        
-        return ($s['id']);
-    }
-    
-    function getStaffCalendarId(int $staffId) {
-        $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
-        $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/staff/" . $staffId);
-        $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
-            \Arbor\Query\Query::OPERATOR_EQUALS,
-            'ACADEMIC');
-        return (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
-    }
-    
     /**
      * Returns an array of Periods
      * @return array(\Roombooking\Period)
