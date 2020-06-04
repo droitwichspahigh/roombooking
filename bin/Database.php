@@ -47,4 +47,13 @@ class Database
         }
         return $result;
     }
+    
+    /** Mutex lock, will sleep for 50 seconds by default while attempting to gain lock, or die */
+    function lock(String $table) {
+        $this->dosql("LOCK TABLES roomchanges WRITE");
+    }
+    
+    function unlock() {
+        $this->dosql("UNLOCK TABLES;");
+    }
 }

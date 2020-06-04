@@ -19,6 +19,8 @@ if (!isset ((\Arbor\Model\CalendarEntryMapping::query($checkQuery))[0])) {
     die();
 }
 
+$db->lock('roomchanges');
+
 $roomDbRow = $db->dosql("SELECT * FROM roomchanges WHERE lesson_id = '$lessonId';")->fetch_array(MYSQLI_ASSOC);
 
 $session = \Arbor\Model\Session::retrieve($lessonId);
@@ -29,5 +31,7 @@ $db->dosql("DELETE FROM roomchanges WHERE id = '" . $roomDbRow['id'] . "';");
 
 /* Need to invalidate the Query data now, as timetable is new */
 $school->resetQuery();
+
+$db->unlock();
 
 header("location: index.php?date=$date");

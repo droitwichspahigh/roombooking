@@ -17,8 +17,7 @@ $roomId = $_GET['roomId'];
 $date = $_GET['date'];
 $client = new GraphQLClient();
 
-/** @var string $date Defined in index.php */
-/** @var \Roombooking\School $school */
+$db->lock('roomchanges');
 
 /* What lesson and Room does the staff member have at this point? */
 
@@ -52,6 +51,7 @@ query {
 $staffCal = $queryData['staffCal'];
 
 if (isset($queryData['roomCal'][0])) {
+    $db->unlock();
     $_SESSION['someoneHasPippedYouToThePost'] = true;
     header("location: index.php?date=$date");
     $school->resetQuery();
@@ -59,12 +59,14 @@ if (isset($queryData['roomCal'][0])) {
 }
 
 if (!isset($staffCal[0])) {
+    $db->unlock();
     $_SESSION['thereIsNoLessonAtThisTime'] = true;
     header("location: index.php?date=$date");
     die();
 }
 
 if (isset($staffCal[1])) {
+    $db->unlock();
     /* There is a conflict, that's weird */
     die ("Conflicting lessons?");
 }
@@ -74,7 +76,6 @@ $oldLessonRoomId= $staffCal[0]['lesson']['location']['id'];
 
 /* Store the old room in the database */
 
-$db = new Database();
 $myCalendarId = $school->getCurrentlyLoggedInStaff()->getCalendarId();
 $db->dosql("INSERT INTO roomchanges (lesson_id, oldroom_id, booking_calendar) VALUES ($LessonId, $oldLessonRoomId, $myCalendarId);");
 
@@ -86,5 +87,7 @@ $session->save();
 /* XXX This is so evil, but it works I guess */
 $staffCal[0]['lesson']['location']['id'] = $roomId;
 array_push($_SESSION['School_queryData']['CalendarEntryMapping'], $staffCal[0]);
+
+$db->unlock();
 
 header("location: index.php?date=$date");
