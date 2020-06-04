@@ -28,5 +28,6 @@ $session->save();
 $db->dosql("DELETE FROM roomchanges WHERE id = '" . $roomDbRow['id'] . "';");
 
 /* Need to invalidate the Query data now, as timetable is new */
-session_destroy();
+$school->resetQuery();
+
 header("location: index.php?date=$date");

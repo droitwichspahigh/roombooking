@@ -22,6 +22,10 @@ if (isset ($_SESSION['thereIsNoLessonAtThisTime'])) {
     /* Do a popup here about there being no lesson for the teacher! */
     $modalmsg = "You don't appear to have a lesson scheduled during this period.";
 }
+if (isset ($_SESSION['someoneHasPippedYouToThePost'])) {
+    unset ($_SESSION['someoneHasPippedYouToThePost']);
+    $modalmsg = "Someone has just booked that slot before you did!  Sorry, please try another.";
+}
 if (isset ($_SESSION['thatIsNotYourLesson'])) {
     unset ($_SESSION['thatIsNotYourLesson']);
     /* Do a popup here about there not being allowed to unbook someone else's booking! */

@@ -52,7 +52,10 @@ query {
 $staffCal = $queryData['staffCal'];
 
 if (isset($queryData['roomCal'][0])) {
-    die ("Sorry, appears someone has pipped you to the post...");
+    $_SESSION['someoneHasPippedYouToThePost'] = true;
+    header("location: index.php?date=$date");
+    $school->resetQuery();
+    die();
 }
 
 if (!isset($staffCal[0])) {

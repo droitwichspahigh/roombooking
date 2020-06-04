@@ -212,6 +212,10 @@ query {
         return $this->queryData;
     }
     
+    public function resetQuery() {
+        unset ($_SESSION['School_queryData']);
+    }
+    
     /**
      * So this is marvellous.
      * 
