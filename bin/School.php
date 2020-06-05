@@ -9,12 +9,13 @@ class School
     protected $rooms = [];
     protected $timetableQuery = [];
     protected $timetablePeriod = [];
-    protected $client;
+    protected $client, $db;
     protected $staff = null;
     
     public function __construct()
     {
         $this->client = new GraphQLClient();
+        $this->db = new Database();
         $this->getTimetables();
     }
     
@@ -33,8 +34,6 @@ class School
      * @return int[] Array of calendar IDs.  The room calendars are stored under Room ID.
      */
     function getRoomCalendarIds() {
-        Config::debug("School::getCalendarIds: no session record or expired, looking up from Arbor");
-        
         $cals = [];
         /* Let's find out which Calendars we need to query- these are the Rooms we should query */
         foreach ($this->getIctRooms() as $r) {
@@ -110,8 +109,8 @@ class School
             return $this->rooms;
         }
         
-        if (isset($_SESSION['rooms'])) {
-            $this->rooms = $_SESSION['rooms'];
+        if ($this->rooms = $this->db->long_cache_get_array('Roombooking\Room')) {
+            Config::debug("School::getRooms: Successfully found in database");
             return $this->rooms;
         }
         
@@ -145,7 +144,7 @@ class School
         /* It is most natural to sort Rooms by name and not ID */
         asort($this->rooms);
         
-        $_SESSION['rooms'] = $this->rooms;
+        $this->db->long_cache_put_array($this->rooms);
         
         return $this->rooms;
     }

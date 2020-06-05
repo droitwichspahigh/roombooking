@@ -20,6 +20,14 @@ if (isset(Config::$maintenance) && Config::$maintenance) {
         booking_calendar INT NOT NULL,
         CONSTRAINT pk PRIMARY KEY (id)
     );");
+    $db->dosql("
+    CREATE TABLE serialisedCache (
+        id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+        class TINYTEXT NOT NULL,
+        subscript SMALLINT NOT NULL,
+        data MEDIUMTEXT NOT NULL,
+        CONSTRAINT pk PRIMARY KEY (id)
+    );");
 }
 
 ?>
