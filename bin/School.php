@@ -7,6 +7,7 @@ class School
      * @var array(\Roombooking\Room) $rooms Contains all of the ICT rooms in the school
      */
     protected $rooms = [];
+    protected $days = [];
     protected $timetableQuery = [];
     protected $timetablePeriod = [];
     protected $client, $db;
@@ -44,14 +45,6 @@ class School
     }
     
     /**
-     * Returns an array of Periods
-     * @return array(\Roombooking\Period)
-     */
-    function getPeriods() {
-        return $this->timetablePeriod;
-    }
-    
-    /**
      * Give ten working days away- the cutoff for bookings.  This needs to be dynamic if caching.
      *
      * @return \Roombooking\Day
@@ -74,13 +67,32 @@ class School
      * @return \Roombooking\Day[]
      */
     function getDays() {
-        if (!isset($_SESSION['days'])) {
-            foreach ($this->getQueryData()['AcademicCalendarDate'] as $d) {
-                $day = new Day(date("Y-m-d", strtotime($d['startDate'])), $d['isGoodSchoolDay']);
-                $_SESSION['days'][$d['id']] = $day;
-            }
+        if (!empty($this->days)) {
+            return $this->days;
         }
-        return $_SESSION['days'];
+        
+        if ($this->days = $this->db->long_cache_get_array('Roombooking\Day')) {
+            Config::debug("School::getDays: Successfully found in database");
+            return $this->days;
+        }
+        
+        $end = date('Y-m-d', strtotime('5 weeks'));
+        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        $query = $this->client->rawQuery('{
+            AcademicCalendarDate (startDate_after: "' . $yesterday . '" startDate_before: "' . $end . '") {
+                startDate
+                dayOfTerm
+                isGoodSchoolDay
+            }
+        }')->getData();
+        
+        foreach ($query['AcademicCalendarDate'] as $d) {
+            $day = new Day($d['id'], date("Y-m-d", strtotime($d['startDate'])), $d['isGoodSchoolDay']);
+            $this->days[$day->getId()] = $day;
+        }
+        
+        $this->db->long_cache_put_array($this->days);
+        return $this->days;
     }
     
     /**
@@ -163,14 +175,34 @@ class School
         return $ictRooms;
     }
     
-    /*
-     * 
-     * This is the semi-VOLATILE section- this stuff needs fetching every session
-     * 
+    /**
+     * Returns an array of Periods
+     * @return array(\Roombooking\Period)
      */
-
-    public function getTimetables() {
-        foreach ($this->getQueryData()['TimetablePeriodGrouping'] as $p) {
+    public function getPeriods() {
+        if (!empty($this->timetablePeriod)) {
+            return $this->timetablePeriod;
+        }
+        
+        if ($this->timetablePeriod = $this->db->long_cache_get_array('Roombooking\Period')) {
+            Config::debug("School::getTimetablePeriods: Successfully found in database");
+            return $this->timetablePeriod;
+        }
+        
+        $queryData = $this->client->rawQuery('
+        {
+            TimetablePeriodGrouping {
+                shortName
+                timetablePeriods {
+                    dayOfWeek
+                    dayOfCycle
+                    startTime
+                    endTime
+                }
+            }
+        }')->getData();
+        
+        foreach ($queryData['TimetablePeriodGrouping'] as $p) {
             /*
              * XXX This assumes that Periods are the same regardless of day,
              *     so places with special Wednesdays or Fridays for example
@@ -180,12 +212,33 @@ class School
              *     to Arbor and the room booking suite crashes...
              */
             $this->timetablePeriod[$p['timetablePeriods'][0]['startTime']] =
-            new Period($p['shortName'], $p['timetablePeriods'][0]['startTime'], $p['timetablePeriods'][0]['endTime']);
+            new Period($p['id'], $p['shortName'], $p['timetablePeriods'][0]['startTime'], $p['timetablePeriods'][0]['endTime']);
         }
         
         /* Sort timetablePeriods by starting time, not when they were entered! */
         ksort($this->timetablePeriod);
         
+        $this->db->long_cache_put_array($this->timetablePeriod);
+        
+        return $this->timetablePeriod;
+    }
+    
+    public function getPeriodFromStartTime(String $startTime) {
+        foreach ($this->getPeriods() as $p) {
+            if ($p->getStartTime() == $startTime) {
+                return $p;
+            }
+        }
+        return null;
+    }
+    
+    /*
+     * 
+     * This is the semi-VOLATILE section- this stuff needs fetching every session
+     * 
+     */
+
+    public function getTimetables() {
         foreach ($this->getQueryData()['CalendarEntryMapping'] as $d) {
             // First deal with lessons
             if (isset($d['lesson']['location'])) {
@@ -203,8 +256,9 @@ class School
                 }
                 
                 $startTime = date("H:i:s",   strtotime($d['lesson']['startDatetime']));
-                if (!isset ($this->timetablePeriod[$startTime])) {
-                    die ("Hm, no timetable map for $startTime. <pre>ttMap = " . print_r($this->timetablePeriod, true));
+                /* Based on startTime, not ID */
+                if (! $this->getPeriodFromStartTime($startTime)) {
+                    die ("Hm, no timetable map for $startTime. <pre>ttMap = " . print_r($this->getPeriods(), true));
                 }
                 
                 $day = $this->getDay($d['lesson']['startDatetime']);
@@ -214,7 +268,7 @@ class School
                 }
                 
                 $this->getRooms()[$d['lesson']['location']['id']]->addLesson(
-                    new Lesson($d['lesson']['id'], $d['lesson']['displayName'], $day, $this->timetablePeriod[$startTime], $staff)
+                    new Lesson($d['lesson']['id'], $d['lesson']['displayName'], $day, $this->getPeriodFromStartTime($startTime), $staff)
                     );
             }
         }
@@ -301,7 +355,6 @@ class School
          */
         $end = date('Y-m-d', strtotime('5 weeks'));
         $lastMidnight = date('Y-m-d');
-        $yesterday = date('Y-m-d', strtotime('yesterday'));
         /* You don't want to know how long this query took to construct :( */
         $_SESSION['School_queryData'] = $this->client->rawQuery('
 query {
@@ -331,20 +384,6 @@ query {
         startDatetime
         endDatetime
         displayName
-    }
-    TimetablePeriodGrouping {
-        shortName
-        timetablePeriods {
-            dayOfWeek
-            dayOfCycle
-            startTime
-            endTime
-        }
-    }
-    AcademicCalendarDate (startDate_after: "' . $yesterday . '" startDate_before: "' . $end . '") {
-        startDate
-        dayOfTerm
-        isGoodSchoolDay
     }
 }')->getData();
         return $_SESSION['School_queryData'];

@@ -5,6 +5,7 @@ namespace Roombooking;
 class Day {
     protected $isTermDay;
     protected $date;
+    protected $id;
     
     /**
      * Store a date along with term date status
@@ -12,7 +13,8 @@ class Day {
      * @param string $date in the format yyyy-mm-dd
      * @param int $isTermDay 1 if term day, otherwise holiday/weekend
      */
-    function __construct(string $date, int $isTermDay) {
+    function __construct(int $id, string $date, int $isTermDay) {
+        $this->id = $id;
         $this->date = $date;
         if ($isTermDay === 1) {
             $this->isTermDay = true;
@@ -27,5 +29,9 @@ class Day {
     
     public function isTermDay() {
         return $this->isTermDay;
+    }
+    
+    public function getId() {
+        return $this->id;
     }
 }
