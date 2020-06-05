@@ -9,6 +9,7 @@ if (isset($_GET['date'])) {
     $date = strtotime($_GET['date']);
     if ($date < strtotime('today') || $date > strtotime($school->getTenWorkingDaysFromNow()->getDate())) {
         unset ($date);
+        $modalmsg = "You may only make bookings from today up to ten working days from today.";
     }
 }
 if (!isset($date)) {
