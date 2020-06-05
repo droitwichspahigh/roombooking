@@ -23,7 +23,7 @@ class Config {
     
     const roomFeatureName = "ICT Room";
     
-    const maintenance = true;
+    public static $maintenance = true;
     
     const debug = true;
     

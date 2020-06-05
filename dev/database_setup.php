@@ -8,7 +8,7 @@ $dbname = Config::db['name'];
 
 $db->dosql("USE $dbname;", FALSE);
 
-if (defined("Config::maintenance") && Config::maintenance) {
+if (isset(Config::$maintenance) && Config::$maintenance) {
     $db->dosql("DROP DATABASE $dbname;", FALSE); /* Don't mind if this fails */
     $db->dosql("CREATE DATABASE $dbname;");
     $db->dosql("USE $dbname;");
