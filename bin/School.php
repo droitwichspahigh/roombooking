@@ -52,6 +52,9 @@ class School
     function getTenWorkingDaysFromNow() {
         $tenDays = 10;
         foreach ($this->getDays() as $d) {
+            if (strtotime($d->getDate()) < time()) {
+                continue;
+            }
             if ($d->isTermDay()) {
                 $tenDays--;
                 if ($tenDays == 0) {
@@ -59,7 +62,7 @@ class School
                 }
             }
         }
-        die ("There is something definitely wrong with the cache- can't get ten days ahead.");
+        die ("There is something definitely wrong with the cache- can't get ten days ahead. Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.");
     }
     
     /**
@@ -76,10 +79,20 @@ class School
             return $this->days;
         }
         
-        $end = date('Y-m-d', strtotime('5 weeks'));
-        $yesterday = date('Y-m-d', strtotime('yesterday'));
+        /* Let's find our academic year before we go any further */
+        $month = date("m");
+        $year = date("Y");
+        
+        if ($month >= 9) {
+            $ayeve = "$year-08-31";
+            $aypost = $year+1 . "-09-01";
+        } else {
+            $ayeve = $year-1 . "-08-31";
+            $aypost = "$year-09-01";
+        }
+        
         $query = $this->client->rawQuery('{
-            AcademicCalendarDate (startDate_after: "' . $yesterday . '" startDate_before: "' . $end . '") {
+            AcademicCalendarDate (startDate_after: "' . $ayeve . '" startDate_before: "' . $aypost . '") {
                 startDate
                 dayOfTerm
                 isGoodSchoolDay
@@ -258,13 +271,13 @@ class School
                 $startTime = date("H:i:s",   strtotime($d['lesson']['startDatetime']));
                 /* Based on startTime, not ID */
                 if (! $this->getPeriodFromStartTime($startTime)) {
-                    die ("Hm, no timetable map for $startTime. <pre>ttMap = " . print_r($this->getPeriods(), true));
+                    die ("Hm, no timetable map for $startTime. <pre>ttMap = " . print_r($this->getPeriods(), true) . "</pre> <p>Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.</p>");
                 }
                 
                 $day = $this->getDay($d['lesson']['startDatetime']);
                 
                 if ($day === null) {
-                    die ("Hm, no Day for " . $d['lesson']['startDatetime']);
+                    die ("Hm, no Day for " . $d['lesson']['startDatetime'] . " Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.");
                 }
                 
                 $this->getRooms()[$d['lesson']['location']['id']]->addLesson(

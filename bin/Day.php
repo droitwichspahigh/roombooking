@@ -23,6 +23,11 @@ class Day {
         }
     }
     
+    /**
+     * Returns the string representation of the date as Y-m-d
+     * 
+     * @return string
+     */
     function getDate() {
         return $this->date;
     }
