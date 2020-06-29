@@ -88,7 +88,7 @@ EOF;
         	<div class="collapse navbar-collapse" id="collapsibleNavbar">
             	<ul class="navbar-nav">
             		<li class="nav-item">
-                		<a class="nav-link" href="clear_cache.php">Clear the cache and rescan Arbor</a>
+                		<a class="nav-link" href="clear_cache.php" disabled>Clear the cache and rescan Arbor</a>
                 	</li>
             	</ul>
         	</div>
@@ -109,7 +109,7 @@ EOF;
 		}
 		?>
 		<div class="table-responsive">
-    		<table class="table table-striped table-bordered text-center">
+    		<table class="table table-striped table-bordered text-center table-sm">
     			<thead>
     				<tr>
     					<th>&nbsp;</th>
