@@ -29,7 +29,9 @@ class Lesson extends Event
     }
     
     public function getInfo() {
-        return $this->name . "<br />" . $this->strStaff();
+        $nameSections = explode(':', $this->name);
+        $name = end($nameSections);
+        return "$name<br />{$this->strStaff()}";
     }
     
     function __destruct()
