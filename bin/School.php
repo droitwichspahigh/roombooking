@@ -271,6 +271,9 @@ class School
                 $startTime = date("H:i:s",   strtotime($d['lesson']['startDatetime']));
                 /* Based on startTime, not ID */
                 if (! $this->getPeriodFromStartTime($startTime)) {
+                    // XXX We ignore lessons that don't match Periods.  This is unlikely to be a problem
+                    //     unless we have an ICT lesson that clashes.
+                    continue;
                     die ("Hm, no timetable map for $startTime. <pre>ttMap = " . print_r($this->getPeriods(), true) . "</pre> <p>Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.</p>");
                 }
                 
@@ -312,7 +315,7 @@ class School
         /* TODO Remove this, it should be in auth.php or similar */
         //$auth_user = preg_replace('/@' . Config::site_emaildomain . '/', "", $_SERVER['PHP_AUTH_USER']);
         //$auth_user = 'abbie.young';
-        $auth_user = 'henry.allen';
+        $auth_user = 'reescm';
         
         Config::debug("School::getCurrentlyLoggedInStaff: looking for email");
         $emailAddress = $auth_user . "@" . Config::site_emaildomain;
@@ -321,13 +324,13 @@ class School
         $emailAddress = $this->client->rawQuery($emailQuery)->getData()['EmailAddress'];
         Config::debug("School::getCurrentlyLoggedInStaff: query complete");
         if (!isset($emailAddress[0])) {
-            die("Your email address " . $auth_user . '@' . Config::$site_emaildomain ." appears unrecognised.");
+            die("Your email address " . $auth_user . '@' . Config::site_emaildomain ." appears unrecognised.");
         }
         if (isset($emailAddress[1])) {
             die("Your email address appears to have more than one owner.  This cannot possibly be right");
         }
         if ($emailAddress[0]['emailAddressOwner']['entityType'] != 'Staff') {
-            die("Your email address " . $auth_user . '@' . Config::$site_emaildomain ." appears not to belong to a member of staff.");
+            die("Your email address " . $auth_user . '@' . Config::site_emaildomain ." appears not to belong to a member of staff.");
         }
         Config::debug("School::getCurrentlyLoggedInStaff: email found");
         $s = $emailAddress[0]['emailAddressOwner'];
