@@ -171,6 +171,10 @@ class School
         
         $this->db->long_cache_put_array($this->rooms);
         
+        // Try refreshing to avoid timeout
+        header("Location: index.php");
+        die();
+        
         return $this->rooms;
     }
     
@@ -232,6 +236,10 @@ class School
         ksort($this->timetablePeriod);
         
         $this->db->long_cache_put_array($this->timetablePeriod);
+        
+        // Avoid timeout
+        header("Location: index.php");
+        die();
         
         return $this->timetablePeriod;
     }
@@ -402,6 +410,12 @@ query {
         displayName
     }
 }')->getData();
+        
+        // Refresh to avoid timeout
+        
+        header('Location: index.php');
+        die();
+        
         return $_SESSION['School_queryData'];
     }
     
