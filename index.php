@@ -91,13 +91,15 @@ EOF;
                 	</li>
             	</ul>
         	</div>
+        	<?php if (in_array($auth_user, Config::admin_users)) { ?>
         	<div class="collapse navbar-collapse" id="collapsibleNavbar">
             	<ul class="navbar-nav">
             		<li class="nav-item">
-                		<a class="nav-link" href="clear_cache.php" disabled>Clear the cache and rescan Arbor</a>
+                		<a class="nav-link" href="clear_cache.php">Clear the cache and rescan Arbor</a>
                 	</li>
             	</ul>
         	</div>
+        	<?php } /* Admin bit */ ?>
         </nav>
 		<h3 class="mb-4"><?= Config::site ?></h3>
 		<form method="GET">

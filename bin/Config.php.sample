@@ -24,11 +24,13 @@ class Config {
     
     const roomFeatureName = "ICT Room";
     
+    const admin_users = array('reescm');
+    
     public static $maintenance = true;
     
     const debug = true;
     
-        /**
+   /**
      * Regular expression for matching student logins.
      *
      * At DSHS, all student logins begin with two digits and then
