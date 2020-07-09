@@ -1,5 +1,11 @@
 <?php namespace Roombooking;
 
+if(!isset($_SERVER['PHP_AUTH_USER'])) {
+    header('WWW-Authenticate: Basic realm="CSE2K"');
+    header('HTTP/1.0 401 Unauthorized');
+    die();
+}
+
 require "bin/classes.php";
 
 $school = new School();

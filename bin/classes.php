@@ -5,6 +5,10 @@ namespace Roombooking;
 /* Have we been called before? */
 if (!class_exists("Config")) {
     require "Config.php";
+    // denied.php skips auth
+    if (!isset($skip_auth) || ! $skip_auth) {
+        require "auth.php";
+    }
     require "Day.php";
     require "Event.php";
     require "Database.php";
@@ -17,7 +21,7 @@ if (!class_exists("Config")) {
     require "Unavailability.php";
     require Config::site_docroot . "/contrib/php-graphql-client/vendor/autoload.php";
     require Config::site_docroot . "/contrib/sis-sdk-php/vendor/autoload.php";
-    
+
     \Arbor\Model\ModelBase::setDefaultGateway(
         new \Arbor\Api\Gateway\RestGateway(
             Config::arbor['site'],

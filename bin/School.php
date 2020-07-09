@@ -316,15 +316,11 @@ class School
      */
     public function getCurrentlyLoggedInStaff() {
         /* Depends on $auth_user */
+        global $auth_user;
         
         if (isset ($_SESSION['currentlyLoggedInStaffId'])) {
             return $this->staff[$_SESSION['currentlyLoggedInStaffId']];
         }
-        
-        /* TODO Remove this, it should be in auth.php or similar */
-        //$auth_user = preg_replace('/@' . Config::site_emaildomain . '/', "", $_SERVER['PHP_AUTH_USER']);
-        //$auth_user = 'abbie.young';
-        $auth_user = 'reescm';
         
         Config::debug("School::getCurrentlyLoggedInStaff: looking for email");
         $emailAddress = $auth_user . "@" . Config::site_emaildomain;
