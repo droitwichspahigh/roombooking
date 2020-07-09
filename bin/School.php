@@ -62,7 +62,8 @@ class School
                 }
             }
         }
-        die ("There is something definitely wrong with the cache- can't get ten days ahead. Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.");
+        // We must be less than ten days away from the end of term.
+        return $d;
     }
     
     /**
