@@ -109,7 +109,7 @@ class Database
     }
     
     function long_cache_clean(String $classname) {
-        $classname = base64_encode(classname);
+        $classname = base64_encode($classname);
         $this->dosql("DELETE FROM serialisedCache WHERE class = '$classname';");
     }
 }
