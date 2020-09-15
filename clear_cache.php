@@ -4,7 +4,7 @@ namespace Roombooking;
 
 require "bin/classes.php";
 
-if (!array_search($auth_user, Config::admin_users)) {
+if (!in_array($auth_user, Config::admin_users)) {
     header("location: denied.php");
     die();
 }
