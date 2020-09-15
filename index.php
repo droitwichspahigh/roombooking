@@ -38,6 +38,11 @@ if (isset ($_SESSION['thatIsNotYourLesson'])) {
     /* Do a popup here about there not being allowed to unbook someone else's booking! */
     $modalmsg = "You can't unbook someone else's lesson!";
 }
+/* This happens if for example you try to book when on duty */
+if (isset($_SESSION['thereIsNoRoomForThisLesson'])) {
+    unset ($_SESSION['thereIsNoRoomForThisLesson']);
+    $modalmsg = "Hm, there is no Room scheduled for this lesson- are you actually teaching?";
+}
 
 ?>
 <!doctype html>

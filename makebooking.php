@@ -73,6 +73,13 @@ if (isset($staffCal[1])) {
 $LessonId = $staffCal[0]['lesson']['id'];
 $oldLessonRoomId= $staffCal[0]['lesson']['location']['id'];
 
+if (empty($oldLessonRoomId)) {
+    $db->unlock();
+    $_SESSION['thereIsNoRoomForThisLesson'] = true;
+    header("location: index.php?date=$date");
+    die();
+}
+
 /* Store the old room in the database */
 
 $myCalendarId = $school->getCurrentlyLoggedInStaff()->getCalendarId();
