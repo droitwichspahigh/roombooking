@@ -254,6 +254,14 @@ class School
         return null;
     }
     
+    public function getPeriodFromEndTime(String $endTime) {
+        foreach ($this->getPeriods() as $p) {
+            if ($p->getEndTime() == $endTime) {
+                return $p;
+            }
+        }
+        return null;
+    }
     /*
      * 
      * This is the semi-VOLATILE section- this stuff needs fetching every session
@@ -278,12 +286,15 @@ class School
                 }
                 
                 $startTime = date("H:i:s",   strtotime($d['lesson']['startDatetime']));
+                $endTime = date("H:i:s",   strtotime($d['lesson']['endDatetime']));
                 /* Based on startTime, not ID */
-                if (! $this->getPeriodFromStartTime($startTime)) {
-                    // XXX We ignore lessons that don't match Periods.  This is unlikely to be a problem
-                    //     unless we have an ICT lesson that clashes.
-                    continue;
-                    die ("Hm, no timetable map for $startTime. <pre>ttMap = " . print_r($this->getPeriods(), true) . "</pre> <p>Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.</p>");
+                $period = $this->getPeriodFromStartTime($startTime);
+                if (! $period) {
+                    // With split periods we take the end time as well.
+                    $period = $this->getPeriodFromEndTime($endTime);
+                    if (! $period) {
+                        die ("Hm, no timetable map for $startTime - $endTime. <pre>ttMap = " . print_r($this->getPeriods(), true) . "</pre> <p>Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.</p>");
+                    }
                 }
                 
                 $day = $this->getDay($d['lesson']['startDatetime']);
@@ -293,7 +304,7 @@ class School
                 }
                 
                 $this->getRooms()[$d['lesson']['location']['id']]->addLesson(
-                    new Lesson($d['lesson']['id'], $d['lesson']['displayName'], $day, $this->getPeriodFromStartTime($startTime), $staff)
+                    new Lesson($d['lesson']['id'], $d['lesson']['displayName'], $day, $period, $staff)
                     );
             }
         }
@@ -391,6 +402,7 @@ query {
                     }
                 }
                 startDatetime
+                endDatetime
                 displayName
                 staff {
                     displayName

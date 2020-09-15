@@ -13,6 +13,7 @@ foreach (['startTime', 'roomId', 'date'] as $g) {
 }
 
 $startTime = $_GET['startTime'];
+$endTime = $_GET['endTime'];
 $roomId = $_GET['roomId'];
 $date = $_GET['date'];
 $client = new GraphQLClient();
@@ -36,6 +37,7 @@ query {
                 }
                 displayName
                 startDatetime
+                endDatetime
                 staff {
                     displayName
                 }
@@ -58,10 +60,47 @@ if (isset($queryData['roomCal'][0])) {
 }
 
 if (!isset($staffCal[0])) {
-    $db->unlock();
-    $_SESSION['thereIsNoLessonAtThisTime'] = true;
-    header("location: index.php?date=$date");
-    die();
+    /* There is no lesson, but let's just check that it's not a staggered/early lunch */
+    $queryData = $client->rawQuery('
+query {
+    staffCal: CalendarEntryMapping (calendar__id: ' . $school->getCurrentlyLoggedInStaff()->getCalendarId() . ' endDatetime: "' . $date . " " . $endTime . '") {
+        id
+        lesson: event {
+            __typename
+            ... on Session {
+                location {
+                    __typename
+                    ... on Room {
+                        id
+                    }
+                }
+                displayName
+                startDatetime
+                endDatetime
+                staff {
+                    displayName
+                }
+            }
+        }
+    }
+    roomCal: CalendarEntryMapping (calendar__id: ' . $school->getRoomCalendarIds()[$roomId] . ' endDatetime: "' . $date . " " . $endTime . '") {
+        id
+    }
+}')->getData();
+    if (isset($queryData['roomCal'][0])) {
+        $db->unlock();
+        $_SESSION['someoneHasPippedYouToThePost'] = true;
+        header("location: index.php?date=$date");
+        $school->resetQuery();
+        die();
+    }
+    $staffCal = $queryData['staffCal'];
+    if (!isset($staffCal[0])) {
+        $db->unlock();
+        $_SESSION['thereIsNoLessonAtThisTime'] = true;
+        header("location: index.php?date=$date");
+        die();
+    }
 }
 
 if (isset($staffCal[1])) {

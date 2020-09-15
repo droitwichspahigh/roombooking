@@ -145,7 +145,7 @@ EOF;
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
-    			             echo "<a href=\"makebooking.php?startTime=" . urlencode($p->getStartTime()) . "&roomId=" . $rId . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
+    			             echo "<a href=\"makebooking.php?startTime=" . urlencode($p->getStartTime()) . "&endTime=" . urlencode($p->getEndTime()) . "&roomId=" . $rId . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
     			         } else {
     			             $info = $e->getInfo();
     			             /* Is this my booking? */
