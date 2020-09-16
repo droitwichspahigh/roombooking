@@ -6,16 +6,22 @@ require "bin/classes.php";
 $school = new School();
 $db = new Database();
 
-foreach (['startTime', 'roomId', 'date'] as $g) {
+foreach (['roomId', 'date'] as $g) {
     if (!isset($_GET[$g])) {
         header("location: index.php");
     }
 }
 
-$startTime = $_GET['startTime'];
-$endTime = $_GET['endTime'];
-$roomId = $_GET['roomId'];
 $date = $_GET['date'];
+if (isset($_GET['startTime'])) {
+    /* We're going to try to book with startTime at first, then endTime */
+    $startTime = $_GET['startTime'];
+    $queryFilter = "startDatetime: \"$date $startTime\"";
+} else {
+    $endTime = $_GET['endTime'];
+    $queryFilter = "endDatetime: \"$date $endTime\"";
+}
+$roomId = $_GET['roomId'];
 $client = new GraphQLClient();
 
 $db->lock('roomchanges');
@@ -24,7 +30,7 @@ $db->lock('roomchanges');
 
 $queryData = $client->rawQuery('
 query {
-    staffCal: CalendarEntryMapping (calendar__id: ' . $school->getCurrentlyLoggedInStaff()->getCalendarId() . ' startDatetime: "' . $date . " " . $startTime . '") {
+    staffCal: CalendarEntryMapping (calendar__id: ' . $school->getCurrentlyLoggedInStaff()->getCalendarId() . ' ' . $queryFilter . ') {
         id
         lesson: event {
             __typename
@@ -44,7 +50,7 @@ query {
             }
         }
     }
-    roomCal: CalendarEntryMapping (calendar__id: ' . $school->getRoomCalendarIds()[$roomId] . ' startDatetime: "' . $date . " " . $startTime . '") {
+    roomCal: CalendarEntryMapping (calendar__id: ' . $school->getRoomCalendarIds()[$roomId] . ' ' . $queryFilter . ') {
         id
     }
 }')->getData();
@@ -60,42 +66,13 @@ if (isset($queryData['roomCal'][0])) {
 }
 
 if (!isset($staffCal[0])) {
-    /* There is no lesson, but let's just check that it's not a staggered/early lunch */
-    $queryData = $client->rawQuery('
-query {
-    staffCal: CalendarEntryMapping (calendar__id: ' . $school->getCurrentlyLoggedInStaff()->getCalendarId() . ' endDatetime: "' . $date . " " . $endTime . '") {
-        id
-        lesson: event {
-            __typename
-            ... on Session {
-                location {
-                    __typename
-                    ... on Room {
-                        id
-                    }
-                }
-                displayName
-                startDatetime
-                endDatetime
-                staff {
-                    displayName
-                }
-            }
-        }
-    }
-    roomCal: CalendarEntryMapping (calendar__id: ' . $school->getRoomCalendarIds()[$roomId] . ' endDatetime: "' . $date . " " . $endTime . '") {
-        id
-    }
-}')->getData();
-    if (isset($queryData['roomCal'][0])) {
+    if (isset($startTime)) {
+        /* Let's try with the endTime now */
         $db->unlock();
-        $_SESSION['someoneHasPippedYouToThePost'] = true;
-        header("location: index.php?date=$date");
-        $school->resetQuery();
+        header("location: makebooking.php?endTime=$endTime&roomId=$roomId&date=$date");
         die();
-    }
-    $staffCal = $queryData['staffCal'];
-    if (!isset($staffCal[0])) {
+    } else {
+        /* We've tried endTime, we're now out of options, give up */
         $db->unlock();
         $_SESSION['thereIsNoLessonAtThisTime'] = true;
         header("location: index.php?date=$date");
@@ -113,10 +90,23 @@ $LessonId = $staffCal[0]['lesson']['id'];
 $oldLessonRoomId= $staffCal[0]['lesson']['location']['id'];
 
 if (empty($oldLessonRoomId)) {
-    $db->unlock();
-    $_SESSION['thereIsNoRoomForThisLesson'] = true;
-    header("location: index.php?date=$date");
-    die();
+    /* 
+     * This looks as though we don't have a Room allocated, which could be a Duty.
+     * 
+     * Chances are you won't have a Lesson afterwards, but you really do need to get this allocated if you do!
+     */
+    if (isset($startTime)) {
+        /* Let's try with the endTime now */
+        $db->unlock();
+        header("location: makebooking.php?endTime=" . urlencode($endTime) . "&roomId=$roomId&date=" . urlencode($date));
+        die();
+    } else {
+        /* Looks as though you have no Lesson before and a late lunch Duty */
+        $db->unlock();
+        $_SESSION['thereIsNoRoomForThisLesson'] = true;
+        header("location: index.php?date=$date");
+        die();
+    }
 }
 
 /* Store the old room in the database */
