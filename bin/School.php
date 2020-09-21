@@ -66,6 +66,29 @@ class School
         return $d;
     }
     
+    function getAcademicYear() {
+        if (!empty($this->academicYear)) {
+            return $this->academicYear;
+        }
+        
+        $month = date("m");
+        $year = date("Y");
+        
+        if ($month >= 9) {
+            $nextYear = $year + 1;
+            $this->academicYear['eve'] = "$year-08-31";
+            $this->academicYear['post'] = "$nextYear-09-01";
+            $this->academicYear['academicYear'] = "$year-$nextYear";
+        } else {
+            $lastYear = $year - 1;
+            $this->academicYear['eve'] = "$lastYear-08-31";
+            $this->academicYear['post'] = "$year-09-01";
+            $this->academicYear['academicYear'] = "$lastYear-$year";
+        }
+        
+        return $this->academicYear;
+    }
+    
     /**
      * 
      * @return \Roombooking\Day[]
@@ -80,17 +103,8 @@ class School
             return $this->days;
         }
         
-        /* Let's find our academic year before we go any further */
-        $month = date("m");
-        $year = date("Y");
-        
-        if ($month >= 9) {
-            $ayeve = "$year-08-31";
-            $aypost = $year+1 . "-09-01";
-        } else {
-            $ayeve = $year-1 . "-08-31";
-            $aypost = "$year-09-01";
-        }
+        $ayeve = $this->getAcademicYear()['eve'];
+        $aypost = $this->getAcademicYear()['post'];
         
         $query = $this->client->rawQuery('{
             AcademicCalendarDate (startDate_after: "' . $ayeve . '" startDate_before: "' . $aypost . '") {
@@ -207,9 +221,11 @@ class School
             return $this->timetablePeriod;
         }
         
+        $ay = $this->getAcademicYear()['academicYear'];
+        
         $queryData = $this->client->rawQuery('
         {
-            TimetablePeriodGrouping {
+            TimetablePeriodGrouping (academicYear__code: "' . $ay . '") {
                 shortName
                 timetablePeriods {
                     dayOfWeek
@@ -276,7 +292,6 @@ class School
                     // This must be a non-ICT room, so a calendared lesson
                     continue;
                 }
-                
                 $staff = [];
                 foreach ($d['lesson']['staff'] as $s) {
                     if (!isset($this->staff[$s['id']])) {
