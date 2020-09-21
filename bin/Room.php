@@ -65,11 +65,35 @@ class Room
      * @param Lesson $lesson
      */
     public function addLesson(Lesson $lesson) {
-        array_push($this->timetableEntries, $lesson);
+        $date = $lesson->getDay()->getDate();
+        $period = $lesson->getPeriod();
+        foreach ($this->timetableEntries as $e) {
+            if ($e instanceOf Lesson) {
+                if ($e->getDay()->getDate() === $date && $e->getPeriod() === $period) {
+                    if (!isset($_SESSION['roomBookingConflict'])) {
+                        $_SESSION['roomBookingConflict'] = [];
+                    }
+                    $alreadyIn = false;
+                    foreach ($_SESSION['roomBookingConflict'] as $conflict) {
+                        if (in_array($lesson, $conflict)) {
+                            $alreadyIn = true;
+                        }
+                    }
+                    if (! $alreadyIn) {
+                        array_push($_SESSION['roomBookingConflict'],
+                            [0 => $lesson, 1 => $e,]);
+                    }
+                    if (empty($_SESSION['roomBookingConflict'])) {
+                        unset ($_SESSION['roomBookingConflict']);
+                    }
+                }
+            }
+        }
+        $this->timetableEntries[$lesson->getId()] = $lesson;
     }
     
     public function addUnavailability(Unavailability $unavailability) {
-        array_push($this->timetableEntries, $unavailability);
+        $this->timetableEntries[-$unavailability->getId()] = $unavailability;
     }
     
     public function getEntry(Period $period, string $date) {
