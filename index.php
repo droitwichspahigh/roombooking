@@ -24,6 +24,9 @@ if (!isset($date)) {
 $date = date("Y-m-d", $date);
 
 /* OK, now let's deal with some popups */
+if (isset($_SESSION['roomBookingConflict'])) {
+    $modalmsg = "WARNING: There are some conflicts in scheduling.  If you would like to help, please <a href=\"review_conflicts.php\">review them</a> and email whoever has lost a booking to let them know.";
+}
 if (isset ($_SESSION['thereIsNoLessonAtThisTime'])) {
     unset ($_SESSION['thereIsNoLessonAtThisTime']);
     /* Do a popup here about there being no lesson for the teacher! */
@@ -101,6 +104,14 @@ EOF;
             	<ul class="navbar-nav">
             		<li class="nav-item">
                 		<a class="nav-link" href="clear_cache.php">Clear the cache and rescan Arbor</a>
+                	</li>
+            	</ul>
+        	</div>
+        	
+        	<div class="collapse navbar-collapse" id="collapsibleNavbar">
+            	<ul class="navbar-nav">
+            		<li class="nav-item">
+                		<a class="nav-link" href="review_conflicts.php">Check for and review scheduling conflicts</a>
                 	</li>
             	</ul>
         	</div>
