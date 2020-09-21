@@ -4,6 +4,7 @@ namespace Roombooking;
 
 use \GraphQL\Client;
 use \GraphQL\Query;
+use GraphQL;
 
 class GraphQLClient {
     protected $client;
@@ -15,11 +16,19 @@ class GraphQLClient {
     }
     
     function query(Query $query,  $vars = [['a' => 0]]) {
-        return $this->client->runQuery($query, true, $vars);
+        try {
+            return $this->client->runQuery($query, true, $vars);
+        } catch (\GuzzleHttp\Exception\ServerException $e) {
+            die("<pre>Really sorry, Arbor appears to be taking too long to respond.  Please try again, and if this repeats, try again later.</pre>");
+        }
     }
     
     function rawQuery(string $query, $vars = [['a' => 0]]) {
-        return $this->client->runRawQuery($query, true, $vars);
+        try {
+            return $this->client->runRawQuery($query, true, $vars);
+        } catch (\GuzzleHttp\Exception\ServerException $e) {
+            die("<pre>Really sorry, Arbor appears to be taking too long to respond.  Please try again, and if this repeats, try again later.</pre>");
+        }
     }
     
     function test() {
