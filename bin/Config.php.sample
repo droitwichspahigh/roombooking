@@ -41,7 +41,7 @@ class Config {
      */
     private const user_regexes = array(
         'student' => '^[0-9]{2}[a-zA-Z]+$',
-        'staff'   => '^[a-zA-Z]+$',
+        'staff'   => '^[-a-zA-Z]+$',
     );
     
     /* No user serviceable parts beyond this point */
