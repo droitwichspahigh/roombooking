@@ -16,8 +16,21 @@ class Lesson extends Event
         $this->period = $period;
     }
     
+    /**
+     * @return \Roombooking\Day
+     */
     public function getDay() { return $this->day; }
+    
+    /**
+     * @return \Roombooking\Period
+     */
     public function getPeriod() { return $this->period; }
+    
+    /**
+     * 
+     * @return \Roombooking\Staff
+     */
+    public function getStaff() { return $this->staff; }
 
     /**
      * Returns staff separated by " & "
