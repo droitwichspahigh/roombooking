@@ -345,7 +345,9 @@ class School
         global $auth_user;
         
         if (isset ($_SESSION['currentlyLoggedInStaffId'])) {
-            return $this->staff[$_SESSION['currentlyLoggedInStaffId']];
+            if (isset ($this->staff[$_SESSION['currentlyLoggedInStaffId']])) {
+                return $this->staff[$_SESSION['currentlyLoggedInStaffId']];
+            }
         }
         
         Config::debug("School::getCurrentlyLoggedInStaff: looking for email");
@@ -370,7 +372,7 @@ class School
         $this->staff[$s['id']] = new Staff($s['id'], $s['displayName']);
         
         $_SESSION['currentlyLoggedInStaffId'] = $s['id'];
-        
+
         return $this->staff[$s['id']];
     }
     
