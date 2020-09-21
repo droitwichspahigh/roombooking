@@ -81,7 +81,7 @@ EOF;
 	<div class="container">
 		<nav class="navbar navbar-expand">
             <!-- Brand -->
-            <a class="navbar-brand">Actions</a>
+            <a class="navbar-brand"><?= $auth_user ?></a>
             
             <!-- Toggler/collapsibe Button -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
