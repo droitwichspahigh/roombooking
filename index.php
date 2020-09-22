@@ -84,7 +84,10 @@ EOF;
 	<div class="container">
 		<nav class="navbar navbar-expand">
             <!-- Brand -->
-            <a class="navbar-brand"><?= $auth_user ?></a>
+            <a class="navbar-brand"><?php print ($auth_user);
+            if (in_array($auth_user, Config::admin_users)) {
+                print ("<span class=\"text-danger\"> (administrator)</span>");
+            }?></a>
             
             <!-- Toggler/collapsibe Button -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
