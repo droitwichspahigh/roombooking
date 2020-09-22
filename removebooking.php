@@ -9,7 +9,7 @@ $db = new Database();
 $lessonId = $_GET['cancelBooking'];
 $date = $_GET['date'];
 
-if (in_array($auth_user, Config::admin_users)) {
+if (!in_array($auth_user, Config::admin_users)) {
     /* Is this actually my booking? */
     $checkQuery = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR_ENTRY_MAPPING);
     $checkQuery->addPropertyFilter(\Arbor\Model\CalendarEntryMapping::CALENDAR, \Arbor\Query\Query::OPERATOR_EQUALS, '/rest-v2/calendars/' . $school->getCurrentlyLoggedInStaff()->getCalendarId());
