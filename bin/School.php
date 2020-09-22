@@ -187,7 +187,7 @@ class School
         $this->db->long_cache_put_array($this->rooms);
         
         // Try refreshing to avoid timeout
-        header("Location: index.php");
+        header("Location: {$_SERVER['REQUEST_URI']}");
         die();
         
         return $this->rooms;
@@ -255,7 +255,7 @@ class School
         $this->db->long_cache_put_array($this->timetablePeriod);
         
         // Avoid timeout
-        header("Location: index.php");
+        header("Location: {$_SERVER['REQUEST_URI']}");
         die();
         
         return $this->timetablePeriod;
@@ -439,7 +439,7 @@ query {
         
         // Refresh to avoid timeout
         
-        header('Location: index.php');
+        header("Location: {$_SERVER['REQUEST_URI']}");
         die();
         
         return $_SESSION['School_queryData'];
