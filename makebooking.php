@@ -13,12 +13,12 @@ foreach (['roomId', 'date'] as $g) {
 }
 
 $date = $_GET['date'];
+$endTime = $_GET['endTime'];
 if (isset($_GET['startTime'])) {
     /* We're going to try to book with startTime at first, then endTime */
     $startTime = $_GET['startTime'];
     $queryFilter = "startDatetime: \"$date $startTime\"";
 } else {
-    $endTime = $_GET['endTime'];
     $queryFilter = "endDatetime: \"$date $endTime\"";
 }
 $roomId = $_GET['roomId'];
@@ -69,7 +69,7 @@ if (!isset($staffCal[0])) {
     if (isset($startTime)) {
         /* Let's try with the endTime now */
         $db->unlock();
-        header("location: makebooking.php?endTime=$endTime&roomId=$roomId&date=$date");
+        header("Location: makebooking.php?endTime=" . urlencode($endTime) . "&roomId=$roomId&date=$date");
         die();
     } else {
         /* We've tried endTime, we're now out of options, give up */
