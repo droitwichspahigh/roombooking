@@ -14,6 +14,7 @@ class Unavailability extends Event
      */
     public function __construct(int $id, string $name, int $startTS, int $endTS)
     {
+        $this->id = $id;
         $this->name = $name;
         $this->startTimeStamp = $startTS;
         $this->endTimeStamp = $endTS;
@@ -28,10 +29,22 @@ class Unavailability extends Event
     }
     
     public function includes(string $date, Period $period) {
-        $ts = strtotime($date . " " . $period->getStartTime());
-        if (($ts <= $this->endTimeStamp && $ts >= $this->startTimeStamp)) {
+        /* Check if startTime - endTime collide */
+        $startTimeStamp = strtotime($date . " " . $period->getStartTime());
+        $endTimeStamp = strtotime($date . " " . $period->getEndTime());
+        // Does the Unavailability contain the Lesson?
+        if (($startTimeStamp <= $this->endTimeStamp && $endTimeStamp >= $this->startTimeStamp)) {
             return true;
         }
+        // Does the Lesson contain the Unavailability?
+        if (($startTimeStamp >= $this->endTimeStamp && $endTimeStamp <= $this->startTimeStamp)) {
+            return true;
+        }
+        // Do they overlap?
+        if ((max($this->startTimeStamp, $startTimeStamp)) - min($this->endTimeStamp, $endTimeStamp) < 0) {
+            return true;
+        }
+        // Phew!  Apparently not.
         return false;
     }
 
