@@ -11,6 +11,8 @@ if (!in_array($auth_user, Config::admin_users)) {
 
 $db = new Database();
 
+session_destroy();
+
 $db->dosql("DELETE FROM serialisedCache;");
 
 header('location: index.php');
