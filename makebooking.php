@@ -50,7 +50,7 @@ query {
             }
         }
     }
-    roomCal: CalendarEntryMapping (calendar__id: ' . $school->getRoomCalendarIds()[$roomId] . ' ' . $queryFilter . ') {
+    roomCal: CalendarEntryMapping (calendar__id: ' . $school->getRoomAcademicCalendarIds()[$roomId] . ' ' . $queryFilter . ') {
         id
     }
 }')->getData();
