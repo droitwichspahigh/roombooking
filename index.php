@@ -86,7 +86,10 @@ EOF;
             <!-- Brand -->
             <a class="navbar-brand"><?php print ($auth_user);
             if (in_array($auth_user, Config::admin_users)) {
-                print ("<span class=\"text-danger\"> (administrator)</span>");
+                print ("<span class=\"text-warning\"> (administrator)</span>");
+                if (isset(Config::$maintenance) && Config::$maintenance) {
+                    print "<span class=\"text-danger\"> (maintenance mode)</span>";
+                }
             }?></a>
             
             <!-- Toggler/collapsibe Button -->
