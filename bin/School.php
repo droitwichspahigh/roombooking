@@ -34,16 +34,29 @@ class School
      *
      * @return int[] Array of calendar IDs.  The room calendars are stored under Room ID.
      */
-    function getRoomCalendarIds() {
+    function getRoomAcademicCalendarIds() {
         $cals = [];
         /* Let's find out which Calendars we need to query- these are the Rooms we should query */
         foreach ($this->getIctRooms() as $r) {
-            $cals[$r->getId()] = $r->getCalendarId();
+            $cals[$r->getId()] = $r->getAcademicCalendarId();
         }
         
         return $cals;
     }
     
+    /**
+     *
+     * @return int[] Array of calendar IDs.  The room calendars are stored under Room ID.
+     */
+    function getRoomSchoolCalendarIds() {
+        $cals = [];
+        /* Let's find out which Calendars we need to query- these are the Rooms we should query */
+        foreach ($this->getIctRooms() as $r) {
+            $cals[$r->getId()] = $r->getSchoolCalendarId();
+        }
+        
+        return $cals;
+    }
     /**
      * Give ten working days away- the cutoff for bookings.  This needs to be dynamic if caching.
      *
@@ -261,23 +274,15 @@ class School
         return $this->timetablePeriod;
     }
     
-    public function getPeriodFromStartTime(String $startTime) {
+    public function getPeriodFromTimes(String $startTime, String $endTime) {
         foreach ($this->getPeriods() as $p) {
-            if ($p->getStartTime() == $startTime) {
+            if ($p->getStartTime() == $startTime || $p->getEndTime() == $endTime) {
                 return $p;
             }
         }
         return null;
     }
     
-    public function getPeriodFromEndTime(String $endTime) {
-        foreach ($this->getPeriods() as $p) {
-            if ($p->getEndTime() == $endTime) {
-                return $p;
-            }
-        }
-        return null;
-    }
     /*
      * 
      * This is the semi-VOLATILE section- this stuff needs fetching every session
@@ -303,13 +308,9 @@ class School
                 $startTime = date("H:i:s",   strtotime($d['lesson']['startDatetime']));
                 $endTime = date("H:i:s",   strtotime($d['lesson']['endDatetime']));
                 /* Based on startTime, not ID */
-                $period = $this->getPeriodFromStartTime($startTime);
+                $period = $this->getPeriodFromTimes($startTime, $endTime);
                 if (! $period) {
-                    // With split periods we take the end time as well.
-                    $period = $this->getPeriodFromEndTime($endTime);
-                    if (! $period) {
-                        die ("Hm, no timetable map for $startTime - $endTime. <pre>ttMap = " . print_r($this->getPeriods(), true) . "</pre> <p>Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.</p>");
-                    }
+                    die ("Hm, no timetable map for $startTime - $endTime. <pre>ttMap = " . print_r($this->getPeriods(), true) . "</pre> <p>Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.</p>");
                 }
                 
                 $day = $this->getDay($d['lesson']['startDatetime']);
@@ -322,10 +323,25 @@ class School
                     new Lesson($d['lesson']['id'], $d['lesson']['displayName'], $day, $period, $staff)
                     );
             }
+        } foreach ($this->getQueryData()['interventionsAndSundry'] as $i) {
+            $roomCalendarId = $i['calendar']['id'];
+            $roomId = array_search($roomCalendarId, $this->getRoomSchoolCalendarIds());
+            if (!$this->getRooms()[$roomId]->isIctRoom()) {
+                // This must be a non-ICT room, so a calendared lesson
+                continue;
+            }
+            $this->rooms[$roomId]->addUnavailability(
+                new Unavailability(
+                    -$i['id'],
+                    'Intervention',
+                    strtotime($i['startDatetime']),
+                    strtotime($i['endDatetime'])
+                    )
+                );
         }
         foreach ($this->getQueryData()['RoomUnavailability'] as $u) {
             // Then deal with availability
-            $this->rooms[$u['room']['id']]->addUnavailability(
+            $this->getRooms()[$u['room']['id']]->addUnavailability(
                 new Unavailability(
                     $u['id'],
                     $u['displayName'],
@@ -407,7 +423,7 @@ class School
         /* You don't want to know how long this query took to construct :( */
         $_SESSION['School_queryData'] = $this->client->rawQuery('
 query {
-    CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
+    CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomAcademicCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
         id
         lesson: event {
             __typename
@@ -425,6 +441,14 @@ query {
                     displayName
                 }
             }
+        }
+    }
+    interventionsAndSundry: CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomSchoolCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
+        id        
+        startDatetime
+        endDatetime
+        calendar {
+            id
         }
     }
     RoomUnavailability (room__id_in: [' . implode (",", array_keys($this->getIctRooms())). '] ){

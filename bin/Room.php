@@ -6,7 +6,8 @@ class Room
     protected $id;
     protected $name;
     protected $isIctRoom;
-    protected $calendarId;
+    protected $academicCalendarId;
+    protected $schoolCalendarId;
     protected $timetableEntries = [];
 
     public function __construct(int $id, string $name, bool $isIctRoom = false)
@@ -33,8 +34,15 @@ class Room
         $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
             \Arbor\Query\Query::OPERATOR_EQUALS,
             'ACADEMIC');
-        $this->calendarId = (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
-
+        $this->academicCalendarId = (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
+        
+        $query = new \Arbor\Query\Query(\Arbor\Resource\ResourceType::CALENDAR);
+        $query->addPropertyFilter(\Arbor\Model\Calendar::OWNER, \Arbor\Query\Query::OPERATOR_EQUALS, "/rest-v2/rooms/" . $this->id);
+        $query->addPropertyFilter(\Arbor\Model\Calendar::CALENDAR_TYPE . '.' . \Arbor\Model\CalendarType::CODE,
+            \Arbor\Query\Query::OPERATOR_EQUALS,
+            'SCHOOL');
+        $this->schoolCalendarId = (\Arbor\Model\Calendar::query($query))[0]->getResourceId();
+            
     }
     
     /**
@@ -55,8 +63,13 @@ class Room
     public function isIctRoom() {
         return ($this->isIctRoom);
     }
-    public function getCalendarId() {
-        return $this->calendarId;
+    
+    public function getAcademicCalendarId() {
+        return $this->academicCalendarId;
+    }
+    
+    public function getSchoolCalendarId() {
+        return $this->schoolCalendarId;
     }
     
     /**

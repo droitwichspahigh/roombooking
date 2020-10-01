@@ -33,11 +33,11 @@ class Unavailability extends Event
         $startTimeStamp = strtotime($date . " " . $period->getStartTime());
         $endTimeStamp = strtotime($date . " " . $period->getEndTime());
         // Does the Unavailability contain the Lesson?
-        if (($startTimeStamp <= $this->endTimeStamp && $endTimeStamp >= $this->startTimeStamp)) {
+        if (($startTimeStamp < $this->endTimeStamp && $endTimeStamp > $this->startTimeStamp)) {
             return true;
         }
         // Does the Lesson contain the Unavailability?
-        if (($startTimeStamp >= $this->endTimeStamp && $endTimeStamp <= $this->startTimeStamp)) {
+        if (($startTimeStamp > $this->endTimeStamp && $endTimeStamp < $this->startTimeStamp)) {
             return true;
         }
         // Do they overlap?
