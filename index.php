@@ -145,7 +145,11 @@ EOF;
     					<th>&nbsp;</th>
     					<?php
     					 foreach ($school->getIctRooms() as $r) {
-    				        echo "<th>" . $r->getName() . "</th>";
+    					     if (false && $r->getCapacity() !== null) {
+    					         echo "<th>" . $r->getName() . " (" . $r->getCapacity() . " students)</th>";
+    					     } else {
+    				            echo "<th>" . $r->getName() . "</th>";
+    					     }
     				     }
     				    ?>
     				</tr>

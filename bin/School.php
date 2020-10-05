@@ -176,6 +176,7 @@ class School
                     room {
                         id
                         roomName
+                        studentCapacity
                     }
                 }
                 AllRoom: Room {
@@ -186,6 +187,7 @@ class School
         
         foreach ($result->getData()['IctRoom'] as $r) {
             $this->rooms[$r['room']['id']] = new Room($r['room']['id'], $r['room']['roomName'], true);
+            $this->rooms[$r['room']['id']]->setCapacity($r['room']['studentCapacity']);
         }
         
         foreach ($result->getData()['AllRoom'] as $r) {

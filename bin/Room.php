@@ -9,6 +9,7 @@ class Room
     protected $academicCalendarId;
     protected $schoolCalendarId;
     protected $timetableEntries = [];
+    protected $studentCapacity = null;
 
     public function __construct(int $id, string $name, bool $isIctRoom = false)
     {
@@ -70,6 +71,16 @@ class Room
     
     public function getSchoolCalendarId() {
         return $this->schoolCalendarId;
+    }
+    
+    public function getCapacity() {
+        return $this->studentCapacity;
+    }
+    
+    public function setCapacity($capacity) {
+        if (!empty($capacity)) {
+            $this->studentCapacity = $capacity;
+        }
     }
     
     /**
