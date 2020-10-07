@@ -170,8 +170,12 @@ EOF;
     			         } else {
     			             $info = $e->getInfo();
     			             /* Is this my booking? */
-    			             if (isset ($bookedLessons[$e->getId()]) && $bookedLessons[$e->getId()] == $school->getCurrentlyLoggedInStaff()->getCalendarId()) {
-    			                 $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
+    			             if (isset ($bookedLessons[$e->getId()])) {
+    			                 if ($bookedLessons[$e->getId()] == $school->getCurrentlyLoggedInStaff()->getCalendarId()) {
+    			                     $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
+    			                 } elseif (in_array($auth_user, Config::admin_users)) {
+    			                     $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-danger stretched-link\">" . $info . "</a>";
+    			                 }
     			             }
     			             echo $info;
     			         }
