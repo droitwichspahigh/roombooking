@@ -377,15 +377,24 @@ class School
         if (!isset($emailAddress[0])) {
             die("Your email address " . $auth_user . '@' . Config::site_emaildomain ." appears unrecognised.");
         }
-        if (isset($emailAddress[1])) {
-            die("Your email address appears to have more than one owner.  This cannot possibly be right");
+        
+        $staffFound = false;
+        foreach ($emailAddress as $e) {
+            if ($e['emailAddressOwner']['entityType'] == "Staff") {
+                if ($staffFound) {
+                    die("Your email address appears to have more than one owner.  This cannot possibly be right");
+                }
+                $staffFound = true;
+                $s = $e['emailAddressOwner'];
+            }
         }
-        if ($emailAddress[0]['emailAddressOwner']['entityType'] != 'Staff') {
+        
+        if (!isset($s)) {
             die("Your email address " . $auth_user . '@' . Config::site_emaildomain ." appears not to belong to a member of staff.");
         }
-        Config::debug("School::getCurrentlyLoggedInStaff: email found");
-        $s = $emailAddress[0]['emailAddressOwner'];
         
+        Config::debug("School::getCurrentlyLoggedInStaff: email found");
+
         /* May as well, save a few microseconds if we need it later */
         $this->staff[$s['id']] = new Staff($s['id'], $s['displayName']);
         
