@@ -50,7 +50,7 @@ if (!class_exists("Config")) {
     }
     if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off") {
         header('HTTP/1.1 301 Moved Permanently');
-        header('location: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        header('location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         exit();
     }
 }
