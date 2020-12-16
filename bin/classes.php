@@ -4,6 +4,11 @@ namespace Roombooking;
 
 /* Have we been called before? */
 if (!class_exists("Config")) {
+    if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off") {
+        header('HTTP/1.1 301 Moved Permanently');
+        header('location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        exit();
+    }
     require "Config.php";
     // denied.php skips auth
     if (!isset($skip_auth) || ! $skip_auth) {
@@ -47,10 +52,5 @@ if (!class_exists("Config")) {
             session_destroy();
             session_start();
             $_SESSION['SESSION_CREATIONTIME'] = $time;
-    }
-    if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off") {
-        header('HTTP/1.1 301 Moved Permanently');
-        header('location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-        exit();
     }
 }
