@@ -13,10 +13,11 @@ class School
     protected $client, $db;
     protected $staff = null;
     
-    public function __construct()
+    public function __construct($start = null, $end = null)
     {
         $this->client = new GraphQLClient();
         $this->db = new Database();
+        $this->getQueryData($start, $end);
         $this->getTimetables();
     }
     
@@ -192,7 +193,8 @@ class School
         
         foreach ($result->getData()['AllRoom'] as $r) {
             if (!array_key_exists($r['id'], $this->rooms)) {
-                $this->rooms[$r['id']] = new Room($r['id'], $r['roomName'], false);
+                // If we have allRooms defined, get info for every room, not just ICT rooms
+                $this->rooms[$r['id']] = new Room($r['id'], $r['roomName'], defined('allRooms'));
             }
         }
         
@@ -312,7 +314,8 @@ class School
                 /* Based on startTime, not ID */
                 $period = $this->getPeriodFromTimes($startTime, $endTime);
                 if (! $period) {
-                    die ("Hm, no timetable map for $startTime - $endTime. <pre>ttMap = " . print_r($this->getPeriods(), true) . "</pre> <p>Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.</p>");
+                    continue;
+                    die ("Hm, no timetable map for $startTime - $endTime. ttMap = " . print_r($this->getPeriods(), true) . "</pre> <p>Try <a href=\"clear_cache.php\">clearing the cache to see if that helps</a> before <a href=\"mailto:" . Config::support_email . "\">emailing</a>.</p>");
                 }
                 
                 $day = $this->getDay($d['lesson']['startDatetime']);
@@ -410,7 +413,7 @@ class School
      *
      * @return array
      */
-    public function getQueryData() {
+    public function getQueryData($start = null, $end = null) {
         if (isset($_SESSION['School_queryData'])) {
             return $_SESSION['School_queryData'];
         }
@@ -418,7 +421,7 @@ class School
         Config::debug("School::getQueryData: no session cache data, requerying");
         
         /*
-         * XXX We're going to look ahead by five weeks.
+         * XXX We're going to look ahead by five weeks by default.
          *
          * The longest holidays (apart from the summer,
          * where you can't normally book in advance) are
@@ -429,8 +432,8 @@ class School
          * Inefficient?  Meh.
          *
          */
-        $end = date('Y-m-d', strtotime('5 weeks'));
-        $lastMidnight = date('Y-m-d');
+        $end = $end ?? date('Y-m-d', strtotime('5 weeks'));
+        $lastMidnight = $start ?? date('Y-m-d');
         /* You don't want to know how long this query took to construct :( */
         $_SESSION['School_queryData'] = $this->client->rawQuery('
 query {
@@ -471,11 +474,6 @@ query {
         displayName
     }
 }')->getData();
-        
-        // Refresh to avoid timeout
-        
-        header("Location: {$_SERVER['REQUEST_URI']}");
-        die();
         
         return $_SESSION['School_queryData'];
     }
