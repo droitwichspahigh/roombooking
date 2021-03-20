@@ -13,6 +13,6 @@ $db = new Database();
 
 session_destroy();
 
-$db->dosql("DELETE FROM serialisedCache;");
+$db->dosql("TRUNCATE serialisedCache;");
 
 header('location: index.php');
