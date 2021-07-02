@@ -20,7 +20,9 @@ echo "<div class=\"container\"><div><a class=\"btn btn-danger\" href=\"?doit=1\"
 while ($row = $result->fetch_row()) {
     if (isset($_GET['doit'])) {
         $session = \Arbor\Model\Session::retrieve($row[3]);
-        $session->setLocation(\Arbor\Model\Room::retrieve($row[4]));
+        $newRoom = \Arbor\Model\Room::retrieve($row[4]);
+        
+        $session->setLocation($newRoom);
         $session->save();
         $db->dosql("DELETE FROM bulkchanges WHERE id={$row[0]}");
     } else {

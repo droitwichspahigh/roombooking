@@ -1,5 +1,5 @@
-0,P4,J16,P14,PE Core KS4: Year 11: 11 S . PE Core Male 1
-0,P4,J17,P13,PE Core KS4: Year 11: 11 S . PE Core Fem 1
+0,P4,J16,Z0,PE Core KS4: Year 11: 11 S . PE Core Male 1
+0,P4,J17,Z0,PE Core KS4: Year 11: 11 S . PE Core Fem 1
 1,P4,A5,N7,PE Core KS4: Year 10: 10 R . PE Male 2
 1,P4,A1,N9,PE Core KS4: Year 10: 10 R . PE Fem 1
 1,P4,C3,N1,Science KS4: Year 10: 10 L . Science 5
@@ -12,17 +12,17 @@
 1,P4,P14,N14,PE Core KS4: Year 10: 10 R . PE Fem 2
 2,P4,P6 - MUSIC,J16,PE Core KS4: Year 10: 10 S . PE Male 1
 2,P4,R2 Gym (Back),J15,PE Core KS4: Year 10: 10 S . PE Fem 1
-3,P1,J17,P14,Science KS4: Year 11: 11 L . Science 2
-3,P1,J18,C1,PE Core KS4: Year 11: 11 R . PE Core Male2
-3,P1,M5 Home Ec,C3,PE Core KS4: Year 11: 11 R . PE Core Male1
-3,P1,N14,B2,Science KS4: Year 11: 11 L . Science 1
-3,P1,N2,A5,Science KS4: Year 11: 11 L . Science 4
-3,P1,N1,C7,PE Core KS4: Year 11: 11 R . PE Core Fem1
-3,P1,N7,P6 - MUSIC,Science KS4: Year 11: 11 L . Science 3
-3,P1,N8,A11,Science KS4: Year 11: 11 L . Science 5
-3,P1,N9,C9,PE Core KS4: Year 11: 11 R . PE Core Fem2
-3,P2,N14,C9,PE Core KS4: Year 11: 11 S . PE Core Fem 1
-3,P2,N9,C7,PE Core KS4: Year 11: 11 S . PE Core Male 1
+3,P1,J17,Z0,Science KS4: Year 11: 11 L . Science 2
+3,P1,J18,Z0,PE Core KS4: Year 11: 11 R . PE Core Male2
+3,P1,M5 Home Ec,Z0,PE Core KS4: Year 11: 11 R . PE Core Male1
+3,P1,N14,Z0,Science KS4: Year 11: 11 L . Science 1
+3,P1,N2,Z0,Science KS4: Year 11: 11 L . Science 4
+3,P1,N1,Z0,PE Core KS4: Year 11: 11 R . PE Core Fem1
+3,P1,N7,Z0,Science KS4: Year 11: 11 L . Science 3
+3,P1,N8,Z0,Science KS4: Year 11: 11 L . Science 5
+3,P1,N9,Z0,PE Core KS4: Year 11: 11 R . PE Core Fem2
+3,P2,N14,Z0,PE Core KS4: Year 11: 11 S . PE Core Fem 1
+3,P2,N9,Z0,PE Core KS4: Year 11: 11 S . PE Core Male 1
 3,P3,C7,J15,Chemistry KS4: Year 10: 10 S . Chemistry 1
 3,P3,R2 Gym (Back),J16,Biology KS4: Year 10: 10 S . Biology 2
 3,P4,A5,N7,PE Core KS4: Year 10: 10 R . PE Male 2
@@ -35,15 +35,15 @@
 3,P5,A17,N1,PE Core KS4: Year 10: 10 L . PE Male 3
 3,P5,C1,J18,PE Core KS4: Year 10: 10 L . PE Fem 2
 3,P5,P13,N2,PE Core KS4: Year 10: 10 L . PE Male 2
-4,P4,J15,P6 - MUSIC,PE Core KS4: Year 11: 11 L . PE Core Male2
-4,P4,J16,B2,PE Core KS4: Year 11: 11 L . PE Core Fem1
-4,P4,J17,A5,PE Core KS4: Year 11: 11 L . PE Core Fem2
-4,P4,J18,P14,PE Core KS4: Year 11: 11 L . PE Core Male1
-4,P4,N8,A11,PE Core KS4: Year 11: 11 L . PE Core Fem3
-4,P5,J18,P14,PE Core KS4: Year 11: 11 R . PE Core Male2
-4,P5,M5 Home Ec,A11,PE Core KS4: Year 11: 11 R . PE Core Male1
-4,P5,N1,B2,PE Core KS4: Year 11: 11 R . PE Core Fem1
-4,P5,N9,A5,PE Core KS4: Year 11: 11 R . PE Core Fem2
+4,P4,J15,Z0,PE Core KS4: Year 11: 11 L . PE Core Male2
+4,P4,J16,Z0,PE Core KS4: Year 11: 11 L . PE Core Fem1
+4,P4,J17,Z0,PE Core KS4: Year 11: 11 L . PE Core Fem2
+4,P4,J18,Z0,PE Core KS4: Year 11: 11 L . PE Core Male1
+4,P4,N8,Z0,PE Core KS4: Year 11: 11 L . PE Core Fem3
+4,P5,J18,Z0,PE Core KS4: Year 11: 11 R . PE Core Male2
+4,P5,M5 Home Ec,Z0,PE Core KS4: Year 11: 11 R . PE Core Male1
+4,P5,N1,Z0,PE Core KS4: Year 11: 11 R . PE Core Fem1
+4,P5,N9,Z0,PE Core KS4: Year 11: 11 R . PE Core Fem2
 0,P1,A5,N9,Science KS4: Year 10: 10 R . Science 4
 0,P1,C3,N1,English KS4: Year 10: 10 L . English 5
 0,P1,C7,N14,Science KS4: Year 10: 10 R . Science 1
@@ -51,23 +51,23 @@
 0,P1,C9,N7,Science KS4: Year 10: 10 R . Science 3
 0,P1,B2,N8,Science KS4: Year 10: 10 R . Science 5
 0,P1,C1,J18,English KS4: Year 10: 10 L . English 4
-0,P1,J15,A17,French KS4: Year 11: 11 'B' . French A
-0,P1,J16,P7 - MUSIC,French KS4: Year 11: 11 'B' . French S
-0,P1,J17,P13,History KS4: Year 11: 11 'B' . History A
-0,P1,J18,C3,German KS4: Year 11: 11 'B' . German
-0,P1,M2 GLC - ICT,P11 - ICT,Computer Sci KS4: Year 11: 11 'B' . Computer Sci
-0,P1,M1 - ART,C1,Voc Exp: Year 11: 11 'B' . Voc Exp 1
-0,P1,M5 Home Ec,A14 ,DT Food KS4: Year 11: 11 'B' . DT - Food
-0,P1,P11 - ICT,P6 - MUSIC,Music KS4: Year 11: 11 'B' . Music
+0,P1,J15,Z0,French KS4: Year 11: 11 'B' . French A
+0,P1,J16,Z0,French KS4: Year 11: 11 'B' . French S
+0,P1,J17,Z0,History KS4: Year 11: 11 'B' . History A
+0,P1,J18,Z0,German KS4: Year 11: 11 'B' . German
+0,P1,M2 GLC - ICT,Z0,Computer Sci KS4: Year 11: 11 'B' . Computer Sci
+0,P1,M1 - ART,Z0,Voc Exp: Year 11: 11 'B' . Voc Exp 1
+0,P1,M5 Home Ec,Z0,DT Food KS4: Year 11: 11 'B' . DT - Food
+0,P1,P11 - ICT,Z0,Music KS4: Year 11: 11 'B' . Music
 0,P1,P13,N10,English KS4: Year 10: 10 L . English 1
 0,P1,P14,J17,Science KS4: Year 10: 10 R . Science 2
-0,P1,N14,B2,Geography KS4: Year 11: 11 'B' . Geography A
+0,P1,N14,Z0,Geography KS4: Year 11: 11 'B' . Geography A
 0,P1,P7 - MUSIC,N2,English KS4: Year 10: 10 L . English 3
-0,P1,N3,P14,Geography KS4: Year 11: 11 'B' . Geography S
+0,P1,N3,Z0,Geography KS4: Year 11: 11 'B' . Geography S
 0,P1,P6 - MUSIC,J16,English KS4: Year 10: 10 S . English 2
-0,P1,N1,C9,Business KS4: Year 11: 11 'B' . Business
+0,P1,N1,Z0,Business KS4: Year 11: 11 'B' . Business
 0,P1,R2 Gym (Back),J15,English KS4: Year 10: 10 S . English 1
-0,P1,Cabin,A5,Voc Exp: Year 11: 11 'B' . Voc Exp 2
+0,P1,Cabin,Z0,Voc Exp: Year 11: 11 'B' . Voc Exp 2
 0,P2,C3,N1,Maths KS4: Year 10: 10 L . Maths 5
 0,P2,C7,N9,English KS4: Year 10: 10 R . English 4
 0,P2,A17,N3,Maths KS4: Year 10: 10 L . Maths 2
@@ -75,18 +75,18 @@
 0,P2,FD HALL,J16,Maths KS4: Year 10: 10 S . Maths 2
 0,P2,B2,N7,English KS4: Year 10: 10 R . English 3
 0,P2,C1,J18,Maths KS4: Year 10: 10 L . Maths 4
-0,P2,J16,P13,History KS4: Year 11: 11 'A' . History S
-0,P2,J17,P6 - MUSIC,History KS4: Year 11: 11 'A' . History A
-0,P2,M2 GLC - ICT,A14 ,HealthSocCare KS4: Year 11: 11 'A' . HealthSocCare
+0,P2,J16,Z0,History KS4: Year 11: 11 'A' . History S
+0,P2,J17,Z0,History KS4: Year 11: 11 'A' . History A
+0,P2,M2 GLC - ICT,Z0,HealthSocCare KS4: Year 11: 11 'A' . HealthSocCare
 0,P2,P13,N10,Maths KS4: Year 10: 10 L . Maths 1
 0,P2,P14,N14,English KS4: Year 10: 10 R . English 1
 0,P2,P7 - MUSIC,N2,Maths KS4: Year 10: 10 L . Maths 3
-0,P2,N2,B2,Business KS4: Year 11: 11 'A' . Business
-0,P2,N3,P14,Geography KS4: Year 11: 11 'A' . Geography A
+0,P2,N2,Z0,Business KS4: Year 11: 11 'A' . Business
+0,P2,N3,Z0,Geography KS4: Year 11: 11 'A' . Geography A
 0,P2,P6 - MUSIC,J17,English KS4: Year 10: 10 R . English 2
-0,P2,N1,P11 - ICT,Music Performance KS4: Year 11: 11 'A' . Music Perform
+0,P2,N1,Z0,Music Performance KS4: Year 11: 11 'A' . Music Perform
 0,P2,R2 Gym (Back),J15,Maths KS4: Year 10: 10 S . Maths 1
-0,P2,N8,R2 Gym (Back),Dance KS4: Year 11: 11 'A' . Dance
+0,P2,N8,Z0,Dance KS4: Year 11: 11 'A' . Dance
 0,P3,C3,J16,Chemistry KS4: Year 10: 10 S . Chemistry 2
 0,P3,C7,N9,Maths KS4: Year 10: 10 R . Maths 4
 0,P3,A17,N2,Science KS4: Year 10: 10 L . Science 3
@@ -94,16 +94,16 @@
 0,P3,B1,N1,Science KS4: Year 10: 10 L . Science 5
 0,P3,B2,N7,Maths KS4: Year 10: 10 R . Maths 3
 0,P3,C1,N3,Science KS4: Year 10: 10 L . Science 2
-0,P3,J16,P13,History KS4: Year 11: 11 'A' . History S
-0,P3,J17,P6 - MUSIC,History KS4: Year 11: 11 'A' . History A
-0,P3,M2 GLC - ICT,A14 ,HealthSocCare KS4: Year 11: 11 'A' . HealthSocCare
+0,P3,J16,Z0,History KS4: Year 11: 11 'A' . History S
+0,P3,J17,Z0,History KS4: Year 11: 11 'A' . History A
+0,P3,M2 GLC - ICT,Z0,HealthSocCare KS4: Year 11: 11 'A' . HealthSocCare
 0,P3,P11 - ICT,J17,Maths KS4: Year 10: 10 R . Maths 2
 0,P3,P13,N10,Religious Studies KS4: Year 10: 10 L . RelStud 1
 0,P3,P14,N14,Maths KS4: Year 10: 10 R . Maths 1
-0,P3,N2,B2,Business KS4: Year 11: 11 'A' . Business
-0,P3,N3,P14,Geography KS4: Year 11: 11 'A' . Geography A
+0,P3,N2,Z0,Business KS4: Year 11: 11 'A' . Business
+0,P3,N3,Z0,Geography KS4: Year 11: 11 'A' . Geography A
 0,P3,P6 - MUSIC,J15,Physics KS4: Year 10: 10 S . Physics 1
-0,P3,N1,P11 - ICT,Music Performance KS4: Year 11: 11 'A' . Music Perform
+0,P3,N1,Z0,Music Performance KS4: Year 11: 11 'A' . Music Perform
 0,P4,A5,N2,DT KS4: Year 10: 10 'B' . DT
 0,P4,A1,M1 - ART,DT - Craft KS4: Year 10: 10 'B' . DT - Craft
 0,P4,A7,M2 GLC - ICT,Engineering KS4: Year 10: 10 'B' . Engineering
@@ -111,19 +111,19 @@
 0,P4,A17,M4 Home Ec,Child Dev KS4: Year 10: 10 'B' . Child Dev
 0,P4,C9,N9,Business KS4: Year 10: 10 'B' . Business
 0,P4,B2,N14,Geography KS4: Year 10: 10 'B' . Geography A
-0,P4,J15,A17,Science KS4: Year 11: 11 R . Science 2
-0,P4,J18,C7,Science KS4: Year 11: 11 R . Science 4
-0,P4,N10,B2,Science KS4: Year 11: 11 L . Science 3
+0,P4,J15,Z0,Science KS4: Year 11: 11 R . Science 2
+0,P4,J18,Z0,Science KS4: Year 11: 11 R . Science 4
+0,P4,N10,Z0,Science KS4: Year 11: 11 L . Science 3
 0,P4,P13,J17,History KS4: Year 10: 10 'B' . History S1
 0,P4,P14,J18,History KS4: Year 10: 10 'B' . History S2
-0,P4,N14,P6 - MUSIC,Science KS4: Year 11: 11 L . Science 1
+0,P4,N14,Z0,Science KS4: Year 11: 11 L . Science 1
 0,P4,P7 - MUSIC,N10,German KS4: Year 10: 10 'B' . German
-0,P4,N3,C9,Science KS4: Year 11: 11 L . Science 2
+0,P4,N3,Z0,Science KS4: Year 11: 11 L . Science 2
 0,P4,P6 - MUSIC,J15,French KS4: Year 10: 10 'B' . French A
-0,P4,N1,A11,Science KS4: Year 11: 11 L . Science 4
-0,P4,N7,C1,Science KS4: Year 11: 11 R . Science 3
-0,P4,N8,A14 ,Science KS4: Year 11: 11 L . Science 5
-0,P4,N9,C3,Science KS4: Year 11: 11 R . Science 1
+0,P4,N1,Z0,Science KS4: Year 11: 11 L . Science 4
+0,P4,N7,Z0,Science KS4: Year 11: 11 R . Science 3
+0,P4,N8,Z0,Science KS4: Year 11: 11 L . Science 5
+0,P4,N9,Z0,Science KS4: Year 11: 11 R . Science 1
 0,P4,Cabin,N8,Voc Exp: Year 10: 10 'B' . Voc Exp
 0,P5,A5,N2,DT KS4: Year 10: 10 'B' . DT
 0,P5,A1,M1 - ART,DT - Craft KS4: Year 10: 10 'B' . DT - Craft
@@ -132,21 +132,21 @@
 0,P5,A17,M4 Home Ec,Child Dev KS4: Year 10: 10 'B' . Child Dev
 0,P5,C9,N9,Business KS4: Year 10: 10 'B' . Business
 0,P5,B2,N14,Geography KS4: Year 10: 10 'B' . Geography A
-0,P5,J15,P14,English KS4: Year 11: 11 L . English 2
-0,P5,J16,P6 - MUSIC,English KS4: Year 11: 11 L . English 3
-0,P5,J17,A14 ,Maths KS4: Year 11: 11 R . Maths 4
-0,P5,J18,B2,Maths KS4: Year 11: 11 R . Maths 3
-0,P5,N10,A17,Maths KS4: Year 11: 11 R . Maths 2
+0,P5,J15,Z0,English KS4: Year 11: 11 L . English 2
+0,P5,J16,Z0,English KS4: Year 11: 11 L . English 3
+0,P5,J17,Z0,Maths KS4: Year 11: 11 R . Maths 4
+0,P5,J18,Z0,Maths KS4: Year 11: 11 R . Maths 3
+0,P5,N10,Z0,Maths KS4: Year 11: 11 R . Maths 2
 0,P5,P13,J17,History KS4: Year 10: 10 'B' . History S1
 0,P5,P14,J18,History KS4: Year 10: 10 'B' . History S2
-0,P5,N14,Gym,Physics KS4: Year 11: 11 S . Physics 2
+0,P5,N14,Z0,Physics KS4: Year 11: 11 S . Physics 2
 0,P5,P7 - MUSIC,N10,German KS4: Year 10: 10 'B' . German
-0,P5,N2,C3,English KS4: Year 11: 11 L . English 4
-0,P5,N3,P13,English KS4: Year 11: 11 L . English 1
+0,P5,N2,Z0,English KS4: Year 11: 11 L . English 4
+0,P5,N3,Z0,English KS4: Year 11: 11 L . English 1
 0,P5,P6 - MUSIC,J15,French KS4: Year 10: 10 'B' . French A
-0,P5,N1,C1,Maths KS4: Year 11: 11 R . Maths 1
-0,P5,N8,P7 - MUSIC,English KS4: Year 11: 11 L . English 5
-0,P5,N9,C9,Biology KS4: Year 11: 11 S . Biology 1
+0,P5,N1,Z0,Maths KS4: Year 11: 11 R . Maths 1
+0,P5,N8,Z0,English KS4: Year 11: 11 L . English 5
+0,P5,N9,Z0,Biology KS4: Year 11: 11 S . Biology 1
 0,P5,Cabin,N8,Voc Exp: Year 10: 10 'B' . Voc Exp
 0,T,A5,N10,Year 10: P10DCC N10/A5
 0,T,C3,J17,Year 10: D10RHB J17/C1
@@ -154,42 +154,42 @@
 0,T,C7,N9,Year 10: R10AJH N9/C7
 0,T,C9,M5 Home Ec,Year 10: R10RLS M5/C9
 0,T,C1,N7,Year 10: D10JJH N7/C1
-0,T,J15,P13,Year 11: W11KAS P13/J15
-0,T,J16,P14,Year 11: W11FS P14/J16
-0,T,J17,C3,Year 11: D11PMH C3/J17
-0,T,N10,A5,Year 11: P11SLO A5/N10
-0,T,M4 Home Ec,A14 ,Year 11: R11RF A14/M4
-0,T,M5 Home Ec,A17,Year 11: R11PP A17/M5
+0,T,J15,Z0,Year 11: W11KAS P13/J15
+0,T,J16,Z0,Year 11: W11FS P14/J16
+0,T,J17,Z0,Year 11: D11PMH C3/J17
+0,T,N10,Z0,Year 11: P11SLO A5/N10
+0,T,M4 Home Ec,Z0,Year 11: R11RF A14/M4
+0,T,M5 Home Ec,Z0,Year 11: R11PP A17/M5
 0,T,P13,J15,Year 10: W10LAH J15/P13
 0,T,P14,J16,Year 10: W10HAB J16/P14
-0,T,N14,A11,Year 11: P11DI A11/N14
+0,T,N14,Z0,Year 11: P11DI A11/N14
 0,T,P7 - MUSIC,N3,Year 10: B10JEW N3/P7
-0,T,N3,P7 - MUSIC,Year 11: B11IED P7/N3
+0,T,N3,Z0,Year 11: B11IED P7/N3
 0,T,P6 - MUSIC,N1,Year 10: B10SB N1/P6
-0,T,N1,P6 - MUSIC,Year 11: B11HJM P6/N1
-0,T,N7,C1,Year 11: D11DH C1/N7
-0,T,N8,C9,Year 11: R11ECD C9/N8
-0,T,N9,C7,Year 11: D11SJG C7/N9
+0,T,N1,Z0,Year 11: B11HJM P6/N1
+0,T,N7,Z0,Year 11: D11DH C1/N7
+0,T,N8,Z0,Year 11: R11ECD C9/N8
+0,T,N9,Z0,Year 11: D11SJG C7/N9
 1,P1,C3,N1,Maths KS4: Year 10: 10 L . Maths 5
 1,P1,C7,J15,Chemistry KS4: Year 10: 10 S . Chemistry 1
 1,P1,A17,N3,Maths KS4: Year 10: 10 L . Maths 2
 1,P1,C9,N8,English KS4: Year 10: 10 R . English 5
 1,P1,B2,N7,English KS4: Year 10: 10 R . English 3
 1,P1,C1,J18,Maths KS4: Year 10: 10 L . Maths 4
-1,P1,J15,R2 Gym (Back),Drama KS4: Year 11: 11 'A' . Drama
-1,P1,J16,P13,History KS4: Year 11: 11 'A' . History S
-1,P1,J17,P6 - MUSIC,History KS4: Year 11: 11 'A' . History A
-1,P1,M2 GLC - ICT,A14 ,HealthSocCare KS4: Year 11: 11 'A' . HealthSocCare
+1,P1,J15,Z0,Drama KS4: Year 11: 11 'A' . Drama
+1,P1,J16,Z0,History KS4: Year 11: 11 'A' . History S
+1,P1,J17,Z0,History KS4: Year 11: 11 'A' . History A
+1,P1,M2 GLC - ICT,Z0,HealthSocCare KS4: Year 11: 11 'A' . HealthSocCare
 1,P1,P11 - ICT,N9,English KS4: Year 10: 10 R . English 4
 1,P1,P13,N10,Maths KS4: Year 10: 10 L . Maths 1
 1,P1,P14,N14,English KS4: Year 10: 10 R . English 1
 1,P1,P7 - MUSIC,N2,Maths KS4: Year 10: 10 L . Maths 3
-1,P1,N2,B2,Business KS4: Year 11: 11 'A' . Business
-1,P1,N3,P14,Geography KS4: Year 11: 11 'A' . Geography A
+1,P1,N2,Z0,Business KS4: Year 11: 11 'A' . Business
+1,P1,N3,Z0,Geography KS4: Year 11: 11 'A' . Geography A
 1,P1,P6 - MUSIC,J17,English KS4: Year 10: 10 R . English 2
-1,P1,N1,P11 - ICT,Music Performance KS4: Year 11: 11 'A' . Music Perform
+1,P1,N1,Z0,Music Performance KS4: Year 11: 11 'A' . Music Perform
 1,P1,R2 Gym (Back),J16,Chemistry KS4: Year 10: 10 S . Chemistry 2
-1,P1,R3 Gym (Front),C3,Dance KS4: Year 11: 11 'A' . Dance
+1,P1,R3 Gym (Front),Z0,Dance KS4: Year 11: 11 'A' . Dance
 1,P2,A5,M13 - ART,Art Textiles KS4: Year 10: 10 'C' . Art Textiles
 1,P2,A1,M1 - ART,Art KS4: Year 10: 10 'C' . Art
 1,P2,C3,M5 Home Ec,DT Food KS4: Year 10: 10 'C' . DT - Food
@@ -197,23 +197,23 @@
 1,P2,A17,N7,PE GCSE KS4: Year 10: 10 'C' . PE GCSE
 1,P2,C9,N10,Geography KS4: Year 10: 10 'C' . Geography S1
 1,P2,B2,N14,Geography KS4: Year 10: 10 'C' . Geography A
-1,P2,J15,A17,Maths KS4: Year 11: 11 L . Maths 1
-1,P2,J16,C7,Maths KS4: Year 11: 11 L . Maths 3
-1,P2,J17,A14 ,Maths KS4: Year 11: 11 L . Maths 2
-1,P2,J18,C1,Maths KS4: Year 11: 11 L . Maths 4
-1,P2,N10,P13,English KS4: Year 11: 11 S . English 2
-1,P2,M4 Home Ec,B2,Maths KS4: Year 11: 11 L . Maths 5
+1,P2,J15,Z0,Maths KS4: Year 11: 11 L . Maths 1
+1,P2,J16,Z0,Maths KS4: Year 11: 11 L . Maths 3
+1,P2,J17,Z0,Maths KS4: Year 11: 11 L . Maths 2
+1,P2,J18,Z0,Maths KS4: Year 11: 11 L . Maths 4
+1,P2,N10,Z0,English KS4: Year 11: 11 S . English 2
+1,P2,M4 Home Ec,Z0,Maths KS4: Year 11: 11 L . Maths 5
 1,P2,P11 - ICT,M2 GLC - ICT,Computer Sci KS4: Year 10: 10 'C' . Computer Sci
 1,P2,P13,J17,History KS4: Year 10: 10 'C' . History A
 1,P2,P14,J16,French KS4: Year 10: 10 'C' . French M
-1,P2,N14,C9,Science KS4: Year 11: 11 R . Science 2
+1,P2,N14,Z0,Science KS4: Year 11: 11 R . Science 2
 1,P2,P7 - MUSIC,N3,Geography KS4: Year 10: 10 'C' . Geography S2
-1,P2,N2,A11,Science KS4: Year 11: 11 R . Science 3
-1,P2,N3,P14,English KS4: Year 11: 11 S . English 1
+1,P2,N2,Z0,Science KS4: Year 11: 11 R . Science 3
+1,P2,N3,Z0,English KS4: Year 11: 11 S . English 1
 1,P2,P6 - MUSIC,J18,History KS4: Year 10: 10 'C' . History S
 1,P2,R2 Gym (Back),F12 Theatre,Drama KS4: Year 10: 10 'C' . Drama
-1,P2,N8,P6 - MUSIC,Religious Studies KS4: Year 11: 11 R . RelStud 4
-1,P2,N9,C3,Science KS4: Year 11: 11 R . Science 1
+1,P2,N8,Z0,Religious Studies KS4: Year 11: 11 R . RelStud 4
+1,P2,N9,Z0,Science KS4: Year 11: 11 R . Science 1
 1,P2,Cabin,N8,Voc Exp: Year 10: 10 'C' . Voc Exp
 1,P3,A5,M13 - ART,Art Textiles KS4: Year 10: 10 'C' . Art Textiles
 1,P3,A1,M1 - ART,Art KS4: Year 10: 10 'C' . Art
@@ -222,37 +222,37 @@
 1,P3,A17,N7,PE GCSE KS4: Year 10: 10 'C' . PE GCSE
 1,P3,C9,N10,Geography KS4: Year 10: 10 'C' . Geography S1
 1,P3,B2,N14,Geography KS4: Year 10: 10 'C' . Geography A
-1,P3,J15,P13,Science KS4: Year 11: 11 L . Science 2
-1,P3,J17,A14 ,Maths KS4: Year 11: 11 R . Maths 4
-1,P3,J18,B2,Maths KS4: Year 11: 11 R . Maths 3
-1,P3,N10,A17,Maths KS4: Year 11: 11 R . Maths 2
+1,P3,J15,Z0,Science KS4: Year 11: 11 L . Science 2
+1,P3,J17,Z0,Maths KS4: Year 11: 11 R . Maths 4
+1,P3,J18,Z0,Maths KS4: Year 11: 11 R . Maths 3
+1,P3,N10,Z0,Maths KS4: Year 11: 11 R . Maths 2
 1,P3,P11 - ICT,M2 GLC - ICT,Computer Sci KS4: Year 10: 10 'C' . Computer Sci
 1,P3,P13,J17,History KS4: Year 10: 10 'C' . History A
 1,P3,P14,J16,French KS4: Year 10: 10 'C' . French M
-1,P3,N14,R2 Gym (Back),Biology KS4: Year 11: 11 S . Biology 2
+1,P3,N14,Z0,Biology KS4: Year 11: 11 S . Biology 2
 1,P3,P7 - MUSIC,N3,Geography KS4: Year 10: 10 'C' . Geography S2
-1,P3,N2,C9,Science KS4: Year 11: 11 L . Science 4
-1,P3,N3,C3,Science KS4: Year 11: 11 L . Science 1
+1,P3,N2,Z0,Science KS4: Year 11: 11 L . Science 4
+1,P3,N3,Z0,Science KS4: Year 11: 11 L . Science 1
 1,P3,P6 - MUSIC,J18,History KS4: Year 10: 10 'C' . History S
-1,P3,N1,C1,Maths KS4: Year 11: 11 R . Maths 1
-1,P3,N7,P14,Science KS4: Year 11: 11 L . Science 3
+1,P3,N1,Z0,Maths KS4: Year 11: 11 R . Maths 1
+1,P3,N7,Z0,Science KS4: Year 11: 11 L . Science 3
 1,P3,R2 Gym (Back),F12 Theatre,Drama KS4: Year 10: 10 'C' . Drama
-1,P3,N8,C7,Science KS4: Year 11: 11 L . Science 5
-1,P3,N9,P6 - MUSIC,Biology KS4: Year 11: 11 S . Biology 1
+1,P3,N8,Z0,Science KS4: Year 11: 11 L . Science 5
+1,P3,N9,Z0,Biology KS4: Year 11: 11 S . Biology 1
 1,P3,Cabin,N8,Voc Exp: Year 10: 10 'C' . Voc Exp
-1,P4,J15,R2 Gym (Back),Maths KS4: Year 11: 11 S . Maths 1
-1,P4,J16,A17,Maths KS4: Year 11: 11 S . Maths 2
-1,P4,J17,C7,Science KS4: Year 11: 11 L . Science 2
-1,P4,N10,B2,Science KS4: Year 11: 11 L . Science 3
-1,P4,N14,C9,English KS4: Year 11: 11 R . English 2
-1,P4,N2,C3,English KS4: Year 11: 11 R . English 4
-1,P4,N3,P6 - MUSIC,English KS4: Year 11: 11 R . English 1
+1,P4,J15,Z0,Maths KS4: Year 11: 11 S . Maths 1
+1,P4,J16,Z0,Maths KS4: Year 11: 11 S . Maths 2
+1,P4,J17,Z0,Science KS4: Year 11: 11 L . Science 2
+1,P4,N10,Z0,Science KS4: Year 11: 11 L . Science 3
+1,P4,N14,Z0,English KS4: Year 11: 11 R . English 2
+1,P4,N2,Z0,English KS4: Year 11: 11 R . English 4
+1,P4,N3,Z0,English KS4: Year 11: 11 R . English 1
 1,P4,P6 - MUSIC,J16,English KS4: Year 10: 10 S . English 2
-1,P4,N1,A11,English KS4: Year 11: 11 R . English 3
-1,P4,N7,P13,Religious Studies KS4: Year 11: 11 L . RelStud 4
+1,P4,N1,Z0,English KS4: Year 11: 11 R . English 3
+1,P4,N7,Z0,Religious Studies KS4: Year 11: 11 L . RelStud 4
 1,P4,R2 Gym (Back),J15,English KS4: Year 10: 10 S . English 1
-1,P4,N8,P7 - MUSIC,Religious Studies KS4: Year 11: 11 L . RelStud 5
-1,P4,N9,C1,Science KS4: Year 11: 11 L . Science 1
+1,P4,N8,Z0,Religious Studies KS4: Year 11: 11 L . RelStud 5
+1,P4,N9,Z0,Science KS4: Year 11: 11 L . Science 1
 1,P5,C3,N1,Science KS4: Year 10: 10 L . Science 5
 1,P5,A14 ,J17,Maths KS4: Year 10: 10 R . Maths 2
 1,P5,C7,N9,Maths KS4: Year 10: 10 R . Maths 4
@@ -260,44 +260,44 @@
 1,P5,C9,N8,Maths KS4: Year 10: 10 R . Maths 5
 1,P5,B2,N7,Maths KS4: Year 10: 10 R . Maths 3
 1,P5,C1,J18,Science KS4: Year 10: 10 L . Science 4
-1,P5,J15,P14,English KS4: Year 11: 11 L . English 2
-1,P5,J16,P6 - MUSIC,English KS4: Year 11: 11 L . English 3
-1,P5,J17,A17,Biology KS4: Year 11: 11 S . Biology 2
-1,P5,J18,C7,Science KS4: Year 11: 11 R . Science 4
-1,P5,N10,C1,Science KS4: Year 11: 11 R . Science 2
+1,P5,J15,Z0,English KS4: Year 11: 11 L . English 2
+1,P5,J16,Z0,English KS4: Year 11: 11 L . English 3
+1,P5,J17,Z0,Biology KS4: Year 11: 11 S . Biology 2
+1,P5,J18,Z0,Science KS4: Year 11: 11 R . Science 4
+1,P5,N10,Z0,Science KS4: Year 11: 11 R . Science 2
 1,P5,P13,N3,Science KS4: Year 10: 10 L . Science 2
 1,P5,P14,N14,Maths KS4: Year 10: 10 R . Maths 1
-1,P5,N14,C3,Physics KS4: Year 11: 11 S . Physics 1
+1,P5,N14,Z0,Physics KS4: Year 11: 11 S . Physics 1
 1,P5,P7 - MUSIC,N2,Religious Studies KS4: Year 10: 10 L . RelStud 3
-1,P5,N2,A14 ,English KS4: Year 11: 11 L . English 4
-1,P5,N3,P13,English KS4: Year 11: 11 L . English 1
+1,P5,N2,Z0,English KS4: Year 11: 11 L . English 4
+1,P5,N3,Z0,English KS4: Year 11: 11 L . English 1
 1,P5,P6 - MUSIC,J16,Maths KS4: Year 10: 10 S . Maths 2
-1,P5,N7,B2,Religious Studies KS4: Year 11: 11 R . RelStud 3
+1,P5,N7,Z0,Religious Studies KS4: Year 11: 11 R . RelStud 3
 1,P5,R2 Gym (Back),J15,Maths KS4: Year 10: 10 S . Maths 1
-1,P5,N8,P7 - MUSIC,English KS4: Year 11: 11 L . English 5
-1,P5,N9,C9,Science KS4: Year 11: 11 R . Science 1
+1,P5,N8,Z0,English KS4: Year 11: 11 L . English 5
+1,P5,N9,Z0,Science KS4: Year 11: 11 R . Science 1
 1,T,A5,N10,Year 10: P10DCC N10/A5
 1,T,C3,J17,Year 10: D10RHB J17/C1
 1,T,A11,N14,Year 10: P10ADM N14/A11
 1,T,C7,N9,Year 10: R10AJH N9/C7
 1,T,C9,M5 Home Ec,Year 10: R10RLS M5/C9
 1,T,C1,N7,Year 10: D10JJH N7/C1
-1,T,J15,P13,Year 11: W11KAS P13/J15
-1,T,J16,P14,Year 11: W11FS P14/J16
-1,T,J17,C3,Year 11: D11PMH C3/J17
-1,T,N10,A5,Year 11: P11SLO A5/N10
-1,T,M4 Home Ec,A14 ,Year 11: R11RF A14/M4
-1,T,M5 Home Ec,A17,Year 11: R11PP A17/M5
+1,T,J15,Z0,Year 11: W11KAS P13/J15
+1,T,J16,Z0,Year 11: W11FS P14/J16
+1,T,J17,Z0,Year 11: D11PMH C3/J17
+1,T,N10,Z0,Year 11: P11SLO A5/N10
+1,T,M4 Home Ec,Z0,Year 11: R11RF A14/M4
+1,T,M5 Home Ec,Z0,Year 11: R11PP A17/M5
 1,T,P13,J15,Year 10: W10LAH J15/P13
 1,T,P14,J16,Year 10: W10HAB J16/P14
-1,T,N14,A11,Year 11: P11DI A11/N14
+1,T,N14,Z0,Year 11: P11DI A11/N14
 1,T,P7 - MUSIC,N3,Year 10: B10JEW N3/P7
-1,T,N3,P7 - MUSIC,Year 11: B11IED P7/N3
+1,T,N3,Z0,Year 11: B11IED P7/N3
 1,T,P6 - MUSIC,N1,Year 10: B10SB N1/P6
-1,T,N1,P6 - MUSIC,Year 11: B11HJM P6/N1
-1,T,N7,C1,Year 11: D11DH C1/N7
-1,T,N8,C9,Year 11: R11ECD C9/N8
-1,T,N9,C7,Year 11: D11SJG C7/N9
+1,T,N1,Z0,Year 11: B11HJM P6/N1
+1,T,N7,Z0,Year 11: D11DH C1/N7
+1,T,N8,Z0,Year 11: R11ECD C9/N8
+1,T,N9,Z0,Year 11: D11SJG C7/N9
 2,P1,A5,M13 - ART,Art KS4: Year 10: 10 'A' . Art
 2,P1,A1,N8,DT KS4: Year 10: 10 'A' . DT
 2,P1,C3,N7,Geography KS4: Year 10: 10 'A' . Geography S
@@ -306,44 +306,44 @@
 2,P1,A17,M5 Home Ec,Child Dev KS4: Year 10: 10 'A' . Child Dev
 2,P1,B2,J15,Business KS4: Year 10: 10 'A' . Business 2
 2,P1,C1,N9,Business KS4: Year 10: 10 'A' . Business 1
-2,P1,J15,A17,Maths KS4: Year 11: 11 L . Maths 1
-2,P1,J16,C7,Maths KS4: Year 11: 11 L . Maths 3
-2,P1,J17,A14 ,Maths KS4: Year 11: 11 L . Maths 2
-2,P1,J18,C1,Maths KS4: Year 11: 11 L . Maths 4
-2,P1,N10,P13,English KS4: Year 11: 11 S . English 2
-2,P1,M4 Home Ec,B2,Maths KS4: Year 11: 11 L . Maths 5
+2,P1,J15,Z0,Maths KS4: Year 11: 11 L . Maths 1
+2,P1,J16,Z0,Maths KS4: Year 11: 11 L . Maths 3
+2,P1,J17,Z0,Maths KS4: Year 11: 11 L . Maths 2
+2,P1,J18,Z0,Maths KS4: Year 11: 11 L . Maths 4
+2,P1,N10,Z0,English KS4: Year 11: 11 S . English 2
+2,P1,M4 Home Ec,Z0,Maths KS4: Year 11: 11 L . Maths 5
 2,P1,P13,J17,History KS4: Year 10: 10 'A' . History A
 2,P1,P14,J16,French KS4: Year 10: 10 'A' . French S
-2,P1,N14,C9,English KS4: Year 11: 11 R . English 2
+2,P1,N14,Z0,English KS4: Year 11: 11 R . English 2
 2,P1,P7 - MUSIC,N2,Music KS4: Year 10: 10 'A' . Music
-2,P1,N2,C3,English KS4: Year 11: 11 R . English 4
-2,P1,N3,P14,English KS4: Year 11: 11 S . English 1
+2,P1,N2,Z0,English KS4: Year 11: 11 R . English 4
+2,P1,N3,Z0,English KS4: Year 11: 11 S . English 1
 2,P1,P6 - MUSIC,N3,Music Performance KS4: Year 10: 10 'A' . Music Perform
-2,P1,N1,A11,English KS4: Year 11: 11 R . English 3
+2,P1,N1,Z0,English KS4: Year 11: 11 R . English 3
 2,P1,R2 Gym (Back),N14,PE GCSE KS4: Year 10: 10 'A' . PE GCSE
-2,P1,N9,P6 - MUSIC,English KS4: Year 11: 11 R . English 1
+2,P1,N9,Z0,English KS4: Year 11: 11 R . English 1
 2,P2,C3,N1,English KS4: Year 10: 10 L . English 5
 2,P2,C7,J17,Science KS4: Year 10: 10 R . Science 2
 2,P2,A17,N3,English KS4: Year 10: 10 L . English 2
 2,P2,C9,N9,Science KS4: Year 10: 10 R . Science 4
 2,P2,B2,N7,Science KS4: Year 10: 10 R . Science 3
 2,P2,C1,J18,English KS4: Year 10: 10 L . English 4
-2,P2,J16,P14,French KS4: Year 11: 11 'C' . French S
-2,P2,J17,P13,History KS4: Year 11: 11 'C' . History S
-2,P2,J18,C3,German KS4: Year 11: 11 'C' . German
-2,P2,N10,P6 - MUSIC,Geography KS4: Year 11: 11 'C' . Geography A
-2,P2,M2 GLC - ICT,P11 - ICT,CreativeMedia KS4: Year 11: 11 'C' . CreativeMedia
-2,P2,M1 - ART,A1,Art KS4: Year 11: 11 'C' . Art
+2,P2,J16,Z0,French KS4: Year 11: 11 'C' . French S
+2,P2,J17,Z0,History KS4: Year 11: 11 'C' . History S
+2,P2,J18,Z0,German KS4: Year 11: 11 'C' . German
+2,P2,N10,Z0,Geography KS4: Year 11: 11 'C' . Geography A
+2,P2,M2 GLC - ICT,Z0,CreativeMedia KS4: Year 11: 11 'C' . CreativeMedia
+2,P2,M1 - ART,Z0,Art KS4: Year 11: 11 'C' . Art
 2,P2,P11 - ICT,N8,Science KS4: Year 10: 10 R . Science 5
 2,P2,P13,N10,English KS4: Year 10: 10 L . English 1
 2,P2,P14,N14,Science KS4: Year 10: 10 R . Science 1
-2,P2,N14,A14 ,PE GCSE KS4: Year 11: 11 'C' . PE GCSE
+2,P2,N14,Z0,PE GCSE KS4: Year 11: 11 'C' . PE GCSE
 2,P2,P7 - MUSIC,N2,English KS4: Year 10: 10 L . English 3
 2,P2,P6 - MUSIC,J16,Maths KS4: Year 10: 10 S . Maths 2
-2,P2,N1,B2,Business KS4: Year 11: 11 'C' . Business
-2,P2,N7,P7 - MUSIC,Geography KS4: Year 11: 11 'C' . Geography S
+2,P2,N1,Z0,Business KS4: Year 11: 11 'C' . Business
+2,P2,N7,Z0,Geography KS4: Year 11: 11 'C' . Geography S
 2,P2,R2 Gym (Back),J15,Maths KS4: Year 10: 10 S . Maths 1
-2,P2,Cabin,A5,Voc Exp: Year 11: 11 'C' . Voc Exp
+2,P2,Cabin,Z0,Voc Exp: Year 11: 11 'C' . Voc Exp
 2,P3,A5,J16,Physics KS4: Year 10: 10 S . Physics 2
 2,P3,C3,N1,English KS4: Year 10: 10 L . English 5
 2,P3,C7,N9,Maths KS4: Year 10: 10 R . Maths 4
@@ -351,21 +351,21 @@
 2,P3,C9,N8,Maths KS4: Year 10: 10 R . Maths 5
 2,P3,B2,N7,Maths KS4: Year 10: 10 R . Maths 3
 2,P3,C1,J18,English KS4: Year 10: 10 L . English 4
-2,P3,J16,P14,French KS4: Year 11: 11 'C' . French S
-2,P3,J17,P13,History KS4: Year 11: 11 'C' . History S
-2,P3,J18,C3,German KS4: Year 11: 11 'C' . German
-2,P3,N10,P6 - MUSIC,Geography KS4: Year 11: 11 'C' . Geography A
-2,P3,M2 GLC - ICT,P11 - ICT,CreativeMedia KS4: Year 11: 11 'C' . CreativeMedia
-2,P3,M1 - ART,A1,Art KS4: Year 11: 11 'C' . Art
+2,P3,J16,Z0,French KS4: Year 11: 11 'C' . French S
+2,P3,J17,Z0,History KS4: Year 11: 11 'C' . History S
+2,P3,J18,Z0,German KS4: Year 11: 11 'C' . German
+2,P3,N10,Z0,Geography KS4: Year 11: 11 'C' . Geography A
+2,P3,M2 GLC - ICT,Z0,CreativeMedia KS4: Year 11: 11 'C' . CreativeMedia
+2,P3,M1 - ART,Z0,Art KS4: Year 11: 11 'C' . Art
 2,P3,P11 - ICT,J17,Maths KS4: Year 10: 10 R . Maths 2
 2,P3,P13,N10,English KS4: Year 10: 10 L . English 1
 2,P3,P14,N14,Maths KS4: Year 10: 10 R . Maths 1
-2,P3,N14,A14 ,PE GCSE KS4: Year 11: 11 'C' . PE GCSE
+2,P3,N14,Z0,PE GCSE KS4: Year 11: 11 'C' . PE GCSE
 2,P3,P7 - MUSIC,N2,English KS4: Year 10: 10 L . English 3
 2,P3,P6 - MUSIC,J15,Biology KS4: Year 10: 10 S . Biology 1
-2,P3,N1,B2,Business KS4: Year 11: 11 'C' . Business
-2,P3,N7,P7 - MUSIC,Geography KS4: Year 11: 11 'C' . Geography S
-2,P3,Cabin,A5,Voc Exp: Year 11: 11 'C' . Voc Exp
+2,P3,N1,Z0,Business KS4: Year 11: 11 'C' . Business
+2,P3,N7,Z0,Geography KS4: Year 11: 11 'C' . Geography S
+2,P3,Cabin,Z0,Voc Exp: Year 11: 11 'C' . Voc Exp
 2,P4,A5,J18,Science KS4: Year 10: 10 L . Science 4
 2,P4,C3,N10,Science KS4: Year 10: 10 L . Science 1
 2,P4,A11,N9,English KS4: Year 10: 10 R . English 4
@@ -374,19 +374,19 @@
 2,P4,B1,M2 GLC - ICT,English KS4: Year 10: 10 R . English 5
 2,P4,B2,N7,English KS4: Year 10: 10 R . English 3
 2,P4,C1,N1,Science KS4: Year 10: 10 L . Science 5
-2,P4,J15,R2 Gym (Back),Maths KS4: Year 11: 11 S . Maths 1
-2,P4,J16,C3,Maths KS4: Year 11: 11 S . Maths 2
-2,P4,J17,A14 ,Maths KS4: Year 11: 11 R . Maths 4
-2,P4,J18,B2,Maths KS4: Year 11: 11 R . Maths 3
-2,P4,N10,A17,Maths KS4: Year 11: 11 R . Maths 2
+2,P4,J15,Z0,Maths KS4: Year 11: 11 S . Maths 1
+2,P4,J16,Z0,Maths KS4: Year 11: 11 S . Maths 2
+2,P4,J17,Z0,Maths KS4: Year 11: 11 R . Maths 4
+2,P4,J18,Z0,Maths KS4: Year 11: 11 R . Maths 3
+2,P4,N10,Z0,Maths KS4: Year 11: 11 R . Maths 2
 2,P4,P13,N3,Science KS4: Year 10: 10 L . Science 2
 2,P4,P14,N14,English KS4: Year 10: 10 R . English 1
-2,P4,N14,P13,Religious Studies KS4: Year 11: 11 L . RelStud 3
-2,P4,N2,C1,Maths KS4: Year 11: 11 R . Maths 1
-2,P4,N3,C9,Science KS4: Year 11: 11 L . Science 2
-2,P4,N1,A11,Science KS4: Year 11: 11 L . Science 4
-2,P4,N8,C7,Science KS4: Year 11: 11 L . Science 5
-2,P4,N9,P14,Science KS4: Year 11: 11 L . Science 1
+2,P4,N14,Z0,Religious Studies KS4: Year 11: 11 L . RelStud 3
+2,P4,N2,Z0,Maths KS4: Year 11: 11 R . Maths 1
+2,P4,N3,Z0,Science KS4: Year 11: 11 L . Science 2
+2,P4,N1,Z0,Science KS4: Year 11: 11 L . Science 4
+2,P4,N8,Z0,Science KS4: Year 11: 11 L . Science 5
+2,P4,N9,Z0,Science KS4: Year 11: 11 L . Science 1
 2,P5,A5,J16,Physics KS4: Year 10: 10 S . Physics 2
 2,P5,C3,N1,Maths KS4: Year 10: 10 L . Maths 5
 2,P5,C7,N9,Religious Studies KS4: Year 10: 10 R . RelStud 4
@@ -394,44 +394,44 @@
 2,P5,C9,N8,Science KS4: Year 10: 10 R . Science 5
 2,P5,B2,N7,Religious Studies KS4: Year 10: 10 R . RelStud 3
 2,P5,C1,J18,Maths KS4: Year 10: 10 L . Maths 4
-2,P5,J15,P14,English KS4: Year 11: 11 L . English 2
-2,P5,J16,P6 - MUSIC,English KS4: Year 11: 11 L . English 3
-2,P5,J17,C3,Biology KS4: Year 11: 11 S . Biology 2
-2,P5,N10,A17,Science KS4: Year 11: 11 R . Science 2
+2,P5,J15,Z0,English KS4: Year 11: 11 L . English 2
+2,P5,J16,Z0,English KS4: Year 11: 11 L . English 3
+2,P5,J17,Z0,Biology KS4: Year 11: 11 S . Biology 2
+2,P5,N10,Z0,Science KS4: Year 11: 11 R . Science 2
 2,P5,P13,N10,Maths KS4: Year 10: 10 L . Maths 1
 2,P5,P14,J17,Science KS4: Year 10: 10 R . Science 2
-2,P5,N14,R2 Gym (Back),Chemistry KS4: Year 11: 11 S . Chemistry 1
+2,P5,N14,Z0,Chemistry KS4: Year 11: 11 S . Chemistry 1
 2,P5,P7 - MUSIC,N2,Maths KS4: Year 10: 10 L . Maths 3
-2,P5,N2,A14 ,English KS4: Year 11: 11 L . English 4
-2,P5,N3,P13,English KS4: Year 11: 11 L . English 1
+2,P5,N2,Z0,English KS4: Year 11: 11 L . English 4
+2,P5,N3,Z0,English KS4: Year 11: 11 L . English 1
 2,P5,P6 - MUSIC,J15,Physics KS4: Year 10: 10 S . Physics 1
-2,P5,N1,C7,Science KS4: Year 11: 11 R . Science 4
-2,P5,N7,C7,Science KS4: Year 11: 11 R . Science 3
+2,P5,N1,Z0,Science KS4: Year 11: 11 R . Science 4
+2,P5,N7,Z0,Science KS4: Year 11: 11 R . Science 3
 2,P5,R2 Gym (Back),N14,Science KS4: Year 10: 10 R . Science 1
-2,P5,N8,P7 - MUSIC,English KS4: Year 11: 11 L . English 5
-2,P5,N9,C9,Science KS4: Year 11: 11 R . Science 1
+2,P5,N8,Z0,English KS4: Year 11: 11 L . English 5
+2,P5,N9,Z0,Science KS4: Year 11: 11 R . Science 1
 2,T,A5,N10,Year 10: P10DCC N10/A5
 2,T,C3,J17,Year 10: D10RHB J17/C1
 2,T,A11,N14,Year 10: P10ADM N14/A11
 2,T,C7,N9,Year 10: R10AJH N9/C7
 2,T,C9,M5 Home Ec,Year 10: R10RLS M5/C9
 2,T,C1,N7,Year 10: D10JJH N7/C1
-2,T,J15,P13,Year 11: W11KAS P13/J15
-2,T,J16,P14,Year 11: W11FS P14/J16
-2,T,J17,C3,Year 11: D11PMH C3/J17
-2,T,N10,A5,Year 11: P11SLO A5/N10
-2,T,M4 Home Ec,A14 ,Year 11: R11RF A14/M4
-2,T,M5 Home Ec,A17,Year 11: R11PP A17/M5
+2,T,J15,Z0,Year 11: W11KAS P13/J15
+2,T,J16,Z0,Year 11: W11FS P14/J16
+2,T,J17,Z0,Year 11: D11PMH C3/J17
+2,T,N10,Z0,Year 11: P11SLO A5/N10
+2,T,M4 Home Ec,Z0,Year 11: R11RF A14/M4
+2,T,M5 Home Ec,Z0,Year 11: R11PP A17/M5
 2,T,P13,J15,Year 10: W10LAH J15/P13
 2,T,P14,J16,Year 10: W10HAB J16/P14
-2,T,N14,A11,Year 11: P11DI A11/N14
+2,T,N14,Z0,Year 11: P11DI A11/N14
 2,T,P7 - MUSIC,N3,Year 10: B10JEW N3/P7
-2,T,N3,P7 - MUSIC,Year 11: B11IED P7/N3
+2,T,N3,Z0,Year 11: B11IED P7/N3
 2,T,P6 - MUSIC,N1,Year 10: B10SB N1/P6
-2,T,N1,P6 - MUSIC,Year 11: B11HJM P6/N1
-2,T,N7,C1,Year 11: D11DH C1/N7
-2,T,N8,C9,Year 11: R11ECD C9/N8
-2,T,N9,C7,Year 11: D11SJG C7/N9
+2,T,N1,Z0,Year 11: B11HJM P6/N1
+2,T,N7,Z0,Year 11: D11DH C1/N7
+2,T,N8,Z0,Year 11: R11ECD C9/N8
+2,T,N9,Z0,Year 11: D11SJG C7/N9
 3,P1,A5,M13 - ART,Art Textiles KS4: Year 10: 10 'C' . Art Textiles
 3,P1,A1,M1 - ART,Art KS4: Year 10: 10 'C' . Art
 3,P1,C3,M5 Home Ec,DT Food KS4: Year 10: 10 'C' . DT - Food
@@ -439,12 +439,12 @@
 3,P1,A17,N7,PE GCSE KS4: Year 10: 10 'C' . PE GCSE
 3,P1,C9,N10,Geography KS4: Year 10: 10 'C' . Geography S1
 3,P1,B2,N14,Geography KS4: Year 10: 10 'C' . Geography A
-3,P1,N10,P13,Physics KS4: Year 11: 11 S . Physics 1
+3,P1,N10,Z0,Physics KS4: Year 11: 11 S . Physics 1
 3,P1,P11 - ICT,M2 GLC - ICT,Computer Sci KS4: Year 10: 10 'C' . Computer Sci
 3,P1,P13,J17,History KS4: Year 10: 10 'C' . History A
 3,P1,P14,J16,French KS4: Year 10: 10 'C' . French M
 3,P1,P7 - MUSIC,N3,Geography KS4: Year 10: 10 'C' . Geography S2
-3,P1,N3,R2 Gym (Back),Physics KS4: Year 11: 11 S . Physics 2
+3,P1,N3,Z0,Physics KS4: Year 11: 11 S . Physics 2
 3,P1,P6 - MUSIC,J18,History KS4: Year 10: 10 'C' . History S
 3,P1,R2 Gym (Back),J15,Drama KS4: Year 10: 10 'C' . Drama
 3,P1,Cabin,N8,Voc Exp: Year 10: 10 'C' . Voc Exp
@@ -454,90 +454,90 @@
 3,P2,C9,J18,Science KS4: Year 10: 10 L . Science 4
 3,P2,B2,N10,Science KS4: Year 10: 10 L . Science 1
 3,P2,C1,N2,Science KS4: Year 10: 10 L . Science 3
-3,P2,J15,P14,English KS4: Year 11: 11 L . English 2
-3,P2,J16,P6 - MUSIC,English KS4: Year 11: 11 L . English 3
-3,P2,J17,A14 ,Maths KS4: Year 11: 11 R . Maths 4
-3,P2,J18,B2,Maths KS4: Year 11: 11 R . Maths 3
-3,P2,N10,A17,Maths KS4: Year 11: 11 R . Maths 2
+3,P2,J15,Z0,English KS4: Year 11: 11 L . English 2
+3,P2,J16,Z0,English KS4: Year 11: 11 L . English 3
+3,P2,J17,Z0,Maths KS4: Year 11: 11 R . Maths 4
+3,P2,J18,Z0,Maths KS4: Year 11: 11 R . Maths 3
+3,P2,N10,Z0,Maths KS4: Year 11: 11 R . Maths 2
 3,P2,P14,N14,Religious Studies KS4: Year 10: 10 L . RelStud 2
-3,P2,N2,C3,English KS4: Year 11: 11 L . English 4
-3,P2,N3,P13,English KS4: Year 11: 11 L . English 1
-3,P2,N1,C1,Maths KS4: Year 11: 11 R . Maths 1
-3,P2,N8,P7 - MUSIC,English KS4: Year 11: 11 L . English 5
+3,P2,N2,Z0,English KS4: Year 11: 11 L . English 4
+3,P2,N3,Z0,English KS4: Year 11: 11 L . English 1
+3,P2,N1,Z0,Maths KS4: Year 11: 11 R . Maths 1
+3,P2,N8,Z0,English KS4: Year 11: 11 L . English 5
 3,P3,C3,N9,Science KS4: Year 10: 10 R . Science 4
 3,P3,C9,N8,Science KS4: Year 10: 10 R . Science 5
 3,P3,C1,J17,Science KS4: Year 10: 10 R . Science 2
-3,P3,J15,A17,Maths KS4: Year 11: 11 L . Maths 1
-3,P3,J16,C7,Maths KS4: Year 11: 11 L . Maths 3
-3,P3,J17,A14 ,Maths KS4: Year 11: 11 L . Maths 2
-3,P3,J18,C1,Maths KS4: Year 11: 11 L . Maths 4
-3,P3,N10,P13,English KS4: Year 11: 11 S . English 2
-3,P3,M4 Home Ec,B2,Maths KS4: Year 11: 11 L . Maths 5
+3,P3,J15,Z0,Maths KS4: Year 11: 11 L . Maths 1
+3,P3,J16,Z0,Maths KS4: Year 11: 11 L . Maths 3
+3,P3,J17,Z0,Maths KS4: Year 11: 11 L . Maths 2
+3,P3,J18,Z0,Maths KS4: Year 11: 11 L . Maths 4
+3,P3,N10,Z0,English KS4: Year 11: 11 S . English 2
+3,P3,M4 Home Ec,Z0,Maths KS4: Year 11: 11 L . Maths 5
 3,P3,P13,N7,Science KS4: Year 10: 10 R . Science 3
 3,P3,P14,N14,Religious Studies KS4: Year 10: 10 R . RelStud 1
-3,P3,N14,C9,English KS4: Year 11: 11 R . English 2
-3,P3,N2,C3,English KS4: Year 11: 11 R . English 4
-3,P3,N3,P14,English KS4: Year 11: 11 S . English 1
-3,P3,N1,A11,English KS4: Year 11: 11 R . English 3
-3,P3,N9,P6 - MUSIC,English KS4: Year 11: 11 R . English 1
+3,P3,N14,Z0,English KS4: Year 11: 11 R . English 2
+3,P3,N2,Z0,English KS4: Year 11: 11 R . English 4
+3,P3,N3,Z0,English KS4: Year 11: 11 S . English 1
+3,P3,N1,Z0,English KS4: Year 11: 11 R . English 3
+3,P3,N9,Z0,English KS4: Year 11: 11 R . English 1
 3,P4,C3,N1,Maths KS4: Year 10: 10 L . Maths 5
 3,P4,A17,N3,Maths KS4: Year 10: 10 L . Maths 2
 3,P4,C1,J18,Maths KS4: Year 10: 10 L . Maths 4
-3,P4,J15,A17,French KS4: Year 11: 11 'B' . French A
-3,P4,J16,P7 - MUSIC,French KS4: Year 11: 11 'B' . French S
-3,P4,J17,P13,History KS4: Year 11: 11 'B' . History A
-3,P4,J18,C3,German KS4: Year 11: 11 'B' . German
-3,P4,M2 GLC - ICT,P11 - ICT,Computer Sci KS4: Year 11: 11 'B' . Computer Sci
-3,P4,M5 Home Ec,A14 ,DT Food KS4: Year 11: 11 'B' . DT - Food
-3,P4,P11 - ICT,P6 - MUSIC,Music KS4: Year 11: 11 'B' . Music
+3,P4,J15,Z0,French KS4: Year 11: 11 'B' . French A
+3,P4,J16,Z0,French KS4: Year 11: 11 'B' . French S
+3,P4,J17,Z0,History KS4: Year 11: 11 'B' . History A
+3,P4,J18,Z0,German KS4: Year 11: 11 'B' . German
+3,P4,M2 GLC - ICT,Z0,Computer Sci KS4: Year 11: 11 'B' . Computer Sci
+3,P4,M5 Home Ec,Z0,DT Food KS4: Year 11: 11 'B' . DT - Food
+3,P4,P11 - ICT,Z0,Music KS4: Year 11: 11 'B' . Music
 3,P4,P13,N10,Maths KS4: Year 10: 10 L . Maths 1
-3,P4,N14,B2,Geography KS4: Year 11: 11 'B' . Geography A
+3,P4,N14,Z0,Geography KS4: Year 11: 11 'B' . Geography A
 3,P4,P7 - MUSIC,N2,Maths KS4: Year 10: 10 L . Maths 3
-3,P4,N3,P14,Geography KS4: Year 11: 11 'B' . Geography S
+3,P4,N3,Z0,Geography KS4: Year 11: 11 'B' . Geography S
 3,P4,P6 - MUSIC,J16,English KS4: Year 10: 10 S . English 2
-3,P4,N1,C9,Business KS4: Year 11: 11 'B' . Business
+3,P4,N1,Z0,Business KS4: Year 11: 11 'B' . Business
 3,P4,R2 Gym (Back),J15,English KS4: Year 10: 10 S . English 1
-3,P4,Cabin,A5,Voc Exp: Year 11: 11 'B' . Voc Exp 2
+3,P4,Cabin,Z0,Voc Exp: Year 11: 11 'B' . Voc Exp 2
 3,P5,A11,N9,English KS4: Year 10: 10 R . English 4
 3,P5,C9,N8,English KS4: Year 10: 10 R . English 5
 3,P5,B2,N7,English KS4: Year 10: 10 R . English 3
-3,P5,J15,A17,French KS4: Year 11: 11 'B' . French A
-3,P5,J16,P7 - MUSIC,French KS4: Year 11: 11 'B' . French S
-3,P5,J17,P13,History KS4: Year 11: 11 'B' . History A
-3,P5,J18,C3,German KS4: Year 11: 11 'B' . German
-3,P5,M2 GLC - ICT,P11 - ICT,Computer Sci KS4: Year 11: 11 'B' . Computer Sci
-3,P5,M5 Home Ec,A14 ,DT Food KS4: Year 11: 11 'B' . DT - Food
-3,P5,P11 - ICT,P6 - MUSIC,Music KS4: Year 11: 11 'B' . Music
+3,P5,J15,Z0,French KS4: Year 11: 11 'B' . French A
+3,P5,J16,Z0,French KS4: Year 11: 11 'B' . French S
+3,P5,J17,Z0,History KS4: Year 11: 11 'B' . History A
+3,P5,J18,Z0,German KS4: Year 11: 11 'B' . German
+3,P5,M2 GLC - ICT,Z0,Computer Sci KS4: Year 11: 11 'B' . Computer Sci
+3,P5,M5 Home Ec,Z0,DT Food KS4: Year 11: 11 'B' . DT - Food
+3,P5,P11 - ICT,Z0,Music KS4: Year 11: 11 'B' . Music
 3,P5,P14,N14,English KS4: Year 10: 10 R . English 1
-3,P5,N14,B2,Geography KS4: Year 11: 11 'B' . Geography A
+3,P5,N14,Z0,Geography KS4: Year 11: 11 'B' . Geography A
 3,P5,P7 - MUSIC,J17,English KS4: Year 10: 10 R . English 2
-3,P5,N3,P14,Geography KS4: Year 11: 11 'B' . Geography S
+3,P5,N3,Z0,Geography KS4: Year 11: 11 'B' . Geography S
 3,P5,P6 - MUSIC,J16,Maths KS4: Year 10: 10 S . Maths 2
-3,P5,N1,C9,Business KS4: Year 11: 11 'B' . Business
+3,P5,N1,Z0,Business KS4: Year 11: 11 'B' . Business
 3,P5,R2 Gym (Back),J15,Maths KS4: Year 10: 10 S . Maths 1
-3,P5,Cabin,A5,Voc Exp: Year 11: 11 'B' . Voc Exp 2
+3,P5,Cabin,Z0,Voc Exp: Year 11: 11 'B' . Voc Exp 2
 3,T,A5,N10,Year 10: P10DCC N10/A5
 3,T,C3,J17,Year 10: D10RHB J17/C1
 3,T,A11,N14,Year 10: P10ADM N14/A11
 3,T,C7,N9,Year 10: R10AJH N9/C7
 3,T,C9,M5 Home Ec,Year 10: R10RLS M5/C9
 3,T,C1,N7,Year 10: D10JJH N7/C1
-3,T,J15,P13,Year 11: W11KAS P13/J15
-3,T,J16,P14,Year 11: W11FS P14/J16
-3,T,J17,C3,Year 11: D11PMH C3/J17
-3,T,N10,A5,Year 11: P11SLO A5/N10
-3,T,M4 Home Ec,A14 ,Year 11: R11RF A14/M4
-3,T,M5 Home Ec,A17,Year 11: R11PP A17/M5
+3,T,J15,Z0,Year 11: W11KAS P13/J15
+3,T,J16,Z0,Year 11: W11FS P14/J16
+3,T,J17,Z0,Year 11: D11PMH C3/J17
+3,T,N10,Z0,Year 11: P11SLO A5/N10
+3,T,M4 Home Ec,Z0,Year 11: R11RF A14/M4
+3,T,M5 Home Ec,Z0,Year 11: R11PP A17/M5
 3,T,P13,J15,Year 10: W10LAH J15/P13
 3,T,P14,J16,Year 10: W10HAB J16/P14
-3,T,N14,A11,Year 11: P11DI A11/N14
+3,T,N14,Z0,Year 11: P11DI A11/N14
 3,T,P7 - MUSIC,N3,Year 10: B10JEW N3/P7
-3,T,N3,P7 - MUSIC,Year 11: B11IED P7/N3
+3,T,N3,Z0,Year 11: B11IED P7/N3
 3,T,P6 - MUSIC,N1,Year 10: B10SB N1/P6
-3,T,N1,P6 - MUSIC,Year 11: B11HJM P6/N1
-3,T,N7,C1,Year 11: D11DH C1/N7
-3,T,N8,C9,Year 11: R11ECD C9/N8
-3,T,N9,C7,Year 11: D11SJG C7/N9
+3,T,N1,Z0,Year 11: B11HJM P6/N1
+3,T,N7,Z0,Year 11: D11DH C1/N7
+3,T,N8,Z0,Year 11: R11ECD C9/N8
+3,T,N9,Z0,Year 11: D11SJG C7/N9
 4,P1,A5,M2 GLC - ICT,DT KS4: Year 10: 10 'B' . DT
 4,P1,A1,M1 - ART,DT - Craft KS4: Year 10: 10 'B' . DT - Craft
 4,P1,C3,N3,Dance KS4: Year 10: 10 'B' . Dance
@@ -547,21 +547,21 @@
 4,P1,C9,N9,Business KS4: Year 10: 10 'B' . Business
 4,P1,B2,N14,Geography KS4: Year 10: 10 'B' . Geography A
 4,P1,C1,N8,Voc Exp: Year 10: 10 'B' . Voc Exp
-4,P1,J16,P14,French KS4: Year 11: 11 'C' . French S
-4,P1,J17,P13,History KS4: Year 11: 11 'C' . History S
-4,P1,J18,C3,German KS4: Year 11: 11 'C' . German
-4,P1,N10,P6 - MUSIC,Geography KS4: Year 11: 11 'C' . Geography A
-4,P1,M2 GLC - ICT,P11 - ICT,CreativeMedia KS4: Year 11: 11 'C' . CreativeMedia
-4,P1,M1 - ART,A1,Art KS4: Year 11: 11 'C' . Art
+4,P1,J16,Z0,French KS4: Year 11: 11 'C' . French S
+4,P1,J17,Z0,History KS4: Year 11: 11 'C' . History S
+4,P1,J18,Z0,German KS4: Year 11: 11 'C' . German
+4,P1,N10,Z0,Geography KS4: Year 11: 11 'C' . Geography A
+4,P1,M2 GLC - ICT,Z0,CreativeMedia KS4: Year 11: 11 'C' . CreativeMedia
+4,P1,M1 - ART,Z0,Art KS4: Year 11: 11 'C' . Art
 4,P1,P13,J17,History KS4: Year 10: 10 'B' . History S1
 4,P1,P14,J18,History KS4: Year 10: 10 'B' . History S2
-4,P1,N14,A14 ,PE GCSE KS4: Year 11: 11 'C' . PE GCSE
+4,P1,N14,Z0,PE GCSE KS4: Year 11: 11 'C' . PE GCSE
 4,P1,P7 - MUSIC,N10,German KS4: Year 10: 10 'B' . German
 4,P1,P6 - MUSIC,J15,French KS4: Year 10: 10 'B' . French A
-4,P1,N1,B2,Business KS4: Year 11: 11 'C' . Business
-4,P1,N7,P7 - MUSIC,Geography KS4: Year 11: 11 'C' . Geography S
+4,P1,N1,Z0,Business KS4: Year 11: 11 'C' . Business
+4,P1,N7,Z0,Geography KS4: Year 11: 11 'C' . Geography S
 4,P1,R2 Gym (Back),J16,Drama KS4: Year 10: 10 'B' . Drama
-4,P1,Cabin,A11,Voc Exp: Year 11: 11 'C' . Voc Exp
+4,P1,Cabin,Z0,Voc Exp: Year 11: 11 'C' . Voc Exp
 4,P2,A5,M13 - ART,Art KS4: Year 10: 10 'A' . Art
 4,P2,A1,N8,DT KS4: Year 10: 10 'A' . DT
 4,P2,C3,N7,Geography KS4: Year 10: 10 'A' . Geography S
@@ -570,22 +570,22 @@
 4,P2,A17,M5 Home Ec,Child Dev KS4: Year 10: 10 'A' . Child Dev
 4,P2,B2,J15,Business KS4: Year 10: 10 'A' . Business 2
 4,P2,C1,N9,Business KS4: Year 10: 10 'A' . Business 1
-4,P2,J15,R2 Gym (Back),Maths KS4: Year 11: 11 S . Maths 1
-4,P2,J16,A17,Maths KS4: Year 11: 11 S . Maths 2
-4,P2,J18,C9,Science KS4: Year 11: 11 R . Science 4
-4,P2,N10,P13,Religious Studies KS4: Year 11: 11 L . RelStud 2
+4,P2,J15,Z0,Maths KS4: Year 11: 11 S . Maths 1
+4,P2,J16,Z0,Maths KS4: Year 11: 11 S . Maths 2
+4,P2,J18,Z0,Science KS4: Year 11: 11 R . Science 4
+4,P2,N10,Z0,Religious Studies KS4: Year 11: 11 L . RelStud 2
 4,P2,P11 - ICT,N3,Music Performance KS4: Year 10: 10 'A' . Music Perform
 4,P2,P13,J17,History KS4: Year 10: 10 'A' . History A
 4,P2,P14,J16,French KS4: Year 10: 10 'A' . French S
-4,P2,N14,P6 - MUSIC,Religious Studies KS4: Year 11: 11 R . RelStud 2
+4,P2,N14,Z0,Religious Studies KS4: Year 11: 11 R . RelStud 2
 4,P2,P7 - MUSIC,N2,Music KS4: Year 10: 10 'A' . Music
-4,P2,N2,C7,Science KS4: Year 11: 11 R . Science 3
-4,P2,N3,C1,Science KS4: Year 11: 11 L . Science 1
-4,P2,N1,A11,Science KS4: Year 11: 11 L . Science 4
-4,P2,N7,P14,Science KS4: Year 11: 11 L . Science 3
+4,P2,N2,Z0,Science KS4: Year 11: 11 R . Science 3
+4,P2,N3,Z0,Science KS4: Year 11: 11 L . Science 1
+4,P2,N1,Z0,Science KS4: Year 11: 11 L . Science 4
+4,P2,N7,Z0,Science KS4: Year 11: 11 L . Science 3
 4,P2,R2 Gym (Back),N14,PE GCSE KS4: Year 10: 10 'A' . PE GCSE
-4,P2,N8,A14 ,Science KS4: Year 11: 11 L . Science 5
-4,P2,N9,C3,Science KS4: Year 11: 11 R . Science 1
+4,P2,N8,Z0,Science KS4: Year 11: 11 L . Science 5
+4,P2,N9,Z0,Science KS4: Year 11: 11 R . Science 1
 4,P3,A5,M13 - ART,Art KS4: Year 10: 10 'A' . Art
 4,P3,A1,N8,DT KS4: Year 10: 10 'A' . DT
 4,P3,C3,N7,Geography KS4: Year 10: 10 'A' . Geography S
@@ -594,22 +594,22 @@
 4,P3,A17,M5 Home Ec,Child Dev KS4: Year 10: 10 'A' . Child Dev
 4,P3,B2,J15,Business KS4: Year 10: 10 'A' . Business 2
 4,P3,C1,N9,Business KS4: Year 10: 10 'A' . Business 1
-4,P3,J15,A17,Maths KS4: Year 11: 11 L . Maths 1
-4,P3,J16,C7,Maths KS4: Year 11: 11 L . Maths 3
-4,P3,J17,A14 ,Maths KS4: Year 11: 11 L . Maths 2
-4,P3,J18,C1,Maths KS4: Year 11: 11 L . Maths 4
-4,P3,N10,P13,English KS4: Year 11: 11 S . English 2
-4,P3,M4 Home Ec,B2,Maths KS4: Year 11: 11 L . Maths 5
+4,P3,J15,Z0,Maths KS4: Year 11: 11 L . Maths 1
+4,P3,J16,Z0,Maths KS4: Year 11: 11 L . Maths 3
+4,P3,J17,Z0,Maths KS4: Year 11: 11 L . Maths 2
+4,P3,J18,Z0,Maths KS4: Year 11: 11 L . Maths 4
+4,P3,N10,Z0,English KS4: Year 11: 11 S . English 2
+4,P3,M4 Home Ec,Z0,Maths KS4: Year 11: 11 L . Maths 5
 4,P3,P11 - ICT,N3,Music Performance KS4: Year 10: 10 'A' . Music Perform
 4,P3,P13,J17,History KS4: Year 10: 10 'A' . History A
 4,P3,P14,J16,French KS4: Year 10: 10 'A' . French S
-4,P3,N14,C9,English KS4: Year 11: 11 R . English 2
+4,P3,N14,Z0,English KS4: Year 11: 11 R . English 2
 4,P3,P7 - MUSIC,N2,Music KS4: Year 10: 10 'A' . Music
-4,P3,N2,C3,English KS4: Year 11: 11 R . English 4
-4,P3,N3,P14,English KS4: Year 11: 11 S . English 1
-4,P3,N1,A11,English KS4: Year 11: 11 R . English 3
+4,P3,N2,Z0,English KS4: Year 11: 11 R . English 4
+4,P3,N3,Z0,English KS4: Year 11: 11 S . English 1
+4,P3,N1,Z0,English KS4: Year 11: 11 R . English 3
 4,P3,R2 Gym (Back),N14,PE GCSE KS4: Year 10: 10 'A' . PE GCSE
-4,P3,N9,P6 - MUSIC,English KS4: Year 11: 11 R . English 1
+4,P3,N9,Z0,English KS4: Year 11: 11 R . English 1
 4,P4,C3,N10,Science KS4: Year 10: 10 L . Science 1
 4,P4,A14 ,J17,Maths KS4: Year 10: 10 R . Maths 2
 4,P4,C7,N9,Maths KS4: Year 10: 10 R . Maths 4
@@ -618,16 +618,16 @@
 4,P4,B1,N1,Science KS4: Year 10: 10 L . Science 5
 4,P4,B2,N7,Maths KS4: Year 10: 10 R . Maths 3
 4,P4,C1,J18,Religious Studies KS4: Year 10: 10 L . RelStud 4
-4,P4,N10,A17,Chemistry KS4: Year 11: 11 S . Chemistry 2
+4,P4,N10,Z0,Chemistry KS4: Year 11: 11 S . Chemistry 2
 4,P4,P13,N3,Science KS4: Year 10: 10 L . Science 2
 4,P4,P14,N14,Maths KS4: Year 10: 10 R . Maths 1
-4,P4,N14,C3,Science KS4: Year 11: 11 R . Science 2
-4,P4,N3,C7,Chemistry KS4: Year 11: 11 S . Chemistry 1
+4,P4,N14,Z0,Science KS4: Year 11: 11 R . Science 2
+4,P4,N3,Z0,Chemistry KS4: Year 11: 11 S . Chemistry 1
 4,P4,P6 - MUSIC,J16,English KS4: Year 10: 10 S . English 2
-4,P4,N1,C9,Science KS4: Year 11: 11 R . Science 4
-4,P4,N7,C1,Science KS4: Year 11: 11 R . Science 3
+4,P4,N1,Z0,Science KS4: Year 11: 11 R . Science 4
+4,P4,N7,Z0,Science KS4: Year 11: 11 R . Science 3
 4,P4,R2 Gym (Back),J15,English KS4: Year 10: 10 S . English 1
-4,P4,N9,P13,Religious Studies KS4: Year 11: 11 R . RelStud 1
+4,P4,N9,Z0,Religious Studies KS4: Year 11: 11 R . RelStud 1
 4,P5,C3,N1,English KS4: Year 10: 10 L . English 5
 4,P5,C7,N14,Science KS4: Year 10: 10 R . Science 1
 4,P5,A17,N3,English KS4: Year 10: 10 L . English 2
@@ -635,37 +635,37 @@
 4,P5,B1,N8,Religious Studies KS4: Year 10: 10 R . RelStud 5
 4,P5,B2,N7,Science KS4: Year 10: 10 R . Science 3
 4,P5,C1,J18,English KS4: Year 10: 10 L . English 4
-4,P5,J15,R2 Gym (Back),Maths KS4: Year 11: 11 S . Maths 1
-4,P5,J16,A17,Maths KS4: Year 11: 11 S . Maths 2
-4,P5,J17,C7,Science KS4: Year 11: 11 L . Science 2
-4,P5,N10,C1,Science KS4: Year 11: 11 L . Science 3
+4,P5,J15,Z0,Maths KS4: Year 11: 11 S . Maths 1
+4,P5,J16,Z0,Maths KS4: Year 11: 11 S . Maths 2
+4,P5,J17,Z0,Science KS4: Year 11: 11 L . Science 2
+4,P5,N10,Z0,Science KS4: Year 11: 11 L . Science 3
 4,P5,P13,J17,Religious Studies KS4: Year 10: 10 R . RelStud 2
 4,P5,P14,N10,English KS4: Year 10: 10 L . English 1
-4,P5,N14,P6 - MUSIC,Religious Studies KS4: Year 11: 11 L . RelStud 1
+4,P5,N14,Z0,Religious Studies KS4: Year 11: 11 L . RelStud 1
 4,P5,P7 - MUSIC,N2,English KS4: Year 10: 10 L . English 3
-4,P5,N2,C9,Science KS4: Year 11: 11 L . Science 4
+4,P5,N2,Z0,Science KS4: Year 11: 11 L . Science 4
 4,P5,P6 - MUSIC,J15,Biology KS4: Year 10: 10 S . Biology 1
 4,P5,R2 Gym (Back),J16,Biology KS4: Year 10: 10 S . Biology 2
-4,P5,N8,A14 ,Science KS4: Year 11: 11 L . Science 5
+4,P5,N8,Z0,Science KS4: Year 11: 11 L . Science 5
 4,T,A5,N10,Year 10: P10DCC N10/A5
 4,T,C3,J17,Year 10: D10RHB J17/C1
 4,T,A11,N14,Year 10: P10ADM N14/A11
 4,T,C7,N9,Year 10: R10AJH N9/C7
 4,T,C9,M5 Home Ec,Year 10: R10RLS M5/C9
 4,T,C1,N7,Year 10: D10JJH N7/C1
-4,T,J15,P13,Year 11: W11KAS P13/J15
-4,T,J16,P14,Year 11: W11FS P14/J16
-4,T,J17,C3,Year 11: D11PMH C3/J17
-4,T,N10,A5,Year 11: P11SLO A5/N10
-4,T,M4 Home Ec,A14 ,Year 11: R11RF A14/M4
-4,T,M5 Home Ec,A17,Year 11: R11PP A17/M5
+4,T,J15,Z0,Year 11: W11KAS P13/J15
+4,T,J16,Z0,Year 11: W11FS P14/J16
+4,T,J17,Z0,Year 11: D11PMH C3/J17
+4,T,N10,Z0,Year 11: P11SLO A5/N10
+4,T,M4 Home Ec,Z0,Year 11: R11RF A14/M4
+4,T,M5 Home Ec,Z0,Year 11: R11PP A17/M5
 4,T,P13,J15,Year 10: W10LAH J15/P13
 4,T,P14,J16,Year 10: W10HAB J16/P14
-4,T,N14,A11,Year 11: P11DI A11/N14
+4,T,N14,Z0,Year 11: P11DI A11/N14
 4,T,P7 - MUSIC,N3,Year 10: B10JEW N3/P7
-4,T,N3,P7 - MUSIC,Year 11: B11IED P7/N3
+4,T,N3,Z0,Year 11: B11IED P7/N3
 4,T,P6 - MUSIC,N1,Year 10: B10SB N1/P6
-4,T,N1,P6 - MUSIC,Year 11: B11HJM P6/N1
-4,T,N7,C1,Year 11: D11DH C1/N7
-4,T,N8,C9,Year 11: R11ECD C9/N8
-4,T,N9,C7,Year 11: D11SJG C7/N9
+4,T,N1,Z0,Year 11: B11HJM P6/N1
+4,T,N7,Z0,Year 11: D11DH C1/N7
+4,T,N8,Z0,Year 11: R11ECD C9/N8
+4,T,N9,Z0,Year 11: D11SJG C7/N9
