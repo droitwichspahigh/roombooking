@@ -5,17 +5,19 @@ class Room
 {
     protected $id;
     protected $name;
-    protected $isIctRoom;
+    protected $isBookable;
+    protected $feature;
     protected $academicCalendarId;
     protected $schoolCalendarId;
     protected $timetableEntries = [];
     protected $studentCapacity = null;
 
-    public function __construct(int $id, string $name, bool $isIctRoom = false)
+    public function __construct(int $id, string $name, bool $isBookable = false, string $feature = "")
     {
         $this->id = $id;
         $this->name = $name;
-        $this->isIctRoom = $isIctRoom;
+        $this->isBookable = $isBookable;
+        $this->feature = $feature;
         
         /*
          * So this is marvellous.
@@ -61,8 +63,8 @@ class Room
         return ($this->name);
     }
     
-    public function isIctRoom() {
-        return ($this->isIctRoom);
+    public function isBookable() {
+        return ($this->isBookable);
     }
     
     public function getAcademicCalendarId() {

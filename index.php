@@ -12,6 +12,13 @@ require "bin/classes.php";
 $school = new School();
 $db = new Database();
 
+$bookableRooms = [];
+foreach (Config::roomFeatureName as $feature) {
+    foreach ($school->getBookableRooms($feature) as $r) {
+        array_push($bookableRooms, $r);
+    }
+}
+
 if (isset($_GET['date'])) {
     $date = strtotime($_GET['date']);
     if ($date < strtotime('today') || $date > strtotime($school->getTenWorkingDaysFromNow()->getDate())) {
@@ -145,7 +152,7 @@ EOF;
     				<tr>
     					<th>&nbsp;</th>
     					<?php
-    					 foreach ($school->getIctRooms() as $r) {
+    					 foreach ($school->getBookableRooms() as $r) {
     					     $roomHeader = $r->getName();
     					     if ($r->getCapacity() !== null) {
     					         $roomHeader .= " ({$r->getCapacity()} students)";
@@ -164,7 +171,7 @@ EOF;
     			 // Before school, check for Unavailability
     			 echo "<tr><th>Early</th>";
     			 $firstPeriod = array_values($school->getPeriods())[0];
-    			 foreach ($school->getIctRooms() as $rId => $r) {
+    			 foreach ($school->getBookableRooms() as $rId => $r) {
     			     $cellTextArr = [];
     			     foreach ($r->getEntriesForPeriod(
     			                 new Period(-1, "Early", "00:00", $firstPeriod->getStartTime()),
@@ -177,7 +184,7 @@ EOF;
     			 echo "</tr>\n";
     			 foreach ($school->getPeriods() as $p) {
     			     echo "<tr><th>" . $p->getName() . "</th>";
-    			     foreach ($school->getIctRooms() as $rId => $r) {
+    			     foreach ($school->getBookableRooms() as $rId => $r) {
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
@@ -202,7 +209,7 @@ EOF;
     			 foreach ($school->getPeriods() as $p) {
     			     $lastPeriod = $p;
     			 }
-    			 foreach ($school->getIctRooms() as $rId => $r) {
+    			 foreach ($school->getBookableRooms() as $rId => $r) {
     			     $cellTextArr = [];
     			     foreach ($r->getEntriesForPeriod(
     			         new Period(-2, "Late", $lastPeriod->getEndTime(), "23:59"),

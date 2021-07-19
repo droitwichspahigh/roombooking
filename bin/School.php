@@ -38,7 +38,7 @@ class School
     function getRoomAcademicCalendarIds() {
         $cals = [];
         /* Let's find out which Calendars we need to query- these are the Rooms we should query */
-        foreach ($this->getIctRooms() as $r) {
+        foreach ($this->getBookableRooms() as $r) {
             $cals[$r->getId()] = $r->getAcademicCalendarId();
         }
         
@@ -52,7 +52,7 @@ class School
     function getRoomSchoolCalendarIds() {
         $cals = [];
         /* Let's find out which Calendars we need to query- these are the Rooms we should query */
-        foreach ($this->getIctRooms() as $r) {
+        foreach ($this->getBookableRooms() as $r) {
             $cals[$r->getId()] = $r->getSchoolCalendarId();
         }
         
@@ -173,11 +173,15 @@ class School
         /* First, we find out the rooms */
         $result = $this->client->rawQuery(
             '{
-                IctRoom: RoomRoomFeature (roomFeature__roomFeatureName: "'. Config::roomFeatureName . '") {
+                BookableRoom: RoomRoomFeature (roomFeature__roomFeatureName_in: ["'. implode('", "', Config::roomFeatureName) . '"]) {
                     room {
                         id
                         roomName
                         studentCapacity
+                    }
+                    roomFeature {
+                        id
+                        displayName
                     }
                 }
                 AllRoom: Room {
@@ -186,14 +190,14 @@ class School
                 }
             }');
         
-        foreach ($result->getData()['IctRoom'] as $r) {
-            $this->rooms[$r['room']['id']] = new Room($r['room']['id'], $r['room']['roomName'], true);
+        foreach ($result->getData()['BookableRoom'] as $r) {
+            $this->rooms[$r['room']['id']] = new Room($r['room']['id'], $r['room']['roomName'], true, $r['roomFeature']['displayName']);
             $this->rooms[$r['room']['id']]->setCapacity($r['room']['studentCapacity']);
         }
         
         foreach ($result->getData()['AllRoom'] as $r) {
             if (!array_key_exists($r['id'], $this->rooms)) {
-                // If we have allRooms defined, get info for every room, not just ICT rooms
+                // If we have allRooms defined, get info for every room, not just bookable rooms
                 $this->rooms[$r['id']] = new Room($r['id'], $r['roomName'], defined('allRooms'));
             }
         }
@@ -211,17 +215,18 @@ class School
     }
     
     /**
+     * @param string $feature
      *
      * @return \Roombooking\Room[]
      */
-    public function getIctRooms() {
-        $ictRooms = [];
+    public function getBookableRooms(string $feature = "") {
+        $bookableRooms = [];
         foreach ($this->getRooms() as $id => $r) {
-            if ($r->isIctRoom()) {
-                $ictRooms[$id] = $r;
+            if ($r->isBookable()/* && (empty($feature) || $r->getFeature() == $feature)*/) {
+                $bookableRooms[$id] = $r;
             }
         }
-        return $ictRooms;
+        return $bookableRooms;
     }
     
     /**
@@ -297,7 +302,7 @@ class School
         foreach ($this->getQueryData()['CalendarEntryMapping'] as $d) {
             // First deal with lessons
             if (isset($d['lesson']['location'])) {
-                if (!$this->getRooms()[$d['lesson']['location']['id']]->isIctRoom()) {
+                if (!$this->getRooms()[$d['lesson']['location']['id']]->isBookable()) {
                     // This must be a non-ICT room, so a calendared lesson
                     continue;
                 }
@@ -331,7 +336,7 @@ class School
         } foreach ($this->getQueryData()['interventionsAndSundry'] as $i) {
             $roomCalendarId = $i['calendar']['id'];
             $roomId = array_search($roomCalendarId, $this->getRoomSchoolCalendarIds());
-            if (!$this->getRooms()[$roomId]->isIctRoom()) {
+            if (!$this->getRooms()[$roomId]->isBookable()) {
                 // This must be a non-ICT room, so a calendared lesson
                 continue;
             }
@@ -465,7 +470,7 @@ query {
             id
         }
     }
-    RoomUnavailability (room__id_in: [' . implode (",", array_keys($this->getIctRooms())). '] ){
+    RoomUnavailability (room__id_in: [' . implode (",", array_keys($this->getBookableRooms())). '] ){
         room {
             id
         }
