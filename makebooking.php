@@ -81,13 +81,30 @@ if (!isset($staffCal[0])) {
 }
 
 if (isset($staffCal[1])) {
-    $db->unlock();
-    /* There is a conflict, that's weird */
-    die ("Conflicting lessons?");
+    if (!isset($_GET['lessonId'])) {
+        $db->unlock();
+        /* There is a conflict, that's weird */
+        echo "<h1>Arbor thinks that you have two lessons.  Please click the lesson that you wish to book</h1>";
+        echo "<ul>";
+        foreach ($staffCal as $cal) {
+            echo "<li><a href=\"{$_SERVER['REQUEST_URI']}&lessonId={$cal['lesson']['id']}\">";
+            echo "{$cal['lesson']['displayName']}</a></li>";
+        }
+        die ("</ul>");
+    } else {
+        foreach ($staffCal as $cal) {
+            if ($cal['lesson']['id'] == $_GET['lessonId']) {
+                $selectedCal = $cal;
+                break;
+            }
+        }
+    }
+} else {
+    $selectedCal = $staffCal[0];
 }
 
-$LessonId = $staffCal[0]['lesson']['id'];
-$oldLessonRoomId= $staffCal[0]['lesson']['location']['id'];
+$LessonId = $selectedCal['lesson']['id'];
+$oldLessonRoomId= $selectedCal['lesson']['location']['id'];
 
 if (empty($oldLessonRoomId)) {
     /* 
@@ -120,8 +137,8 @@ $session->save();
 
 /* Need to hack this into the Query data now, as timetable has changed */
 /* XXX This is so evil, but it works I guess */
-$staffCal[0]['lesson']['location']['id'] = $roomId;
-array_push($_SESSION['School_queryData']['CalendarEntryMapping'], $staffCal[0]);
+$selectedCal['lesson']['location']['id'] = $roomId;
+array_push($_SESSION['School_queryData']['CalendarEntryMapping'], $selectedCal);
 
 $db->unlock();
 
