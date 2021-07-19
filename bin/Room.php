@@ -120,19 +120,32 @@ class Room
         $this->timetableEntries[-$unavailability->getId()] = $unavailability;
     }
     
-    public function getEntry(Period $period, string $date) {
+    public function getEntriesForPeriod(Period $period, string $date, bool $allEntries = false) {
+        $ret = [];
         foreach ($this->timetableEntries as $e) {
             if ($e instanceOf Unavailability) {
                 /* First, check Availability */
                 if ($e->includes($date, $period)) {
-                    return $e;
+                    array_push($ret, $e);
                 }
             } else if ($e instanceOf Lesson) {
                 /* Let's look through the lessons */
                 if ($e->getDay()->getDate() === $date && $e->getPeriod() === $period) {
-                    return $e;
+                    array_push($ret, $e);
                 }
             }
+        }
+        return $ret;
+    }
+    
+    /**
+     * Return the first matching entry
+     * @return Event
+     */
+    public function getEntry(Period $period, string $date) {
+        $entries = $this->getEntriesForPeriod($period, $date, true);
+        if (!empty($entries)) {
+            return $entries[0];
         }
         return null;
     }

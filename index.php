@@ -7,6 +7,7 @@ if(!isset($_SERVER['PHP_AUTH_USER'])) {
 }
 
 require "bin/classes.php";
+/** @var $auth_user // from auth.php */
 
 $school = new School();
 $db = new Database();
@@ -160,6 +161,20 @@ EOF;
     	       	 foreach ($db->dosql("SELECT * FROM roomchanges;")->fetch_all(MYSQLI_ASSOC) as $r) {
     			     $bookedLessons[$r['lesson_id']] = $r['booking_calendar'];
     			 }
+    			 // Before school, check for Unavailability
+    			 echo "<tr><th>Early</th>";
+    			 $firstPeriod = array_values($school->getPeriods())[0];
+    			 foreach ($school->getIctRooms() as $rId => $r) {
+    			     $cellTextArr = [];
+    			     foreach ($r->getEntriesForPeriod(
+    			                 new Period(-1, "Early", "00:00", $firstPeriod->getStartTime()),
+    			                 $date) as $e) {
+    			         array_push($cellTextArr, "{$e->getStartTime()}-{$e->getEndTime()}: {$e->getName()}");
+    			     }
+    			     $cellText = implode('<br />', $cellTextArr);
+    			     echo "<td>$cellText</td>";
+    			 }
+    			 echo "</tr>\n";
     			 foreach ($school->getPeriods() as $p) {
     			     echo "<tr><th>" . $p->getName() . "</th>";
     			     foreach ($school->getIctRooms() as $rId => $r) {
@@ -180,9 +195,25 @@ EOF;
     			             echo $info;
     			         }
     			     }
-    			     echo "</tr>";
+    			     echo "</tr>\n";
     			 }
-    			?>
+    			 // After school, check for Unavailability
+    			 echo "<tr><th>Late</th>";
+    			 foreach ($school->getPeriods() as $p) {
+    			     $lastPeriod = $p;
+    			 }
+    			 foreach ($school->getIctRooms() as $rId => $r) {
+    			     $cellTextArr = [];
+    			     foreach ($r->getEntriesForPeriod(
+    			         new Period(-2, "Late", $lastPeriod->getEndTime(), "23:59"),
+    			         $date) as $e) {
+    			             array_push($cellTextArr, "{$e->getStartTime()}-{$e->getEndTime()}: {$e->getName()}");
+    			         }
+    			         $cellText = implode('<br />', $cellTextArr);
+    			         echo "<td>$cellText</td>";
+    			 }
+    			 echo "</tr>\n";
+    			 ?>
     		</table>
 		</div>
 	</div>

@@ -20,12 +20,21 @@ class Unavailability extends Event
         $this->endTimeStamp = $endTS;
     }
     
-    public function getstartTimeStamp() {
+    public function getStartTimeStamp() {
         return $this->startTimeStamp;
     }
     
-    public function getEndDateTime() {
-        return $this->startTimeStamp;
+    // How I managed to get two different names here is beyond me :(
+    public function getEndTimeStamp() {
+        return $this->endTimeStamp;
+    }
+    
+    public function getStartTime() {
+        return date('H:i', $this->getStartTimeStamp());
+    }
+    
+    public function getEndTime() {
+        return date('H:i', $this->getEndTimeStamp());
     }
     
     public function includes(string $date, Period $period) {
