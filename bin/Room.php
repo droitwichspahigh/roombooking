@@ -79,6 +79,10 @@ class Room
         return $this->studentCapacity;
     }
     
+    public function getFeature() {
+        return $this->feature;
+    }
+    
     public function setCapacity($capacity) {
         if (!empty($capacity)) {
             $this->studentCapacity = $capacity;
@@ -138,6 +142,28 @@ class Room
             }
         }
         return $ret;
+    }
+    
+    public function isThereClash(Period $period, string $date) {
+        foreach ($this->timetableEntries as $e) {
+            if ($e instanceOf Unavailability) {
+                /* First, check Availability */
+                if ($e->includes($date, $period)) {
+                    return $e->getInfo($date);
+                }
+            } else if ($e instanceOf Lesson) {
+                /* Let's look through the lessons */
+                if ($e->getDay()->getDate() === $date) {
+                    // We'll make an Unavailability to check for collisions
+                    $p = $e->getPeriod();
+                    $u = new Unavailability(0, "", strtotime($p->getStartTime()), strtotime($p->getEndTime()));
+                    if ($u->includes($date, $period)) {
+                        return $e->getInfo();
+                    }
+                }
+            }
+        }
+        return null;
     }
     
     /**

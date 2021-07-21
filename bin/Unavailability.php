@@ -24,6 +24,25 @@ class Unavailability extends Event
         return $this->startTimeStamp;
     }
     
+    public function getPositiveId() {
+        return abs($this->getId());
+    }
+    
+    public function getInfo(string $date = null) {
+        $startTime = ''; $endTime = '';
+        if (!is_null($date)) {
+            $startDate = date('Y-m-d', $this->getStartTimeStamp());
+            $endDate = date('Y-m-d', $this->getEndTimeStamp());
+            if ($startDate != $date || $endDate != $date) {
+                $startTime = "$startDate ";
+                $endTime = "$endDate ";
+            }
+        }
+        $startTime .= $this->getStartTime();
+        $endTime .= $this->getEndTime();
+        return "$startTime-$endTime: {$this->getName()}";
+    }
+    
     // How I managed to get two different names here is beyond me :(
     public function getEndTimeStamp() {
         return $this->endTimeStamp;

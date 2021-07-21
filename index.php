@@ -9,6 +9,36 @@ if(!isset($_SERVER['PHP_AUTH_USER'])) {
 require "bin/classes.php";
 /** @var $auth_user // from auth.php */
 
+function nonLessonRow($school, $rooms, $name, $date, $startTime, $endTime) {
+    $startHhmm = substr($startTime, 0, 5);
+    $endHhmm = substr($endTime, 0, 5);
+    echo "<tr><th title=\"$startHhmm-$endHhmm\">$name</th>";
+    foreach ($rooms as $r) {
+        $cellTextArr = [];
+        $entries = $r->getEntriesForPeriod(new Period(-1, $name, $startTime, $endTime), $date);
+        usort($entries, function (Event $a, Event $b) { 
+            $a = ($a instanceOf Unavailability) ? $a : $a->getPeriod;
+            $b = ($b instanceOf Unavailability) ? $b : $b->getPeriod;
+            return strtotime($a->getStartTime()) <=> strtotime($b->getStartTime()); });
+        //$entries = array_merge($unavail, $other);
+        foreach ($entries as $e) {
+                $descr = str_replace(': ', '<br />', str_replace('Room Unavailable: ', '', $e->getInfo($date)));
+                $m = [];
+                if (preg_match('/^(.*) \((\d+)\)$/', $descr, $m) == 1) {
+                    if ($m[2] == $school->getCurrentlyLoggedInStaff()->getId()) {
+                        $descr = "<a href=\"removebooking.php?cancelUnavailability={$e->getPositiveId()}&date=$date\" class=\"btn btn-primary stretched-link\">{$m[1]}</a>";
+                    } elseif (in_array($auth_user, Config::admin_users)) {
+                        $descr = "<a href=\"removebooking.php?cancelUnavailability={$e->getPositiveId()}&date=$date\" class=\"btn btn-danger stretched-link\">{$m[1]}</a>";
+                    }
+                }
+                array_push($cellTextArr, "$descr");
+            }
+            $cellText = implode('<br />', $cellTextArr);
+            echo "<td>$cellText</td>";
+    }
+    echo "</tr>\n";
+}
+
 $school = new School();
 $db = new Database();
 
@@ -62,6 +92,43 @@ if (isset($_SESSION['thereIsNoRoomForThisLesson'])) {
 <?php
 require "bin/head.php"; 
 ?>
+<script>
+adhocRoomId = 0;
+function showAdhocBooking(id, name) {
+	$('#adhocBook').modal('show');
+    date = $('input#date-input')[0].value;
+	$('span#adhocBookRoomName')[0].innerHTML = name + " on " + date;
+	adhocRoomId = id;
+}
+function makeAdhocBooking() {
+	var xhr = new XMLHttpRequest();
+    xhr.open("POST", 'async/newUnavailability.php', true);
+    
+    //Send the proper header information along with the request
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          adhocBookingHandle(this.responseText);
+        }
+    };
+	$('div#adhocError')[0].innerHTML = "Working...";
+	$('div#adhocError').removeClass('hidden');
+    startTime = encodeURIComponent($('input#adhocBookStartTime')[0].value);
+    endTime = encodeURIComponent($('input#adhocBookEndTime')[0].value);
+    date = encodeURIComponent($('input#date-input')[0].value);
+    reason = encodeURIComponent($('input#adhocBookDetails')[0].value);
+    xhr.send("startTime=" + startTime + "&endTime=" + endTime + "&date=" + date + "&roomId=" + adhocRoomId + "&reason=" + reason);
+}
+function adhocBookingHandle(response) {
+	if (response == "Success") {
+		$('div#adhocError')[0].innerHTML = "Done!  Please wait...";
+		location.reload(true);
+	} else {
+		// Indicate error
+		$('div#adhocError')[0].innerHTML = response;
+	}	
+}
+</script>
 </head>
 <body>
 <?php
@@ -88,7 +155,40 @@ if (isset($modalmsg)) {
     <script>$('#msgBox').modal('show')</script>
 EOF;
 }
-?>	
+?>
+<!-- Ad-hoc booking modal -->
+<div class="modal fade" id="adhocBook" tabindex="-1" role="dialog" aria-labelledby="adhocBooking" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adhocBookLabel">Non-lesson booking</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div><strong>Book room <span id="adhocBookRoomName"></span>, for something other than a lesson.</strong></div>
+        <div class="form-group">
+        	<label for="adhocBookDetails">Booking details</label>
+    		<input type="text" class="form-control" id="adhocBookDetails" aria-describedby="adhocBookDetails" placeholder="Describe why you are booking the room">
+        </div>
+        <div class="form-group">
+			<label for="adhocBookStartTime">Start time</label>
+    		<input type="time" class="form-control" id="adhocBookStartTime" aria-describedby="adhocBookStartTime">
+        </div>
+        <div class="form-group">
+			<label for="adhocBookEndTime">End time</label>
+    		<input type="time" class="form-control" id="adhocBookEndTime" aria-describedby="adhocBookEndTime">
+        </div>
+        <div id="adhocError" class="text-danger hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="makeAdhocBooking()">Make booking</button>
+      </div>
+    </div>
+  </div>
+</div>
 	<div class="container">
 		<nav class="navbar navbar-expand">
             <!-- Brand -->
@@ -152,12 +252,12 @@ EOF;
     				<tr>
     					<th>&nbsp;</th>
     					<?php
-    					 foreach ($school->getBookableRooms() as $r) {
+    					 foreach ($bookableRooms as $r) {
     					     $roomHeader = $r->getName();
     					     if ($r->getCapacity() !== null) {
     					         $roomHeader .= " ({$r->getCapacity()} students)";
     					     }
-    					     echo "<th>" . $roomHeader . "</th>";
+    					     echo "<th onclick=\"showAdhocBooking({$r->getId()}, '{$r->getName()}')\">" . $roomHeader . "</th>";
     					 }
     				    ?>
     				</tr>
@@ -169,57 +269,54 @@ EOF;
     			     $bookedLessons[$r['lesson_id']] = $r['booking_calendar'];
     			 }
     			 // Before school, check for Unavailability
-    			 echo "<tr><th>Early</th>";
-    			 $firstPeriod = array_values($school->getPeriods())[0];
-    			 foreach ($school->getBookableRooms() as $rId => $r) {
-    			     $cellTextArr = [];
-    			     foreach ($r->getEntriesForPeriod(
-    			                 new Period(-1, "Early", "00:00", $firstPeriod->getStartTime()),
-    			                 $date) as $e) {
-    			         array_push($cellTextArr, "{$e->getStartTime()}-{$e->getEndTime()}: {$e->getName()}");
-    			     }
-    			     $cellText = implode('<br />', $cellTextArr);
-    			     echo "<td>$cellText</td>";
-    			 }
-    			 echo "</tr>\n";
+    			 nonLessonRow($school, $bookableRooms, "Early", $date, "00:00", array_values($school->getPeriods())[0]->getStartTime());
+    			 $previousPeriod = null;
     			 foreach ($school->getPeriods() as $p) {
-    			     echo "<tr><th>" . $p->getName() . "</th>";
-    			     foreach ($school->getBookableRooms() as $rId => $r) {
+    			     if (!is_null($previousPeriod)) {
+    			         if ($previousPeriod->getEndTime() != $p->getStartTime()) {
+    			             // Must be a break
+    			             nonLessonRow($school, $bookableRooms, "B", $date, $previousPeriod->getEndTime(), $p->getStartTime());
+    			         }
+    			     }
+    			     $previousPeriod = $p;
+    			     echo "<tr><th title=\"{$p->getStartTime(true)}-{$p->getEndTime(true)}\">{$p->getName()}</th>";
+    			     foreach ($bookableRooms as $rId => $r) {
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
     			             echo "<a href=\"makebooking.php?startTime=" . urlencode($p->getStartTime()) . "&endTime=" . urlencode($p->getEndTime()) . "&roomId=" . $rId . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
     			         } else {
-    			             $info = $e->getInfo();
-    			             /* Is this my booking? */
-    			             if (isset ($bookedLessons[$e->getId()])) {
-    			                 if ($bookedLessons[$e->getId()] == $school->getCurrentlyLoggedInStaff()->getCalendarId()) {
-    			                     $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
-    			                 } elseif (in_array($auth_user, Config::admin_users)) {
-    			                     $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-danger stretched-link\">" . $info . "</a>";
-    			                 }
-    			             }
-    			             echo $info;
+			                 $info = $e->getInfo($date);
+			                 if ($e instanceOf Unavailability) {
+			                     $info = str_replace(': ', '<br />', str_replace('Room Unavailable: ', '', $info));
+			                     $m = [];
+			                     if (preg_match('/^(.*) \((\d+)\)$/', $info, $m) == 1) {
+			                         if ($m[2] == $school->getCurrentlyLoggedInStaff()->getId()) {
+			                             $info = "<a href=\"removebooking.php?cancelUnavailability={$e->getPositiveId()}&date=$date\" class=\"btn btn-primary stretched-link\">{$m[1]}</a>";
+			                         } elseif (in_array($auth_user, Config::admin_users)) {
+			                             $info = "<a href=\"removebooking.php?cancelUnavailability={$e->getPositiveId()}&date=$date\" class=\"btn btn-danger stretched-link\">{$m[1]}</a>";
+			                         }
+			                     }
+			                 } else {
+        			             /* Is this my booking? */
+        			             if (isset ($bookedLessons[$e->getId()])) {
+        			                 if ($bookedLessons[$e->getId()] == $school->getCurrentlyLoggedInStaff()->getCalendarId()) {
+        			                     $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-primary stretched-link\">" . $info . "</a>";
+        			                 } elseif (in_array($auth_user, Config::admin_users)) {
+        			                     $info = "<a href=\"removebooking.php?cancelBooking=" . $e->getId() . "&date=" . $date . "\" class=\"btn btn-danger stretched-link\">" . $info . "</a>";
+        			                 }
+        			             }
+			                 }
+        			         echo $info;
     			         }
     			     }
     			     echo "</tr>\n";
     			 }
     			 // After school, check for Unavailability
-    			 echo "<tr><th>Late</th>";
     			 foreach ($school->getPeriods() as $p) {
     			     $lastPeriod = $p;
     			 }
-    			 foreach ($school->getBookableRooms() as $rId => $r) {
-    			     $cellTextArr = [];
-    			     foreach ($r->getEntriesForPeriod(
-    			         new Period(-2, "Late", $lastPeriod->getEndTime(), "23:59"),
-    			         $date) as $e) {
-    			             array_push($cellTextArr, "{$e->getStartTime()}-{$e->getEndTime()}: {$e->getName()}");
-    			         }
-    			         $cellText = implode('<br />', $cellTextArr);
-    			         echo "<td>$cellText</td>";
-    			 }
-    			 echo "</tr>\n";
+    			 nonLessonRow($school, $bookableRooms, "Late", $date, $lastPeriod->getEndTime(), "23:59");
     			 ?>
     		</table>
 		</div>

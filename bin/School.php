@@ -222,7 +222,7 @@ class School
     public function getBookableRooms(string $feature = "") {
         $bookableRooms = [];
         foreach ($this->getRooms() as $id => $r) {
-            if ($r->isBookable()/* && (empty($feature) || $r->getFeature() == $feature)*/) {
+            if ($r->isBookable() && (empty($feature) || $r->getFeature() == $feature)) {
                 $bookableRooms[$id] = $r;
             }
         }
@@ -340,6 +340,11 @@ class School
                 // This must be a non-ICT room, so a calendared lesson
                 continue;
             }
+            if ($i['event']['__typename'] == 'RoomUnavailability') {
+                // These are dealt with later
+                continue;
+            }
+            if ($this->rooms[$roomId]->isThereClash())
             $this->rooms[$roomId]->addUnavailability(
                 new Unavailability(
                     -$i['id'],
@@ -468,6 +473,9 @@ query {
         endDatetime
         calendar {
             id
+        }
+        event {
+            __typename
         }
     }
     RoomUnavailability (room__id_in: [' . implode (",", array_keys($this->getBookableRooms())). '] ){

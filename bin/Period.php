@@ -22,8 +22,8 @@ class Period
     
     public function getId()         { return $this->id; }
     public function getName()       { return $this->name; }
-    public function getStartTime()  { return $this->startTime; }
-    public function getEndTime()    { return $this->endTime; }
+    public function getStartTime($hhmm = false)  { return $hhmm ? substr($this->startTime, 0, 5) : $this->startTime; }
+    public function getEndTime($hhmm = false)    { return $hhmm ? substr($this->endTime, 0, 5) : $this->endTime; }
 
     function __destruct()
     {}
