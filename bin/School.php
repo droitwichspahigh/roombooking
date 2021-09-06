@@ -58,6 +58,35 @@ class School
         
         return $cals;
     }
+    
+    function getAY($element = 'start') {
+        if (isset($this->academic_year[$element])) {
+            return $this->academic_year[$element];
+        }
+        
+        /* Let's find our academic year before we go any further */
+        $month = date("m");
+        $year = date("Y");
+        
+        if ($month >= 9) {
+            $this->academic_year['eve'] = "$year-08-31";
+            $this->academic_year['start'] = "$year-09-01";
+            $this->academic_year['end'] = $year+1 . "-08-31";
+            $this->academic_year['post'] = $year+1 . "-09-01";
+        } else {
+            $this->academic_year['eve'] = $year-1 . "-08-31";
+            $this->academic_year['start'] = $year-1 . "-09-01";
+            $this->academic_year['end'] = "$year-08-31";
+            $this->academic_year['post'] = "$year-09-01";
+        }
+        
+        /* Is it something we actually know? */
+        if (!array_key_exists($element, $this->academic_year))
+            die("There isn't such an element; $element for academic year");
+            
+            return $this->getAY($element);
+    }
+    
     /**
      * Give ten working days away- the cutoff for bookings.  This needs to be dynamic if caching.
      *
@@ -340,19 +369,16 @@ class School
                 // This must be a non-ICT room, so a calendared lesson
                 continue;
             }
-            if ($i['event']['__typename'] == 'RoomUnavailability') {
-                // These are dealt with later
-                continue;
+            if ($this->rooms[$roomId]->isThereClash(new Period(-1, '', date('h:M', strtotime($i['startDatetime'])), date('h:M', strtotime($i['endDatetime']))), date('Y-m-d', strtotime($i['endDatetime'])))) {
+                $this->rooms[$roomId]->addUnavailability(
+                    new Unavailability(
+                        -$i['id'],
+                        'Intervention',
+                        strtotime($i['startDatetime']),
+                        strtotime($i['endDatetime'])
+                        )
+                    );
             }
-            if ($this->rooms[$roomId]->isThereClash())
-            $this->rooms[$roomId]->addUnavailability(
-                new Unavailability(
-                    -$i['id'],
-                    'Intervention',
-                    strtotime($i['startDatetime']),
-                    strtotime($i['endDatetime'])
-                    )
-                );
         }
         foreach ($this->getQueryData()['RoomUnavailability'] as $u) {
             // Then deal with availability
@@ -430,64 +456,66 @@ class School
         
         Config::debug("School::getQueryData: no session cache data, requerying");
         
-        /*
-         * XXX We're going to look ahead by five weeks by default.
-         *
-         * The longest holidays (apart from the summer,
-         * where you can't normally book in advance) are
-         * two weeks, so that makes four weeks in advance
-         * max we'll need.  We'll go for five, because
-         * bank holidays can mess things up.
-         *
-         * Inefficient?  Meh.
-         *
-         */
-        $end = $end ?? date('Y-m-d', strtotime('5 weeks'));
-        $lastMidnight = $start ?? date('Y-m-d');
-        /* You don't want to know how long this query took to construct :( */
-        $_SESSION['School_queryData'] = $this->client->rawQuery('
-query {
-    CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomAcademicCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
-        id
-        lesson: event {
-            __typename
-            ... on Session {
-                location {
-                    __typename
-                    ... on Room {
-                        id
+        $start = $this->getAY('start');
+        $end = $this->getAY('end');
+        
+        //$lastMidnight = "2021-09-01";
+        //$end = "2022-08-31";
+        
+        $page = 0;
+        $_SESSION['School_queryData'] = [];
+        while ($page == 0 || !empty($queryData['CalendarEntryMapping']) || !empty($queryData['interventionsAndSundry']) || !empty($queryData['RoomUnavailability'])) {
+            /* You don't want to know how long this query took to construct :( */
+            $query = '
+    query {
+        CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomAcademicCalendarIds()) . "] startDatetime_after: \"$start\" startDatetime_before: \"$end\" page_num: $page) {
+            id
+            lesson: event {
+                __typename
+                ... on Session {
+                    location {
+                        __typename
+                        ... on Room {
+                            id
+                        }
                     }
-                }
-                startDatetime
-                endDatetime
-                displayName
-                staff {
+                    startDatetime
+                    endDatetime
                     displayName
+                    staff {
+                        displayName
+                    }
                 }
             }
         }
-    }
-    interventionsAndSundry: CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomSchoolCalendarIds()) . '] startDatetime_after: "' . $lastMidnight . '" startDatetime_before: "' . $end . '") {
-        id        
-        startDatetime
-        endDatetime
-        calendar {
-            id
+        interventionsAndSundry: CalendarEntryMapping (calendar__id_in: [" . implode(',', $this->getRoomSchoolCalendarIds()) . "] startDatetime_after: \"$start\" startDatetime_before: \"$end\" page_num: $page) {
+            id        
+            startDatetime
+            endDatetime
+            calendar {
+                id
+            }" .
+//            event {
+//                __typename
+//            }
+"
         }
-        event {
-            __typename
+        RoomUnavailability (room__id_in: [" . implode (',', array_keys($this->getBookableRooms())). "] page_num: $page){
+            room {
+                id
+            }
+            startDatetime
+            endDatetime
+            displayName
         }
-    }
-    RoomUnavailability (room__id_in: [' . implode (",", array_keys($this->getBookableRooms())). '] ){
-        room {
-            id
+    }";
+            //die($query);
+            $queryData = $this->client->rawQuery($query)->getData();
+            foreach (['RoomUnavailability', 'interventionsAndSundry', 'CalendarEntryMapping'] as $g) {
+                $_SESSION['School_queryData'][$g] = array_merge($_SESSION['School_queryData'][$g] ?? [], $queryData[$g]);
+            }
+            $page += 1;
         }
-        startDatetime
-        endDatetime
-        displayName
-    }
-}')->getData();
-        
         return $_SESSION['School_queryData'];
     }
     

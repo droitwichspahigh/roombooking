@@ -13,6 +13,11 @@ foreach (['roomId', 'date'] as $g) {
 }
 
 $date = $_GET['date'];
+if (strtotime($date) > strtotime($school->getTenWorkingDaysFromNow()->getDate())) {
+    $_SESSION['dateTooFarInAdvance'] = true;
+    header("Location: index.php?date=$date");
+    die();
+}
 $endTime = $_GET['endTime'];
 if (isset($_GET['startTime'])) {
     /* We're going to try to book with startTime at first, then endTime */

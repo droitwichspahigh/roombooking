@@ -51,9 +51,8 @@ foreach (Config::roomFeatureName as $feature) {
 
 if (isset($_GET['date'])) {
     $date = strtotime($_GET['date']);
-    if ($date < strtotime('today') || $date > strtotime($school->getTenWorkingDaysFromNow()->getDate())) {
+    if ($date < strtotime('today')) {
         unset ($date);
-        $modalmsg = "You may only make bookings from today up to ten working days from today.";
     }
 }
 if (!isset($date)) {
@@ -62,6 +61,10 @@ if (!isset($date)) {
 $date = date("Y-m-d", $date);
 
 /* OK, now let's deal with some popups */
+if (isset($_SESSION['dateTooFarInAdvance'])) {
+    unset($_SESSION['dateTooFarInAdvance']);
+    $modalmsg = "You may only make lesson bookings from today up to ten working days from today.";
+}
 if (isset($_SESSION['roomBookingConflict'])) {
     $modalmsg = "WARNING: There are some conflicts in scheduling.  If you would like to help, please <a href=\"review_conflicts.php\">review them</a> and email whoever has lost a booking to let them know.";
 }
@@ -280,11 +283,11 @@ EOF;
     			     }
     			     $previousPeriod = $p;
     			     echo "<tr><th title=\"{$p->getStartTime(true)}-{$p->getEndTime(true)}\">{$p->getName()}</th>";
-    			     foreach ($bookableRooms as $rId => $r) {
+    			     foreach ($bookableRooms as $r) {
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
-    			             echo "<a href=\"makebooking.php?startTime=" . urlencode($p->getStartTime()) . "&endTime=" . urlencode($p->getEndTime()) . "&roomId=" . $rId . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
+    			             echo "<a href=\"makebooking.php?startTime=" . urlencode($p->getStartTime()) . "&endTime=" . urlencode($p->getEndTime()) . "&roomId=" . $r->getId() . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
     			         } else {
 			                 $info = $e->getInfo($date);
 			                 if ($e instanceOf Unavailability) {
