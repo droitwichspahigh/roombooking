@@ -99,22 +99,20 @@ class Room
         $period = $lesson->getPeriod();
         foreach ($this->timetableEntries as $e) {
             if ($e instanceOf Lesson) {
-                if ($e->getDay()->getDate() === $date && $e->getPeriod() === $period) {
-                    if (!isset($_SESSION['roomBookingConflict'])) {
-                        $_SESSION['roomBookingConflict'] = [];
-                    }
-                    $alreadyIn = false;
-                    foreach ($_SESSION['roomBookingConflict'] as $conflict) {
-                        if (in_array($lesson, $conflict)) {
-                            $alreadyIn = true;
+                if ($e->getDay()->getDate() === $date && $e->getPeriod() === $period && $date >= date('Y-m-d')) {
+                    $conflict = [0 => $lesson, 1 => $e,];
+                    if (isset($_SESSION['roomBookingConflict'])) {
+                        $alreadyIn = false;
+                        foreach ($_SESSION['roomBookingConflict'] as $conflict) {
+                            if (in_array($lesson, $conflict)) {
+                                $alreadyIn = true;
+                            }
                         }
-                    }
-                    if (! $alreadyIn) {
-                        array_push($_SESSION['roomBookingConflict'],
-                            [0 => $lesson, 1 => $e,]);
-                    }
-                    if (empty($_SESSION['roomBookingConflict'])) {
-                        unset ($_SESSION['roomBookingConflict']);
+                        if (! $alreadyIn) {
+                            array_push($_SESSION['roomBookingConflict'], $conflict);
+                        }
+                    } else {
+                        $_SESSION['roomBookingConflict'] = [$conflict,];
                     }
                 }
             }
