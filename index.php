@@ -10,6 +10,7 @@ require "bin/classes.php";
 /** @var $auth_user // from auth.php */
 
 function nonLessonRow($school, $rooms, $name, $date, $startTime, $endTime) {
+    global $auth_user;
     $startHhmm = substr($startTime, 0, 5);
     $endHhmm = substr($endTime, 0, 5);
     echo "<tr><th title=\"$startHhmm-$endHhmm\">$name</th>";
