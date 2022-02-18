@@ -369,16 +369,14 @@ class School
                 // This must be a non-ICT room, so a calendared lesson
                 continue;
             }
-            if ($this->rooms[$roomId]->isThereClash(new Period(-1, '', date('h:M', strtotime($i['startDatetime'])), date('h:M', strtotime($i['endDatetime']))), date('Y-m-d', strtotime($i['endDatetime'])))) {
-                $this->rooms[$roomId]->addUnavailability(
-                    new Unavailability(
-                        -$i['id'],
-                        'Intervention',
-                        strtotime($i['startDatetime']),
-                        strtotime($i['endDatetime'])
-                        )
-                    );
-            }
+            $this->rooms[$roomId]->addUnavailability(
+                new Unavailability(
+                    -$i['id'],
+                    'Intervention or exam',
+                    strtotime($i['startDatetime']),
+                    strtotime($i['endDatetime'])
+                    )
+                );
         }
         foreach ($this->getQueryData()['RoomUnavailability'] as $u) {
             // Then deal with availability
