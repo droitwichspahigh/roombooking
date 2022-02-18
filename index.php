@@ -199,7 +199,7 @@ EOF;
             <a class="navbar-brand"><?php print ($auth_user);
             if (in_array($auth_user, Config::admin_users)) {
                 print ("<span class=\"text-warning\"> (administrator)</span>");
-                if (isset(Config::$maintenance) && Config::$maintenance) {
+                if (Settings::getSetting(Settings::MAINTENANCE)) {
                     print "<span class=\"text-danger\"> (maintenance mode)</span>";
                 }
             }?></a>
@@ -222,6 +222,11 @@ EOF;
             	<ul class="navbar-nav">
             		<li class="nav-item">
                 		<a class="nav-link" href="clear_cache.php">Clear the cache and rescan Arbor</a>
+                	</li>
+            	</ul>
+            	<ul class="navbar-nav">
+            		<li class="nav-item">
+                		<a class="nav-link" href="settings.php">Change settings</a>
                 	</li>
             	</ul>
         	</div>

@@ -9,8 +9,13 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
 
 $auth_user = preg_replace('/@' . Config::site_emaildomain . '/', "", $_SERVER['PHP_AUTH_USER']);
 
-if (isset(Config::$maintenance) && Config::$maintenance && !in_array($auth_user, Config::admin_users)) {
-    die("Sorry, the Room Booking Service is under maintenance currently.  Please try again later.");
+if (!in_array($auth_user, Config::admin_users)) {
+    if (Settings::getSetting(Settings::MAINTENANCE)) {
+        die("Sorry, the Room Booking Service is under maintenance currently.  Please try again later.");
+    }
+    if (basename($_SERVER['PHP_SELF']) == 'settings.php') {
+        die('Admins only');
+    }
 }
 
 /* So, let's check this user should actually be here! */

@@ -26,8 +26,6 @@ class Config {
     
     const admin_users = array('reescm');
     
-    public static $maintenance = true;
-    
     const debug = true;
     
    /**

@@ -10,13 +10,14 @@ if (!class_exists("Config")) {
         exit();
     }
     require "Config.php";
+    require "Database.php";
+    require "Settings.php";
     // denied.php skips auth
     if (!isset($skip_auth) || ! $skip_auth) {
         require "auth.php";
     }
     require "Day.php";
     require "Event.php";
-    require "Database.php";
     require "GraphQLClient.php";
     require "Lesson.php";
     require "Period.php";

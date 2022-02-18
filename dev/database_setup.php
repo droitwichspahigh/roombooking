@@ -18,6 +18,7 @@ if (isset(Config::$maintenance) && Config::$maintenance) {
         lesson_id INT NOT NULL,
         oldroom_id INT NOT NULL,
         booking_calendar INT NOT NULL,
+        humanreadable TEXT NULL,
         CONSTRAINT pk PRIMARY KEY (id)
     );");
     $db->dosql("
@@ -26,6 +27,13 @@ if (isset(Config::$maintenance) && Config::$maintenance) {
         class TINYTEXT NOT NULL,
         subscript SMALLINT NOT NULL,
         data MEDIUMTEXT NOT NULL,
+        CONSTRAINT pk PRIMARY KEY (id)
+    );");
+    $db->dosql("
+    CREATE TABLE settings (
+        id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+        name TEXT NULL,
+        value TEXT NULL,
         CONSTRAINT pk PRIMARY KEY (id)
     );");
 }
