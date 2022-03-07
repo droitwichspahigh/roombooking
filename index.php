@@ -66,7 +66,7 @@ if (isset($_SESSION['dateTooFarInAdvance'])) {
     unset($_SESSION['dateTooFarInAdvance']);
     $modalmsg = "You may only make lesson bookings from today up to ten working days from today.";
 }
-if (isset($_SESSION['roomBookingConflict'])) {
+if (isset($_SESSION['roomBookingConflict']) && in_array($auth_user, Config::admin_users)) {
     $modalmsg = "WARNING: There are some conflicts in scheduling.  If you would like to help, please <a href=\"review_conflicts.php\">review them</a> and email whoever has lost a booking to let them know.";
 }
 if (isset ($_SESSION['thereIsNoLessonAtThisTime'])) {
