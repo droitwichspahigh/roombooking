@@ -48,6 +48,10 @@ class Database
         return $result;
     }
     
+    function escape(String $string) {
+        return $this->conn->real_escape_string($string);
+    }
+    
     /** Mutex lock, will sleep for 50 seconds by default while attempting to gain lock, or die */
     function lock(String $table) {
         $this->dosql("LOCK TABLES roomchanges WRITE");
