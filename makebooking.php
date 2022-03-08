@@ -134,7 +134,8 @@ if (empty($oldLessonRoomId)) {
 /* Store the old room in the database */
 
 $myCalendarId = $school->getCurrentlyLoggedInStaff()->getCalendarId();
-$db->dosql("INSERT INTO roomchanges (lesson_id, oldroom_id, booking_calendar) VALUES ($LessonId, $oldLessonRoomId, $myCalendarId);");
+$humanreadable = "$date $startTime {$school->getCurrentlyLoggedInStaff()->getName()} {$selectedCal['lesson']['displayName']}";
+$db->dosql("INSERT INTO roomchanges (lesson_id, oldroom_id, booking_calendar, humanreadable) VALUES ($LessonId, $oldLessonRoomId, $myCalendarId, '$humanreadable');");
 
 $session = \Arbor\Model\Session::retrieve($LessonId);
 $session->setLocation(\Arbor\Model\Room::retrieve($roomId));
