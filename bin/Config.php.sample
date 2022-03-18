@@ -22,7 +22,9 @@ class Config {
         'password' => "",
     );
     
-    const roomFeatureName = ["ICT Room"];
+    const roomFeatureName = ["ICT Room", "Minibus"];
+    
+    const nonLesson = ["Minibus"];
     
     const admin_users = array('reescm');
     

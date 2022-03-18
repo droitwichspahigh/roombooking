@@ -293,7 +293,18 @@ EOF;
     			         echo "<td>";
     			         $e = $r->getEntry($p, $date);
     			         if (is_null($e)) {
-    			             echo "<a href=\"makebooking.php?startTime=" . urlencode($p->getStartTime()) . "&endTime=" . urlencode($p->getEndTime()) . "&roomId=" . $r->getId() . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
+    			             // Is the room lessonBookable?
+    			             $lessonBookable = true;
+    			             foreach (Config::nonLesson as $f) {
+    			                 if ($r->getFeature() == $f) {
+    			                     $lessonBookable = false;
+    			                 }
+    			             }
+    			             if ($lessonBookable) {
+    			                 echo "<a href=\"makebooking.php?startTime=" . urlencode($p->getStartTime()) . "&endTime=" . urlencode($p->getEndTime()) . "&roomId=" . $r->getId() . "&date=" . $date . "\" class=\"btn btn-secondary stretched-link\">Book</a>";
+    			             } else {
+    			                 echo "Available";
+    			             }
     			         } else {
 			                 $info = $e->getInfo($date);
 			                 if ($e instanceOf Unavailability) {
