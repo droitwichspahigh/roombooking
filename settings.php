@@ -11,6 +11,7 @@ if (Settings::getSetting(Settings::VERSION) == -1) {
 foreach ([Settings::MAINTENANCE] as $s) {
     if (isset($_GET[$s])) {
         Settings::storeSetting($s, $_GET[$s]);
+        die($s);
     }
 }
 
@@ -23,11 +24,20 @@ require "bin/head.php";
 ?>
 <script>
 function changeChkBoxSetting(name) {
-	value = $('input#' + name)[0].checked ? 1 : 0
+	value = $('input#' + name)[0].checked ? 1 : 0;
+	label = $('label[for=' + name + ']')[0];
+	label.classList.remove("text-success");
+	label.classList.add("text-warning");
 	var xhr = new XMLHttpRequest();
-    //xhr.addEventListener("load", testAdded);
+    xhr.addEventListener("load", settingSaved);
     xhr.open("GET", 'settings.php?' + name + '=' + value);
 	xhr.send();
+}
+
+function settingSaved() {
+	label = $('label[for=' + this.response + ']')[0];
+	label.classList.remove("text-warning");
+	label.classList.add("text-success");	
 }
 
 </script>
