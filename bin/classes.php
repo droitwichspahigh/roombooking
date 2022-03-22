@@ -12,7 +12,7 @@ if (!class_exists("Config")) {
     require "Config.php";
     require "Database.php";
     // Don't collide with settings.php
-    require "bin/Settings.php";
+    require Config::site_docroot . "/bin/Settings.php";
     // denied.php skips auth
     if (!isset($skip_auth) || ! $skip_auth) {
         require "auth.php";
