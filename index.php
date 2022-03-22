@@ -21,21 +21,21 @@ function nonLessonRow($school, $rooms, $name, $date, $startTime, $endTime) {
             $a = ($a instanceOf Unavailability) ? $a : $a->getPeriod;
             $b = ($b instanceOf Unavailability) ? $b : $b->getPeriod;
             return strtotime($a->getStartTime()) <=> strtotime($b->getStartTime()); });
-        //$entries = array_merge($unavail, $other);
-        foreach ($entries as $e) {
-                $descr = str_replace(': ', '<br />', str_replace('Room Unavailable: ', '', $e->getInfo($date)));
-                $m = [];
-                if (preg_match('/^(.*) \((\d+)\)$/', $descr, $m) == 1) {
-                    if ($m[2] == $school->getCurrentlyLoggedInStaff()->getId()) {
-                        $descr = "<a href=\"removebooking.php?cancelUnavailability={$e->getPositiveId()}&date=$date\" class=\"btn btn-primary stretched-link\">{$m[1]}</a>";
-                    } elseif (in_array($auth_user, Config::admin_users)) {
-                        $descr = "<a href=\"removebooking.php?cancelUnavailability={$e->getPositiveId()}&date=$date\" class=\"btn btn-danger stretched-link\">{$m[1]}</a>";
-                    }
+        if (isset($entries[0])) {
+            $e = $entries[0];
+            $descr = str_replace(': ', '<br />', str_replace('Room Unavailable: ', '', $e->getInfo($date)));
+            $m = [];
+            if (preg_match('/^(.*) +\((\d+)\)$/', $descr, $m) == 1) {
+                if ($m[2] == $school->getCurrentlyLoggedInStaff()->getId()) {
+                    $descr = "<a href=\"removebooking.php?cancelUnavailability={$e->getPositiveId()}&date=$date\" class=\"btn btn-primary stretched-link\">{$m[1]}</a>";
+                } elseif (in_array($auth_user, Config::admin_users)) {
+                    $descr = "<a href=\"removebooking.php?cancelUnavailability={$e->getPositiveId()}&date=$date\" class=\"btn btn-danger stretched-link\">{$m[1]}</a>";
                 }
-                array_push($cellTextArr, "$descr");
             }
-            $cellText = implode('<br />', $cellTextArr);
-            echo "<td>$cellText</td>";
+            array_push($cellTextArr, "$descr");
+        }
+        $cellText = implode('<br />', $cellTextArr);
+        echo "<td>$cellText</td>";
     }
     echo "</tr>\n";
 }

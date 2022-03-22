@@ -362,7 +362,19 @@ class School
                     new Lesson($d['lesson']['id'], $d['lesson']['displayName'], $day, $period, $staff)
                     );
             }
-        } foreach ($this->getQueryData()['interventionsAndSundry'] as $i) {
+        }
+        foreach ($this->getQueryData()['RoomUnavailability'] as $u) {
+            // Then deal with availability
+            $this->getRooms()[$u['room']['id']]->addUnavailability(
+                new Unavailability(
+                    $u['id'],
+                    $u['displayName'],
+                    strtotime($u['startDatetime']['date']),
+                    strtotime($u['endDatetime']['date'])
+                    )
+                );
+        }
+        foreach ($this->getQueryData()['interventionsAndSundry'] as $i) {
             $roomCalendarId = $i['calendar']['id'];
             $roomId = array_search($roomCalendarId, $this->getRoomSchoolCalendarIds());
             if (!$this->getRooms()[$roomId]->isBookable()) {
@@ -377,17 +389,6 @@ class School
                     strtotime($i['endDatetime'])
                     )
                 );
-        }
-        foreach ($this->getQueryData()['RoomUnavailability'] as $u) {
-            // Then deal with availability
-            $this->getRooms()[$u['room']['id']]->addUnavailability(
-                new Unavailability(
-                    $u['id'],
-                    $u['displayName'],
-                    strtotime($u['startDatetime']['date']),
-                    strtotime($u['endDatetime']['date'])
-                )
-            );
         }
     }
     
@@ -490,14 +491,14 @@ class School
             id        
             startDatetime
             endDatetime
+            displayName
             calendar {
                 id
             }" .
-//            event {
-//                __typename
-//            }
-"
-        }
+/*            event {
+                __typename
+            }
+*/        "}
         RoomUnavailability (room__id_in: [" . implode (',', array_keys($this->getBookableRooms())). "] page_num: $page){
             room {
                 id
