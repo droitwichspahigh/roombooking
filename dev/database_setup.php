@@ -36,6 +36,13 @@ if (isset(Config::$maintenance) && Config::$maintenance) {
         value TEXT NULL,
         CONSTRAINT pk PRIMARY KEY (id)
     );");
+    $db->dosql("
+    CREATE TABLE debug (
+        id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+        message MEDIUMTEXT NULL,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT pk PRIMARY KEY (id)
+    );");    
 }
 
 ?>

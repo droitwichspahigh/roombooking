@@ -25,7 +25,11 @@ class GraphQLClient {
     
     function rawQuery(string $query, $vars = [['a' => 0]]) {
         try {
-            return $this->client->runRawQuery($query, true, $vars);
+            $db = new Database();
+            $db->dosql("INSERT INTO `debug` (`message`) VALUES ('Query: $query');");
+            $ret = $this->client->runRawQuery($query, true, $vars);
+            $db->dosql("INSERT INTO `debug` (`message`) VALUES ('Query done');");
+            return $ret;
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             die("<pre>Really sorry, Arbor appears to be taking too long to respond.  Please try again, and if this repeats, try again later.</pre>");
         }
