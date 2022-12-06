@@ -7,13 +7,13 @@ if (!(isset($_POST['startTime']) && isset($_POST['endTime']) && isset($_POST['da
     die("Incomplete");
 }
 
-$school = new School();
-
 $startTime = $_POST['startTime'];
 $endTime = $_POST['endTime'];
 $date = $_POST['date'];
 $roomId = $_POST['roomId'];
 $reason = $_POST['reason'];
+
+$school = new School($date);
 
 // Validate
 if (preg_match('/\d\d:\d\d$/', $startTime) == 0) {
