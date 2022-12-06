@@ -18,6 +18,14 @@ if (!in_array($auth_user, Config::admin_users)) {
     }
 }
 
+// Turn on debugging if maintenance mode is on
+
+if (Settings::getSetting(Settings::MAINTENANCE)) {
+    ini_set('display_startup_errors', 1);
+    ini_set('display_errors', 1);
+    error_reporting(-1);
+}
+
 /* So, let's check this user should actually be here! */
 
 /* Let's explicitly keep kids out, as staff regex may match kids! */
