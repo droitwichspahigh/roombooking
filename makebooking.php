@@ -3,8 +3,20 @@ namespace Roombooking;
 
 require "bin/classes.php";
 
-$school = new School();
+if (!isset($_GET['date'])) {
+    die("Don't call this directly.");
+}
+
+$date = $_GET['date'];
+
+$school = new School($date);
 $db = new Database();
+
+if (strtotime($date) > strtotime($school->getTenWorkingDaysFromNow()->getDate())) {
+    $_SESSION['dateTooFarInAdvance'] = true;
+    header("Location: index.php?date=$date");
+    die();
+}
 
 foreach (['roomId', 'date'] as $g) {
     if (!isset($_GET[$g])) {
@@ -12,12 +24,6 @@ foreach (['roomId', 'date'] as $g) {
     }
 }
 
-$date = $_GET['date'];
-if (strtotime($date) > strtotime($school->getTenWorkingDaysFromNow()->getDate())) {
-    $_SESSION['dateTooFarInAdvance'] = true;
-    header("Location: index.php?date=$date");
-    die();
-}
 $endTime = $_GET['endTime'];
 if (isset($_GET['startTime'])) {
     /* We're going to try to book with startTime at first, then endTime */
@@ -143,8 +149,10 @@ $session->save();
 
 /* Need to hack this into the Query data now, as timetable has changed */
 /* XXX This is so evil, but it works I guess */
+
 $selectedCal['lesson']['location']['id'] = $roomId;
-array_push($_SESSION['School_queryData']['CalendarEntryMapping'], $selectedCal);
+array_push($_SESSION['School_queryData'][$date]['CalendarEntryMapping'], $selectedCal);
+
 
 $db->unlock();
 
