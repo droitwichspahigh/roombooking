@@ -3,8 +3,17 @@ namespace Roombooking;
 
 require "bin/classes.php";
 
-$school = new School();
+$date = date('Y-m-d');
+$school = new School($date);
 $db = new Database();
+
+// Make sure that we check the next four weeks-- this could be slow!
+
+for ($d=0; $d<28; $d++) {
+    $date = date('Y-m-d', strtotime('+1 day', strtotime($date)));
+    echo $date;
+    $school->getTimetables($date);
+}
 
 ?>
 <!doctype html>
@@ -48,11 +57,6 @@ foreach ($db->dosql("SELECT * FROM roomchanges;")->fetch_all(MYSQLI_ASSOC) as $r
 <?php
 $conflictShown = [];
 foreach ($_SESSION['roomBookingConflict'] as $conflict) {
-    print "<tr><td>";
-    print $conflict[0]->getDay()->getDate();
-    print "<br />";
-    print $conflict[0]->getPeriod()->getName();
-    print "</td>";
     if ($conflict[0] instanceOf Unavailability) {
         $unavail = $conflict[0];
         $booking = $conflict[1];
@@ -80,6 +84,12 @@ foreach ($_SESSION['roomBookingConflict'] as $conflict) {
         $booking = $conflict[1];
     }
     if (isset($c)) {
+        print "<tr><td>";
+        print $conflict[0]->getDay()->getDate();
+        print "<br />";
+        print $conflict[0]->getPeriod()->getName();
+        print "</td>";
+        
         /** @var Lesson $booking */
         if (in_array($c->getId(), $conflictShown)) {
             continue;

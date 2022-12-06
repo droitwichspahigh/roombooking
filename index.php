@@ -40,26 +40,25 @@ function nonLessonRow($school, $rooms, $name, $date, $startTime, $endTime) {
     echo "</tr>\n";
 }
 
-$school = new School();
-$db = new Database();
-
-$bookableRooms = [];
-foreach (Config::roomFeatureName as $feature) {
-    foreach ($school->getBookableRooms($feature) as $r) {
-        array_push($bookableRooms, $r);
-    }
-}
-
 if (isset($_GET['date'])) {
     $date = strtotime($_GET['date']);
     if ($date < strtotime('today')) {
         unset ($date);
     }
 }
-if (!isset($date)) {
-    $date = time();
+$date = date("Y-m-d", $date ?? time());
+
+$school = new School($date);
+$db = new Database();
+
+$bookableRooms = [];
+$features = Config::roomFeatureName;
+array_unshift($features, 'special');
+foreach ($features as $feature) {
+    foreach ($school->getBookableRooms($feature) as $r) {
+        array_push($bookableRooms, $r);
+    }
 }
-$date = date("Y-m-d", $date);
 
 /* OK, now let's deal with some popups */
 if (isset($_SESSION['dateTooFarInAdvance'])) {
@@ -261,6 +260,28 @@ EOF;
     				<tr>
     					<th>&nbsp;</th>
     					<?php
+    					foreach ($bookableRooms as $key => $r) {
+    					    $removeRoom = false;
+    					    if (isset(Config::specialRooms[$r->getId()])) {
+    					        $removeRoom = true;
+    					        // Need to check user is allowed!
+    					        foreach (Config::specialRooms[$r->getId()] as $u) {
+    					            if (strtolower($u) == strtolower($auth_user)) {
+    					                $removeRoom = false;
+    					            }
+    					        }
+    					    }
+    					    if ($removeRoom) {
+    					        unset($bookableRooms[$key]);
+    					    }
+    					}
+    					/*foreach (Config::specialRooms as $rid => $r) {
+    					     foreach ($r as $u) {
+    					         if (strtolower($auth_user) == strtolower($u)) {
+    					             array_unshift($bookableRooms, $school->getRooms()[$rid]);
+    					         }
+    					     }
+    					 }*/
     					 foreach ($bookableRooms as $r) {
     					     $roomHeader = $r->getName();
     					     if ($r->getCapacity() !== null) {

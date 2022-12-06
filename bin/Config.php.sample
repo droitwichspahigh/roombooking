@@ -28,6 +28,12 @@ class Config {
     
     const admin_users = array('reescm');
     
+    // These are Rooms that only certain users may book; structure is roomId
+    // and then a list of usernames
+    const specialRooms = [
+        13 => ['reescm'],
+    ];
+    
     const debug = true;
     
    /**

@@ -3,13 +3,13 @@ namespace Roombooking;
 
 require "bin/classes.php";
 
-$school = new School();
-$db = new Database();
-
 if (!(isset($_GET['date']) && (isset($_GET['cancelBooking']) || isset($_GET['cancelUnavailability'])))) {
     die("Issue with your GET variables-- stop trying to hack!");
 }
 $date = $_GET['date'];
+
+$school = new School($date);
+$db = new Database();
 
 if (isset($_GET['cancelBooking'])) {
     $lessonId = $_GET['cancelBooking'];

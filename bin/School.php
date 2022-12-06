@@ -13,12 +13,12 @@ class School
     protected $client, $db;
     protected $staff = null;
     
-    public function __construct($start = null, $end = null)
+    public function __construct($date)
     {
         $this->client = new GraphQLClient();
         $this->db = new Database();
-        $this->getQueryData($start, $end);
-        $this->getTimetables();
+        $this->getQueryData($date);
+        $this->getTimetables($date);
     }
     
     /*
@@ -216,6 +216,7 @@ class School
                 AllRoom: Room {
                     id
                     roomName
+                    studentCapacity
                 }
             }');
         
@@ -225,9 +226,20 @@ class School
         }
         
         foreach ($result->getData()['AllRoom'] as $r) {
-            if (!array_key_exists($r['id'], $this->rooms)) {
-                // If we have allRooms defined, get info for every room, not just bookable rooms
-                $this->rooms[$r['id']] = new Room($r['id'], $r['roomName'], defined('allRooms'));
+            $bookable = false;
+            foreach (Config::specialRooms as $rId => $_) {
+                if ($rId == $r['id']) {
+                    $bookable = true;
+                }
+            }
+            if ($bookable) {
+                $this->rooms[$r['id']] = new Room($r['id'], $r['roomName'], true, 'special');
+                $this->rooms[$r['id']]->setCapacity($r['studentCapacity']);
+            } else {
+                if (!array_key_exists($r['id'], $this->rooms)) {
+                    // If we have allRooms defined, get info for every room, not just bookable rooms
+                    $this->rooms[$r['id']] = new Room($r['id'], $r['roomName'], defined('allRooms'));
+                }
             }
         }
         
@@ -251,7 +263,7 @@ class School
     public function getBookableRooms(string $feature = "") {
         $bookableRooms = [];
         foreach ($this->getRooms() as $id => $r) {
-            if ($r->isBookable() && (empty($feature) || $r->getFeature() == $feature)) {
+            if ($r->isBookable() && (empty($feature) || $r->getFeature() == $feature || ($feature == "" && $r->getFeature() == 'special'))) {
                 $bookableRooms[$id] = $r;
             }
         }
@@ -327,8 +339,8 @@ class School
      * 
      */
 
-    public function getTimetables() {
-        foreach ($this->getQueryData()['CalendarEntryMapping'] as $d) {
+    public function getTimetables(String $date) {
+        foreach ($this->getQueryData($date)['CalendarEntryMapping'] as $d) {
             // First deal with lessons
             if (isset($d['lesson']['location'])) {
                 if (!$this->getRooms()[$d['lesson']['location']['id']]->isBookable()) {
@@ -363,18 +375,18 @@ class School
                     );
             }
         }
-        foreach ($this->getQueryData()['RoomUnavailability'] as $u) {
+        foreach ($this->getQueryData($date)['RoomUnavailability'] as $u) {
             // Then deal with availability
             $this->getRooms()[$u['room']['id']]->addUnavailability(
                 new Unavailability(
                     $u['id'],
                     $u['displayName'],
-                    strtotime($u['startDatetime']['date']),
-                    strtotime($u['endDatetime']['date'])
+                    strtotime($u['startDatetime']),
+                    strtotime($u['endDatetime'])
                     )
                 );
         }
-        foreach ($this->getQueryData()['interventionsAndSundry'] as $i) {
+        foreach ($this->getQueryData($date)['interventionsAndSundry'] as $i) {
             $roomCalendarId = $i['calendar']['id'];
             $roomId = array_search($roomCalendarId, $this->getRoomSchoolCalendarIds());
             if (!$this->getRooms()[$roomId]->isBookable()) {
@@ -400,10 +412,8 @@ class School
         /* Depends on $auth_user */
         global $auth_user;
         
-        if (isset ($_SESSION['currentlyLoggedInStaffId'])) {
-            if (isset ($this->staff[$_SESSION['currentlyLoggedInStaffId']])) {
-                return $this->staff[$_SESSION['currentlyLoggedInStaffId']];
-            }
+        if (isset ($_SESSION['currentStaff'])) {
+            return $_SESSION['currentStaff'];
         }
         
         Config::debug("School::getCurrentlyLoggedInStaff: looking for email");
@@ -436,9 +446,9 @@ class School
         /* May as well, save a few microseconds if we need it later */
         $this->staff[$s['id']] = new Staff($s['id'], $s['displayName']);
         
-        $_SESSION['currentlyLoggedInStaffId'] = $s['id'];
+        $_SESSION['currentStaff'] = $this->staff[$s['id']];
 
-        return $this->staff[$s['id']];
+        return $_SESSION['currentStaff'];
     }
     
     /**
@@ -448,26 +458,27 @@ class School
      *
      * @return array
      */
-    public function getQueryData($start = null, $end = null) {
-        if (isset($_SESSION['School_queryData'])) {
-            return $_SESSION['School_queryData'];
+    public function getQueryData($start) {
+        if (isset($_SESSION['School_queryData'][$start])) {
+            return $_SESSION['School_queryData'][$start];
         }
         
         Config::debug("School::getQueryData: no session cache data, requerying");
         
-        $start = $this->getAY('start');
-        $end = $this->getAY('end');
-        
+        $end = date('Y-m-d', strtotime('+1 day', strtotime($start)));
         //$lastMidnight = "2021-09-01";
         //$end = "2022-08-31";
         
         $page = 0;
-        $_SESSION['School_queryData'] = [];
-        while ($page == 0 || !empty($queryData['CalendarEntryMapping']) || !empty($queryData['interventionsAndSundry']) || !empty($queryData['RoomUnavailability'])) {
+        $_SESSION['School_queryData'] ??= [];
+        $_SESSION['School_queryData'][$start] = [];
+        $nextPageNeeded = false;
+        $page_size = 1000;
+        while ($page == 0 || $nextPageNeeded /* || !empty($queryData['CalendarEntryMapping']) || !empty($queryData['interventionsAndSundry']) || !empty($queryData['RoomUnavailability']) */) {
             /* You don't want to know how long this query took to construct :( */
             $query = '
     query {
-        CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomAcademicCalendarIds()) . "] startDatetime_after: \"$start\" startDatetime_before: \"$end\" page_num: $page) {
+        CalendarEntryMapping (calendar__id_in: [' . implode(",", $this->getRoomAcademicCalendarIds()) . "] startDatetime_after: \"$start\" startDatetime_before: \"$end\" page_num: $page page_size: $page_size) {
             id
             lesson: event {
                 __typename
@@ -487,7 +498,7 @@ class School
                 }
             }
         }
-        interventionsAndSundry: CalendarEntryMapping (calendar__id_in: [" . implode(',', $this->getRoomSchoolCalendarIds()) . "] startDatetime_after: \"$start\" startDatetime_before: \"$end\" page_num: $page) {
+        interventionsAndSundry: CalendarEntryMapping (calendar__id_in: [" . implode(',', $this->getRoomSchoolCalendarIds()) . "] startDatetime_after: \"$start\" startDatetime_before: \"$end\" page_num: $page page_size: $page_size) {
             id        
             startDatetime
             endDatetime
@@ -499,7 +510,7 @@ class School
                 __typename
             }
 */        "}
-        RoomUnavailability (room__id_in: [" . implode (',', array_keys($this->getBookableRooms())). "] page_num: $page){
+        RoomUnavailability (room__id_in: [" . implode (',', array_keys($this->getBookableRooms())). "] page_num: $page page_size: $page_size){
             room {
                 id
             }
@@ -510,12 +521,17 @@ class School
     }";
             //die($query);
             $queryData = $this->client->rawQuery($query)->getData();
+            $nextPageNeeded = false;
+            //echo "<pre>"; die(print_r($queryData, true));
             foreach (['RoomUnavailability', 'interventionsAndSundry', 'CalendarEntryMapping'] as $g) {
-                $_SESSION['School_queryData'][$g] = array_merge($_SESSION['School_queryData'][$g] ?? [], $queryData[$g]);
+                if (count($queryData[$g]) >= $page_size-1) {
+                    $nextPageNeeded = true;
+                }
+                $_SESSION['School_queryData'][$start][$g] = array_merge($_SESSION['School_queryData'][$start][$g] ?? [], $queryData[$g]);
             }
             $page += 1;
         }
-        return $_SESSION['School_queryData'];
+        return $_SESSION['School_queryData'][$start];
     }
     
     public function resetQuery() {
