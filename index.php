@@ -228,6 +228,11 @@ EOF;
                 		<a class="nav-link" href="settings.php">Change settings</a>
                 	</li>
             	</ul>
+            	<ul class="navbar-nav">
+            		<li class="nav-item">
+            			<a class="nav-link" href="report.php">Show bookings</a>
+            		</li>
+            	</ul>
         	</div>
         	
         	<div class="collapse navbar-collapse" id="collapsibleNavbar">

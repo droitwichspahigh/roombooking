@@ -13,8 +13,12 @@ if (!in_array($auth_user, Config::admin_users)) {
     if (Settings::getSetting(Settings::MAINTENANCE)) {
         die("Sorry, the Room Booking Service is under maintenance currently.  Please try again later.");
     }
-    if (basename($_SERVER['PHP_SELF']) == 'settings.php') {
+    switch(basename($_SERVER['PHP_SELF'])) {
+    case "settings.php":
+    case "report.php":
         die('Admins only');
+    default:
+        break;
     }
 }
 

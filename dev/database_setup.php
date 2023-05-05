@@ -18,6 +18,8 @@ if (isset(Config::$maintenance) && Config::$maintenance) {
         lesson_id INT NOT NULL,
         oldroom_id INT NOT NULL,
         booking_calendar INT NOT NULL,
+        lessondate TEXT NULL,
+        roomname TEXT NULL,
         humanreadable TEXT NULL,
         CONSTRAINT pk PRIMARY KEY (id)
     );");
